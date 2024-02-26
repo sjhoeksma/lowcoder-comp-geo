@@ -98,6 +98,11 @@ let GEOComp = (function () {
         value: "click",
         description: "Triggers when there is a click within the viewer",
       },
+      {
+        label: "onZoom",
+        value: "zoom",
+        description: "Triggers when there is a zoom change within the viewer",
+      },
     ] as const),
   };
    
@@ -108,6 +113,7 @@ let GEOComp = (function () {
     center : any;
     pitch : number;
     zoom : number;
+    maxZoom: number;
     geoJson: any;
     event : any;
     /*
@@ -196,7 +202,7 @@ let GEOComp = (function () {
         {children.geoJson.propertyView({ label: "geoJson" })}
         {children.center.propertyView({ label: "center" })}
         {children.zoom.propertyView({ label: "zoom" })}
-        {children.zoom.propertyView({ label: "maxZoom" })}
+        {children.maxZoom.propertyView({ label: "maxZoom" })}
         {children.pitch.propertyView({ label: "pitch" })}
         <span>Hide <b>logo</b> only if you are entitled</span>
         {children.showLogo.propertyView({ label: "Show logo" })}
