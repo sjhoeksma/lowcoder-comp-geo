@@ -1,0 +1,4 @@
+.yarn/
+node_modules/
+lowcoder-comp-bpmn-io-*.tgz
+.DS_Store
