@@ -1,0 +1,55 @@
+mapConfig:
+  initOptions:
+    center: [longitude, latitude]  # Replace with actual longitude and latitude values
+    zoom: initialZoomLevel  # Replace with an initial zoom level value
+    pitch: initialPitchAngle  # Replace with an initial pitch angle value (for 3D views)
+    crs: "EPSG:3857"  # Default Coordinate Reference System; change if needed
+
+  globalTriggers:
+    - event: "load"
+      action: "initializeMap"
+      description: "Initialize the map with specified center, zoom, and pitch."
+      
+    - event: "zoom"
+      action: "adjustGlobalVisibility"
+      description: "Adjust global layer visibility based on zoom level."
+
+  layers:
+    - id: "baseLayer"
+      type: "wms"
+      source:
+        url: "https://example.com/wms"
+        layers: "baseLayer"
+        version: "1.3.0"
+      opacity: 1
+      order: 1  # Base layer with highest priority (rendered first)
+      crs: "EPSG:3857"
+      metadata:
+        title: "Base Map Layer"
+        abstract: "This is the base map layer providing the foundational geographical context."
+        source: "GeoSpatial Authority"
+        bbox: [-180, -90, 180, 90]
+      triggers:
+        - event: "click"
+          action: "showBaseLayerInfo"
+          description: "Show information specific to the base map layer."
+
+    - id: "landmarksLayer"
+      type: "geojson"
+      source:
+        data: "https://example.com/data/landmarks.geojson"
+      style:
+        color: "#4264fb"
+        weight: 2
+        opacity: 0.8
+      order: 2  # Overlays on top of the base layer
+      crs: "EPSG:3857"
+      metadata:
+        title: "Landmarks"
+        abstract: "Layer showing landmarks across the city."
+        source: "City Data Portal"
+        bbox: [-122.41, 37.77, -122.40, 37.78]
+      triggers:
+        - event: "click"
+          action: "highlightLandmark"
+          description: "Highlight and show details of the clicked landmark."

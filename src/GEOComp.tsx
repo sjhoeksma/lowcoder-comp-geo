@@ -89,7 +89,17 @@ let GEOComp = (function () {
       {
         label: "onChange",
         value: "change",
-        description: "Triggers when GEO data changes",
+        description: "Triggers when GeoJson data changes",
+      },
+      {
+        label: "onLoadEnd",
+        value: "loadend",
+        description: "Triggers when GEO data is loaded",
+      },
+      {
+        label: "onClick",
+        value: "click",
+        description: "Triggers when there is a click within the viewer",
       },
     ] as const),
   };
@@ -112,13 +122,17 @@ let GEOComp = (function () {
     autoHeight: boolean;
   }) => {
   const handleDataChange = (json: string) => {
-    if (props.onEvent) {
-      _skipRedraw = true //We should not redraw the component
-      props.geoJson.onChange(json);
-      props.onEvent("change");
-      return false
-    }
+    _skipRedraw = true //We should not redraw the component
+    props.geoJson.onChange(json);
+    props.onEvent("change");
   };
+  const handleLoadEnd= (event : object) =>{
+    props.onEvent("loadend");
+  };
+  const handleClick = (event : object) =>{
+    //TODO: Set output variable  props.geoJson.onChange(json);
+    props.onEvent("click");
+  }
   const [dimensions, setDimensions] = useState({ width: 480, height: 415 });
   const { width, height, ref: conRef } = useResizeDetector({onResize: () =>{
     const container = conRef.current;
@@ -159,6 +173,8 @@ let GEOComp = (function () {
         width={dimensions.width}
         showLogo={props.showLogo}
         onDataChange={handleDataChange}
+        onLoadEnd={handleLoadEnd}
+        onClick={handleClick}
         skipRedraw={skipRedraw}
       />
     </div>
@@ -172,7 +188,7 @@ let GEOComp = (function () {
         {children.center.propertyView({ label: "center" })}
         {children.zoom.propertyView({ label: "zoom" })}
         {children.pitch.propertyView({ label: "pitch" })}
-        <span>Hide <b>AntV L7 logo</b> only if you are entitled</span>
+        <span>Hide <b>logo</b> only if you are entitled</span>
         {children.showLogo.propertyView({ label: "Show logo" })}
       </Section>
       <Section name="Interaction">

@@ -84,6 +84,15 @@ function Geo(props) {
         layers: [baseLayer]
       });
 
+      map.on('loadend', function (event) {
+        props.onLoadEnd(event)
+      });
+
+      map.on('click', function(event) {
+        props.onClick(event)
+      });
+
+
 
       if (!props.showLogo) {
         //geoCanvas.getElementsByClassName('l7-control-logo')[0].style="display:none" 
@@ -116,6 +125,8 @@ Geo.propTypes = {
   */
   showLogo : PropTypes.bool,
   onDataChange: PropTypes.func,
+  onLoadEnd: PropTypes.func,
+  onClick: PropTypes.func,
   skipRedraw: PropTypes.func,
 }
 
