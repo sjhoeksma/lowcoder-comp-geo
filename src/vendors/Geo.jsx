@@ -11,6 +11,9 @@ import {XYZ} from 'ol/source';
 //import ZoomSlider from 'ol/control/ZoomSlider.js';
 import {fromLonLat} from 'ol/proj.js';
 import {Control, defaults as defaultControls} from 'ol/control.js';
+import GeoJSON from 'ol/format/GeoJSON.js';
+import VectorLayer from 'ol/layer/Vector.js';
+import VectorSource from 'ol/source/Vector.js';
 
 
 
@@ -73,25 +76,39 @@ function Geo(props) {
         })
       })
 
+      const geoJson = new VectorLayer({
+        background: '#1a2b39',
+        source: new VectorSource({
+          url: 'https://openlayers.org/data/vector/ecoregions.json',
+          format: new GeoJSON(),
+        }),
+        style: {
+          'fill-color': ['string', ['get', 'COLOR'], '#eee'],
+        },
+      });
+
       var map = new Map({
         controls: defaultControls().extend([new RotateNorthControl()]),
         view: new View({
           center:  fromLonLat(props.center),
           zoom: props.zoom,
-          maxZoom: 18, //To make property
+          maxZoom: props.maxZoom, 
         }),
         target: 'GEO_'+ geoId,
-        layers: [baseLayer]
+        layers: [baseLayer,geoJson]
       });
 
+      //Add the supported events
       map.on('loadend', function (event) {
         props.onLoadEnd(event)
       });
-
       map.on('click', function(event) {
         props.onClick(event)
       });
-
+      map.getView().on('change:resolution', (event) => {
+        //TODO:This event triggers on very small changes, shoud we limit it ?
+        props.onZoom(event)
+      });
 
 
       if (!props.showLogo) {
@@ -114,6 +131,7 @@ Geo.propTypes = {
   height: PropTypes.number,
   center: PropTypes.array,
   zoom: PropTypes.number,
+  maxZoom: PropTypes.number,
   pitch: PropTypes.number,
   geoJson: PropTypes.object,
 
@@ -127,6 +145,7 @@ Geo.propTypes = {
   onDataChange: PropTypes.func,
   onLoadEnd: PropTypes.func,
   onClick: PropTypes.func,
+  onZoom: PropTypes.func,
   skipRedraw: PropTypes.func,
 }
 

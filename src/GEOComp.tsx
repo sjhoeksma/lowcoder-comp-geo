@@ -75,16 +75,13 @@ let GEOComp = (function () {
     autoHeight: withDefault(AutoHeightControl, "fixed"),
     styles: styleControl(CompStyles),
     center: withDefault(ArrayControl,"[4.6999,52.297]"),
-    zoom: withDefault(NumberControl,16),
+    zoom: withDefault(NumberControl,1),
+    maxZoom: withDefault(NumberControl,30),
     pitch: withDefault(NumberControl,0),
     geoJson : jsonObjectExposingStateControl("geoJson"),
+    event : jsonObjectExposingStateControl("event"),
     showLogo : withDefault(BoolControl,true),
-/*
-    values: withDefault(JSONObjectControl),
-    svgDownload : withDefault(BoolControl,false),
-    imageName : stringSimpleControl(""), 
-    designer : withDefault(BoolControl,false),
-*/
+
     onEvent: eventHandlerControl([
       {
         label: "onChange",
@@ -112,6 +109,7 @@ let GEOComp = (function () {
     pitch : number;
     zoom : number;
     geoJson: any;
+    event : any;
     /*
     values: object | null | undefined;
     svgDownload: boolean;
@@ -127,11 +125,20 @@ let GEOComp = (function () {
     props.onEvent("change");
   };
   const handleLoadEnd= (event : object) =>{
+    console.log("GEO Loaded",event)
+    props.event = event
     props.onEvent("loadend");
   };
   const handleClick = (event : object) =>{
     //TODO: Set output variable  props.geoJson.onChange(json);
+    console.log("GEO Clicked",event)
+    props.event = event
     props.onEvent("click");
+  }
+  const handleZoom= (event: object) =>{
+   // console.log("GEO Zoom",event)
+    props.event = event
+    props.onEvent("zoom")
   }
   const [dimensions, setDimensions] = useState({ width: 480, height: 415 });
   const { width, height, ref: conRef } = useResizeDetector({onResize: () =>{
@@ -168,12 +175,14 @@ let GEOComp = (function () {
         center={props.center}
         geoJson={props.geoJson.value}
         zoom={props.zoom}
+        maxZoom={props.maxZoom}
         pitch={props.pitch}
         height={dimensions.height}
         width={dimensions.width}
         showLogo={props.showLogo}
         onDataChange={handleDataChange}
         onLoadEnd={handleLoadEnd}
+        onZoom={handleZoom}
         onClick={handleClick}
         skipRedraw={skipRedraw}
       />
@@ -187,6 +196,7 @@ let GEOComp = (function () {
         {children.geoJson.propertyView({ label: "geoJson" })}
         {children.center.propertyView({ label: "center" })}
         {children.zoom.propertyView({ label: "zoom" })}
+        {children.zoom.propertyView({ label: "maxZoom" })}
         {children.pitch.propertyView({ label: "pitch" })}
         <span>Hide <b>logo</b> only if you are entitled</span>
         {children.showLogo.propertyView({ label: "Show logo" })}
@@ -215,12 +225,9 @@ GEOComp = class extends GEOComp {
 export default withExposingConfigs(GEOComp, [
   new NameConfig("center", trans("component.center")),
   new NameConfig("zoom", trans("component.zoom")),
+  new NameConfig("maxZoom", trans("component.maxZoom")),
   new NameConfig("pitch", trans("component.pitch")),
   new NameConfig("geoJson", trans("component.geoJson")),
-
+  new NameConfig("event", trans("component.event")),
   new NameConfig("showLogo", trans("component.showLogo")),
- //  new NameConfig("values", trans("component.values")),
-  // new NameConfig("svgDownload", trans("component.svgDownload")),
- //  new NameConfig("imageName", trans("component.imageName")),
- //  new NameConfig("designer", trans("component.designer")),
 ]);

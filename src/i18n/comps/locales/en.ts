@@ -26,8 +26,10 @@ export const en = {
   },
   "component": {
     "geoJson": "geoJson",
+    "event" : "event",
     "zoom": "zoom",
-    "pitch": "pirch",
+    "maxZoom": "maxZoom",
+    "pitch": "pitch",
     "center" : "center",
     "designer": "Designer mode",
     "showLogo" : "Show logo"
