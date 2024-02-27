@@ -21,6 +21,7 @@ import { Geo } from "./vendors";
 import { useResizeDetector } from "react-resize-detector";
 import { useState } from "react";
 import {version} from '../package.json';
+import { ObjectEvent } from "ol/Object";
 
 
 export const CompStyles = [
@@ -77,11 +78,11 @@ let GEOComp = (function () {
     center: withDefault(ArrayControl,"[4.6999,52.297]"),
     zoom: withDefault(NumberControl,1),
     maxZoom: withDefault(NumberControl,30),
+    rotation: withDefault(NumberControl,0),
     pitch: withDefault(NumberControl,0),
     geoJson : jsonObjectExposingStateControl("geoJson"),
     event : jsonObjectExposingStateControl("event"),
     showLogo : withDefault(BoolControl,true),
-
     onEvent: eventHandlerControl([
       {
         label: "onChange",
@@ -114,6 +115,7 @@ let GEOComp = (function () {
     pitch : number;
     zoom : number;
     maxZoom: number;
+    rotation: number;
     geoJson: any;
     event : any;
     /*
@@ -126,25 +128,24 @@ let GEOComp = (function () {
     autoHeight: boolean;
   }) => {
   const handleDataChange = (json: string) => {
+    //TODO: Set output variable  props.geoJson.onChange(json);
     _skipRedraw = true //We should not redraw the component
     props.geoJson.onChange(json);
     props.onEvent("change");
   };
   const handleLoadEnd= (event : object) =>{
-    console.log("GEO Loaded",event)
     props.event = event
     props.onEvent("loadend");
   };
   const handleClick = (event : object) =>{
-    //TODO: Set output variable  props.geoJson.onChange(json);
     console.log("GEO Clicked",event)
     props.event = event
     props.onEvent("click");
   }
-  const handleZoom= (event: object) =>{
-   // console.log("GEO Zoom",event)
-    props.event = event
-    props.onEvent("zoom")
+
+  const handleZoom= (event: ObjectEvent,newValue : number) =>{
+      props.event = Object.assign({},event,{newValue})
+      props.onEvent("zoom")
   }
   const [dimensions, setDimensions] = useState({ width: 480, height: 415 });
   const { width, height, ref: conRef } = useResizeDetector({onResize: () =>{
@@ -183,6 +184,7 @@ let GEOComp = (function () {
         zoom={props.zoom}
         maxZoom={props.maxZoom}
         pitch={props.pitch}
+        rotation={props.rotation}
         height={dimensions.height}
         width={dimensions.width}
         showLogo={props.showLogo}
@@ -204,6 +206,7 @@ let GEOComp = (function () {
         {children.zoom.propertyView({ label: "zoom" })}
         {children.maxZoom.propertyView({ label: "maxZoom" })}
         {children.pitch.propertyView({ label: "pitch" })}
+        {children.rotation.propertyView({ label: "rotation" })}
         <span>Hide <b>logo</b> only if you are entitled</span>
         {children.showLogo.propertyView({ label: "Show logo" })}
       </Section>
@@ -232,6 +235,8 @@ export default withExposingConfigs(GEOComp, [
   new NameConfig("center", trans("component.center")),
   new NameConfig("zoom", trans("component.zoom")),
   new NameConfig("maxZoom", trans("component.maxZoom")),
+  new NameConfig("zoomEventTrigger", trans("component.zoomEventTrigger")),
+  new NameConfig("rotation", trans("component.rotation")),
   new NameConfig("pitch", trans("component.pitch")),
   new NameConfig("geoJson", trans("component.geoJson")),
   new NameConfig("event", trans("component.event")),

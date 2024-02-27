@@ -47,7 +47,7 @@ class RotateNorthControl extends Control {
 
 function Geo(props) {
   const [geoRef, setGeoRef] = React.useState();
-  const  geoId = Math.random().toString(16).slice(2);
+  const geoId = Math.random().toString(16).slice(2);
 
   const variants = [
     'standaard',
@@ -93,6 +93,8 @@ function Geo(props) {
           center:  fromLonLat(props.center),
           zoom: props.zoom,
           maxZoom: props.maxZoom, 
+          pitch : props.pitch,
+          rotation: props.rotation
         }),
         target: 'GEO_'+ geoId,
         layers: [baseLayer,geoJson]
@@ -106,8 +108,7 @@ function Geo(props) {
         props.onClick(event)
       });
       map.getView().on('change:resolution', (event) => {
-        //TODO:This event triggers on very small changes, shoud we limit it ?
-        props.onZoom(event)
+        props.onZoom(event, map.getView().getResolution())
       });
 
 
@@ -115,8 +116,9 @@ function Geo(props) {
         //geoCanvas.getElementsByClassName('l7-control-logo')[0].style="display:none" 
       }
     }
-  }, [geoRef, props.center,props.zoom,props.pitch,props.geoJson,
-        props.showLogo,props.onDataChange]);
+  }, [geoRef, props.center,props.zoom,props.maxZoom,props.rotation, props.pitch,props.geoJson,
+      props.showLogo,
+      props.onDataChange,props.onLoadEnd,props.onZoom]);
 
   return (
     <div
@@ -132,15 +134,9 @@ Geo.propTypes = {
   center: PropTypes.array,
   zoom: PropTypes.number,
   maxZoom: PropTypes.number,
+  rotation: PropTypes.number,
   pitch: PropTypes.number,
   geoJson: PropTypes.object,
-
-  /*
-  values: PropTypes.object,
-  svgDownload : PropTypes.bool,
-  imageName : PropTypes.string,
-  designer : PropTypes.bool,
-  */
   showLogo : PropTypes.bool,
   onDataChange: PropTypes.func,
   onLoadEnd: PropTypes.func,
