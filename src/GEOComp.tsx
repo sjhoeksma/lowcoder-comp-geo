@@ -235,7 +235,6 @@ export default withExposingConfigs(GEOComp, [
   new NameConfig("center", trans("component.center")),
   new NameConfig("zoom", trans("component.zoom")),
   new NameConfig("maxZoom", trans("component.maxZoom")),
-  new NameConfig("zoomEventTrigger", trans("component.zoomEventTrigger")),
   new NameConfig("rotation", trans("component.rotation")),
   new NameConfig("pitch", trans("component.pitch")),
   new NameConfig("geoJson", trans("component.geoJson")),
