@@ -63,8 +63,10 @@ export const CompStyles = [
   },
 ] as const;
 
+const defaultMapOptions = i18nObjs.defaultMapJsonOption;
+
 let GEOComp = (function () {
-  //Function to prevent unneeded redraws
+  //Function to prevent unneeded redrawsUICompBuilder
   var _skipRedraw = false;
   const skipRedraw = function () {
     var ret = _skipRedraw;
@@ -182,7 +184,7 @@ let GEOComp = (function () {
           });
         },
       });
-
+      console.log("mapOptions prop before passing to Geo:", props.mapOptions);
       return (
         <div
           className={styles.wrapper}
@@ -201,7 +203,7 @@ let GEOComp = (function () {
           <Geo
             center={props.center}
             geoJson={props.geoJson.value}
-            mapOptions={props.mapOptions.value}
+            mapOptions={props.mapOptions}
             zoom={props.zoom}
             maxZoom={props.maxZoom}
             pitch={props.pitch}

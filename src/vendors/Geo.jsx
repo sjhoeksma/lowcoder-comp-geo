@@ -1,32 +1,20 @@
-
-
-import React, { useState } from 'react';
-import PropTypes from 'prop-types'
-
-//The real GEO OpenLayers packages
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import PropTypes from 'prop-types';
 import 'ol/ol.css';
-import { Map, View } from 'ol/index.js';
-import { Tile as TileLayer } from 'ol/layer.js';
-import { XYZ } from 'ol/source';
-//import ZoomSlider from 'ol/control/ZoomSlider.js';
-import { fromLonLat } from 'ol/proj.js';
-import { Control, defaults as defaultControls } from 'ol/control.js';
-import GeoJSON from 'ol/format/GeoJSON.js';
-import VectorLayer from 'ol/layer/Vector.js';
-import VectorSource from 'ol/source/Vector.js';
-
-
+import Map from 'ol/Map';
+import View from 'ol/View';
+import { Tile as TileLayer, Vector as VectorLayer, VectorTile as VectorTileLayer } from 'ol/layer';
+import { OSM, XYZ, TileWMS, Vector as VectorSource, VectorTile as VectorTileSource } from 'ol/source';
+import MVT from 'ol/format/MVT';
+import GeoJSON from 'ol/format/GeoJSON';
+import { fromLonLat } from 'ol/proj';
+import { Control, defaults as defaultControls } from 'ol/control';
+// import { applyStyle } from 'ol-mapbox-style';
 
 class RotateNorthControl extends Control {
-  /**
-   * @param {Object} [opt_options] Control options.
-   */
-  constructor(opt_options) {
-    const options = opt_options || {};
-
+  constructor(options = {}) {
     const button = document.createElement('button');
     button.innerHTML = 'N';
-
 
     const element = document.createElement('div');
     element.className = 'rotate-north ol-unselectable ol-control';
@@ -45,105 +33,146 @@ class RotateNorthControl extends Control {
   }
 }
 
-function Geo(props) {
-  const [geoRef, setGeoRef] = React.useState();
-  const geoId = Math.random().toString(16).slice(2);
 
-  const variants = [
-    'standaard',
-    'pastel',
-    'grijs',
-    'water',
-  ];
+const Geo = ({ center, zoom, mapOptions, maxZoom, rotation }) => {
+  const mapElementRef = useRef();
+  const [map, setMap] = useState(null);
 
-  var varaint = variants[0]
-
-  const useGeoRef = React.useCallback(ref => {
-    setGeoRef(ref);
-  }, []);
-
-  React.useEffect(() => {
-    if (geoRef && !props.skipRedraw()) {
-      // Rebuild the GEOL7
-      geoRef.innerHTML = "<div id='GEO_" + geoId + "' style='height:" + props.height + "px;position:relative'></div>"
-      //const geoCanvas = document.getElementById("GEO_"+geoId) 
-
-      //The base layer containg the streetmap
-      var baseLayer = new TileLayer({
-        source: new XYZ({
-          url: //'https://service.pdok.nl/hwh/luchtfotorgb/wmts/v1_0/Actueel_ortho25/EPSG:3857/{z}/{x}/{y}.jpeg'
-            'https://tile.openstreetmap.org/{z}/{x}/{y}.png'
-        })
-      })
-
-      const geoJson = new VectorLayer({
-        background: '#1a2b39',
-        source: new VectorSource({
-          url: 'https://openlayers.org/data/vector/ecoregions.json',
-          format: new GeoJSON(),
-        }),
-        style: {
-          'fill-color': ['string', ['get', 'COLOR'], '#eee'],
-        },
-      });
-
-      var map = new Map({
-        controls: defaultControls().extend([new RotateNorthControl()]),
-        view: new View({
-          center: fromLonLat(props.center),
-          zoom: props.zoom,
-          maxZoom: props.maxZoom,
-          pitch: props.pitch,
-          rotation: props.rotation
-        }),
-        target: 'GEO_' + geoId,
-        layers: [baseLayer, geoJson]
-      });
-
-      //Add the supported events
-      map.on('loadend', function (event) {
-        props.onLoadEnd(event)
-      });
-      map.on('click', function (event) {
-        props.onClick(event)
-      });
-      map.getView().on('change:resolution', (event) => {
-        props.onZoom(event, map.getView().getResolution())
-      });
-
-
-      if (!props.showLogo) {
-        //geoCanvas.getElementsByClassName('l7-control-logo')[0].style="display:none" 
-      }
+  const createLayer = (layerConfig) => {
+    switch (layerConfig.type) {
+      case 'mvt':
+        return new VectorTileLayer({
+          source: new VectorTileSource({
+            attributions: layerConfig.attributions,
+            format: new MVT(),
+            url: layerConfig.source.url,
+          }),
+        });
+      case 'wms':
+        return new TileLayer({
+          source: new TileWMS({
+            url: layerConfig.source.url,
+            params: layerConfig.source.params,
+          }),
+        });
+      case 'wfs':
+        return new VectorLayer({
+          source: new VectorSource({
+            format: new GeoJSON(),
+            url: layerConfig.source.url,
+          }),
+        });
+      case 'xyz':
+        return new TileLayer({
+          source: new XYZ({
+            url: layerConfig.source.url,
+          }),
+        });
+      case 'geojson':
+        return new VectorLayer({
+          source: new VectorSource({
+            features: new GeoJSON().readFeatures(layerConfig.source.data),
+          }),
+        });
+      case 'stylegl':
+        // Example: return applyStyle(new VectorTileLayer({ declutter: true }), layerConfig.source.styleURL);
+        break;
+      default:
+        throw new Error(`Unsupported layer type: ${layerConfig.type}`);
     }
-  }, [geoRef, props.center, props.zoom, props.maxZoom, props.rotation, props.pitch, props.geoJson,
-    props.showLogo, props.mapOptions,
-    props.onDataChange, props.onLoadEnd, props.onZoom]);
+  };
 
-  return (
-    <div
-      ref={useGeoRef}
-      style={{ height: '100%', width: '100%' }}
-    ></div>
-  );
-}
+  useEffect(() => {
+    if (!map && mapElementRef.current) {
+      // Sort layers based on the 'order' property before creating them
+      const sortedLayers = mapOptions.layers
+        .sort((a, b) => a.order - b.order)
+        .map(createLayer)
+        .filter(layer => layer !== undefined);
+
+      const olMap = new Map({
+        target: mapElementRef.current,
+        layers: sortedLayers, // Use the sorted array of layers
+        view: new View({
+          center: fromLonLat(center),
+          zoom: zoom,
+          maxZoom: maxZoom,
+          rotation: rotation,
+        }),
+        controls: defaultControls().extend([new RotateNorthControl()]),
+      });
+
+      setMap(olMap);
+    }
+  }, [map, mapOptions, center, zoom, maxZoom, rotation]); // Initial setup effect
+
+
+
+  // Effect to update center
+  useEffect(() => {
+    if (map) {
+      map.getView().setCenter(fromLonLat(center));
+    }
+  }, [center, map]);
+
+  // Effect to update zoom
+  useEffect(() => {
+    if (map) {
+      map.getView().setZoom(zoom);
+    }
+  }, [zoom, map]);
+
+  // Effect to update rotation
+  useEffect(() => {
+    if (map) {
+      map.getView().setRotation(rotation);
+    }
+  }, [rotation, map]);
+
+  // Placeholder for pitch handling (Openlayer 2D not pitch for now)
+  // useEffect(() => {
+  //   if (map && pitch is supported) {
+  //     // Update map view or camera to adjust pitch
+  //   }
+  // }, [pitch, map]);
+
+  // Dynamic layer updating
+  useEffect(() => {
+    if (map) {
+      // Remove all current layers from the map
+      map.getLayers().clear();
+
+      // Sort layers by their 'order' property and add them back
+      const sortedLayers = mapOptions.layers
+        .sort((a, b) => a.order - b.order)
+        .map(createLayer)
+        .filter(layer => layer !== undefined);
+
+      sortedLayers.forEach(layer => {
+        map.addLayer(layer);
+      });
+    }
+  }, [map, mapOptions.layers]); // Listen for changes in mapOptions.layers
+
+  return <div ref={mapElementRef} style={{ height: '100%', width: '100%' }} />;
+};
 
 Geo.propTypes = {
-  mapOptions: PropTypes.object,
-  width: PropTypes.number,
-  height: PropTypes.number,
-  center: PropTypes.array,
-  zoom: PropTypes.number,
+  mapOptions: PropTypes.object.isRequired,
+  width: PropTypes.number.isRequired,
+  height: PropTypes.number.isRequired,
+  center: PropTypes.arrayOf(PropTypes.number).isRequired,
+  zoom: PropTypes.number.isRequired,
   maxZoom: PropTypes.number,
   rotation: PropTypes.number,
-  pitch: PropTypes.number,
   geoJson: PropTypes.object,
   showLogo: PropTypes.bool,
   onDataChange: PropTypes.func,
   onLoadEnd: PropTypes.func,
-  onClick: PropTypes.func,
-  onZoom: PropTypes.func,
-  skipRedraw: PropTypes.func,
+  onClick: PropTypes.func.isRequired,
+  onZoom: PropTypes.func.isRequired,
+  skipRedraw: PropTypes.func.isRequired,
+  pitch: PropTypes.number,
 }
 
 export default Geo;

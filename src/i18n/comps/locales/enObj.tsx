@@ -83,10 +83,11 @@ const defaultMapData = {
       minZoom: 0,
       maxZoom: 22,
       source: {
-        url: "https://basemaps.arcgis.com/v1/arcgis/rest/services/World_Basemap/VectorTileServer/tile/{z}/{y}/{x}.pbf",
+        // url: "https://basemaps.arcgis.com/v1/arcgis/rest/services/World_Basemap/VectorTileServer/tile/{z}/{y}/{x}.pbf",
+        url: "https://wms.wheregroup.com/tileserver/tile/world-0-14/{z}/{x}/{y}.pbf",
       },
       style: {
-        styleURL: "mapbox://styles/mapbox/streets-v11",
+        styleURL: "https://wms.wheregroup.com/tileserver/style/osm-bright.json",
       },
       metadata: {
         title: "World Basemap (Vector Tiles)",
@@ -96,14 +97,15 @@ const defaultMapData = {
       },
     },
     {
-      id: "earthquakesWFS",
+      id: "contoursWFS",
       type: "wfs",
       order: 4,
       minZoom: 0,
       maxZoom: 22,
       source: {
-        url: "https://geoserver.org/earthquakes/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=geoserver:earthquakes&outputFormat=application/json",
+        url: "https://services.seismofaults.eu/geoserver/EDSF/wfs?service=WFS&version=1.1.0&request=GetFeature&typeName=EDSF%3Asubduction_contours&outputFormat=JSON&srsName=urn%3Ax-ogc%3Adef%3Acrs%3AEPSG%3A4326&maxFeatures=1000",
         format: "geojson",
+        version: "1.1.0",
       },
       style: {
         "circle-radius": 6,
@@ -118,11 +120,11 @@ const defaultMapData = {
     {
       id: "historicalMapsXYZ",
       type: "xyz",
-      order: 5,
+      order: 0,
       minZoom: 0,
       maxZoom: 19,
       source: {
-        url: "https://tiles.mapbox.com/v4/mapbox.9e9dbec5/{z}/{x}/{y}.png?access_token=your-mapbox-access-token",
+        url: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
       },
       metadata: {
         title: "Historical Maps",
@@ -138,7 +140,7 @@ const defaultMapData = {
       minZoom: 0,
       maxZoom: 22,
       source: {
-        styleURL: "mapbox://styles/mapbox/outdoors-v11",
+        styleURL: "https://wms.wheregroup.com/tileserver/style/osm-bright.json",
       },
       metadata: {
         title: "Outdoor Adventure Map",
