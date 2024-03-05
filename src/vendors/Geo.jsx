@@ -60,6 +60,8 @@ const Geo = ({ center, zoom, mapOptions, maxZoom, rotation }) => {
           source: new TileWMS({
             url: layerConfig.source.url,
             params: layerConfig.source.params,
+            serverType: layerConfig.source.serverType,
+            crossOrigin: layerConfig.source.crossOrigin,
           }),
         });
       case 'wfs':
@@ -141,6 +143,53 @@ const Geo = ({ center, zoom, mapOptions, maxZoom, rotation }) => {
         }),
         controls: defaultControls().extend([new RotateNorthControl()]),
       });
+
+      // Click event listener for vector features and WMS GetFeatureInfo
+      olMap.on('singleclick', function (evt) {
+        let hasFeature = false;
+
+        olMap.forEachFeatureAtPixel(evt.pixel, function (feature, layer) {
+          // Vector feature click logic
+          console.log(feature.getProperties());
+          hasFeature = true; // Indicate that a vector feature was clicked
+          // Optionally, call onClick or other handlers here
+          return true; // Stop iterating through features
+        });
+
+        // WMS GetFeatureInfo logic
+        if (!hasFeature) { // Only proceed if no vector feature was clicked
+          olMap.getLayers().forEach(layer => {
+            if (layer instanceof TileLayer && layer.getSource() instanceof TileWMS) {
+              const view = olMap.getView();
+              const viewResolution = view.getResolution();
+              const url = layer.getSource().getFeatureInfoUrl(
+                evt.coordinate,
+                viewResolution,
+                'EPSG:3857',
+                { 'INFO_FORMAT': 'text/html' }, // or application/json ?
+              );
+              if (url) {
+                fetch(url)
+                  .then(response => response.text())
+                  .then(html => {
+                    // Display the HTML response in an element, or process JSON as needed
+                    console.log(html);
+                    // Example: document.getElementById('info').innerHTML = html;
+                  });
+              }
+            }
+          });
+        }
+      });
+
+      // Optional: pointer move logic for changing cursor over WMS layers
+      olMap.on('pointermove', function (evt) {
+        if (evt.dragging) return;
+        const pixel = olMap.getEventPixel(evt.originalEvent);
+        const hit = olMap.hasFeatureAtPixel(pixel);
+        olMap.getTargetElement().style.cursor = hit ? 'pointer' : '';
+      });
+
 
       setMap(olMap);
     }
