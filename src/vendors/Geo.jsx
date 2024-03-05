@@ -3,8 +3,10 @@ import PropTypes from 'prop-types';
 import 'ol/ol.css';
 import Map from 'ol/Map';
 import View from 'ol/View';
-import { Tile as TileLayer, Vector as VectorLayer, VectorTile as VectorTileLayer } from 'ol/layer';
+import { Vector as VectorLayer, VectorTile as VectorTileLayer } from 'ol/layer';
 import { OSM, XYZ, TileWMS, Vector as VectorSource, VectorTile as VectorTileSource } from 'ol/source';
+import GeoTIFF from 'ol/source/GeoTIFF.js';
+import TileLayer from 'ol/layer/WebGLTile.js';
 import MVT from 'ol/format/MVT';
 import GeoJSON from 'ol/format/GeoJSON';
 import { fromLonLat } from 'ol/proj';
@@ -44,6 +46,7 @@ const Geo = ({ center, zoom, mapOptions, maxZoom, rotation }) => {
         return new VectorTileLayer({
           minZoom: layerConfig.minZoom,
           maxZoom: layerConfig.maxZoom,
+          visible: layerConfig.visible,
           source: new VectorTileSource({
             attributions: layerConfig.attributions,
             format: new MVT(),
@@ -54,6 +57,7 @@ const Geo = ({ center, zoom, mapOptions, maxZoom, rotation }) => {
         return new TileLayer({
           minZoom: layerConfig.minZoom,
           maxZoom: layerConfig.maxZoom,
+          visible: layerConfig.visible,
           source: new TileWMS({
             url: layerConfig.source.url,
             params: layerConfig.source.params,
@@ -63,6 +67,7 @@ const Geo = ({ center, zoom, mapOptions, maxZoom, rotation }) => {
         return new VectorLayer({
           minZoom: layerConfig.minZoom,
           maxZoom: layerConfig.maxZoom,
+          visible: layerConfig.visible,
           source: new VectorSource({
             format: new GeoJSON(),
             url: layerConfig.source.url,
@@ -72,6 +77,7 @@ const Geo = ({ center, zoom, mapOptions, maxZoom, rotation }) => {
         return new TileLayer({
           minZoom: layerConfig.minZoom,
           maxZoom: layerConfig.maxZoom,
+          visible: layerConfig.visible,
           source: new XYZ({
             url: layerConfig.source.url,
           }),
@@ -80,10 +86,34 @@ const Geo = ({ center, zoom, mapOptions, maxZoom, rotation }) => {
         return new VectorLayer({
           minZoom: layerConfig.minZoom,
           maxZoom: layerConfig.maxZoom,
+          visible: layerConfig.visible,
           source: new VectorSource({
             features: new GeoJSON().readFeatures(layerConfig.source.data),
           }),
         });
+      case 'cog':
+        return new TileLayer({
+          minZoom: layerConfig.minZoom,
+          maxZoom: layerConfig.maxZoom,
+          visible: layerConfig.visible,
+          source: new GeoTIFF({
+            sources: [
+              {
+                url: layerConfig.source.url,
+                tileSize: 512,
+              },
+            ],
+            converToRGB: false,
+            interpolate: false,
+            normalize: true,
+            opaque: false,
+            wrapX: false,
+            projection: 'EPSG:4326',
+
+
+          }),
+        });
+
       case 'stylegl':
         // Example: return applyStyle(new VectorTileLayer({ declutter: true }), layerConfig.source.styleURL);
         break;

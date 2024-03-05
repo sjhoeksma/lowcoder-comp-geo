@@ -8,6 +8,7 @@ const defaultMapData = {
       order: 1,
       minZoom: 0,
       maxZoom: 22,
+      visible: true,
       source: {
         url: "https://ahocevar.com/geoserver/wms",
         layers: "baseLayer",
@@ -38,6 +39,7 @@ const defaultMapData = {
       order: 2,
       minZoom: 0,
       maxZoom: 22,
+      visible: true,
       source: {
         data: {
           type: "FeatureCollection",
@@ -82,6 +84,7 @@ const defaultMapData = {
       order: 3,
       minZoom: 0,
       maxZoom: 22,
+      visible: true,
       source: {
         // url: "https://basemaps.arcgis.com/v1/arcgis/rest/services/World_Basemap/VectorTileServer/tile/{z}/{y}/{x}.pbf",
         url: "https://wms.wheregroup.com/tileserver/tile/world-0-14/{z}/{x}/{y}.pbf",
@@ -102,6 +105,7 @@ const defaultMapData = {
       order: 4,
       minZoom: 0,
       maxZoom: 22,
+      visible: true,
       source: {
         url: "https://services.seismofaults.eu/geoserver/EDSF/wfs?service=WFS&version=1.1.0&request=GetFeature&typeName=EDSF%3Asubduction_contours&outputFormat=JSON&srsName=urn%3Ax-ogc%3Adef%3Acrs%3AEPSG%3A4326&maxFeatures=1000",
         format: "geojson",
@@ -123,6 +127,7 @@ const defaultMapData = {
       order: 0,
       minZoom: 0,
       maxZoom: 19,
+      visible: true,
       source: {
         url: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
       },
@@ -139,8 +144,26 @@ const defaultMapData = {
       order: 6,
       minZoom: 0,
       maxZoom: 22,
+      visible: true,
       source: {
         styleURL: "https://wms.wheregroup.com/tileserver/style/osm-bright.json",
+      },
+      metadata: {
+        title: "Outdoor Adventure Map",
+        abstract:
+          "A map designed for outdoor activities, highlighting trails, terrain, and points of interest.",
+        source: "Mapbox Styles",
+      },
+    },
+    {
+      id: "egyptDSMCOG",
+      type: "cog",
+      order: 7,
+      minZoom: 0,
+      maxZoom: 22,
+      visible: true,
+      source: {
+        url: "https://link.storjshare.io/raw/juj37qat4melrpmooioq65fzgo7q/truemaps-public/aw3d30/output_cog.tif",
       },
       metadata: {
         title: "Outdoor Adventure Map",
