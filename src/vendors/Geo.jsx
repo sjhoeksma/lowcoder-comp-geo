@@ -11,7 +11,6 @@ import MVT from 'ol/format/MVT';
 import GeoJSON from 'ol/format/GeoJSON';
 import { fromLonLat } from 'ol/proj';
 import { Control, defaults as defaultControls } from 'ol/control';
-// import { applyStyle } from 'ol-mapbox-style';
 
 class RotateNorthControl extends Control {
   constructor(options = {}) {
@@ -101,12 +100,13 @@ const Geo = ({ center, zoom, mapOptions, maxZoom, rotation }) => {
               {
                 url: layerConfig.source.url,
                 tileSize: 512,
+                nodata: 0,
               },
             ],
-            converToRGB: false,
-            interpolate: false,
+            converToRGB: true,
+            interpolate: true,
             normalize: true,
-            opaque: false,
+            opaque: true,
             wrapX: false,
             projection: 'EPSG:4326',
 
