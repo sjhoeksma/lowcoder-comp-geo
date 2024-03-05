@@ -5,12 +5,12 @@ import PropTypes from 'prop-types'
 
 //The real GEO OpenLayers packages
 import 'ol/ol.css';
-import {Map, View} from 'ol/index.js';
-import {Tile as TileLayer} from 'ol/layer.js';
-import {XYZ} from 'ol/source';
+import { Map, View } from 'ol/index.js';
+import { Tile as TileLayer } from 'ol/layer.js';
+import { XYZ } from 'ol/source';
 //import ZoomSlider from 'ol/control/ZoomSlider.js';
-import {fromLonLat} from 'ol/proj.js';
-import {Control, defaults as defaultControls} from 'ol/control.js';
+import { fromLonLat } from 'ol/proj.js';
+import { Control, defaults as defaultControls } from 'ol/control.js';
 import GeoJSON from 'ol/format/GeoJSON.js';
 import VectorLayer from 'ol/layer/Vector.js';
 import VectorSource from 'ol/source/Vector.js';
@@ -27,7 +27,7 @@ class RotateNorthControl extends Control {
     const button = document.createElement('button');
     button.innerHTML = 'N';
 
-  
+
     const element = document.createElement('div');
     element.className = 'rotate-north ol-unselectable ol-control';
     element.appendChild(button);
@@ -51,28 +51,28 @@ function Geo(props) {
 
   const variants = [
     'standaard',
-		'pastel',
-		'grijs',
-		'water',
+    'pastel',
+    'grijs',
+    'water',
   ];
 
   var varaint = variants[0]
- 
+
   const useGeoRef = React.useCallback(ref => {
     setGeoRef(ref);
   }, []);
-  
+
   React.useEffect(() => {
     if (geoRef && !props.skipRedraw()) {
       // Rebuild the GEOL7
-      geoRef.innerHTML = "<div id='GEO_"+ geoId+ "' style='height:"+props.height+"px;position:relative'></div>"
+      geoRef.innerHTML = "<div id='GEO_" + geoId + "' style='height:" + props.height + "px;position:relative'></div>"
       //const geoCanvas = document.getElementById("GEO_"+geoId) 
 
       //The base layer containg the streetmap
       var baseLayer = new TileLayer({
         source: new XYZ({
           url: //'https://service.pdok.nl/hwh/luchtfotorgb/wmts/v1_0/Actueel_ortho25/EPSG:3857/{z}/{x}/{y}.jpeg'
-          'https://service.pdok.nl/brt/achtergrondkaart/wmts/v2_0/standaard/EPSG:3857/{z}/{x}/{y}.png'
+            'https://tile.openstreetmap.org/{z}/{x}/{y}.png'
         })
       })
 
@@ -90,21 +90,21 @@ function Geo(props) {
       var map = new Map({
         controls: defaultControls().extend([new RotateNorthControl()]),
         view: new View({
-          center:  fromLonLat(props.center),
+          center: fromLonLat(props.center),
           zoom: props.zoom,
-          maxZoom: props.maxZoom, 
-          pitch : props.pitch,
+          maxZoom: props.maxZoom,
+          pitch: props.pitch,
           rotation: props.rotation
         }),
-        target: 'GEO_'+ geoId,
-        layers: [baseLayer,geoJson]
+        target: 'GEO_' + geoId,
+        layers: [baseLayer, geoJson]
       });
 
       //Add the supported events
       map.on('loadend', function (event) {
         props.onLoadEnd(event)
       });
-      map.on('click', function(event) {
+      map.on('click', function (event) {
         props.onClick(event)
       });
       map.getView().on('change:resolution', (event) => {
@@ -116,9 +116,9 @@ function Geo(props) {
         //geoCanvas.getElementsByClassName('l7-control-logo')[0].style="display:none" 
       }
     }
-  }, [geoRef, props.center,props.zoom,props.maxZoom,props.rotation, props.pitch,props.geoJson,
-      props.showLogo,
-      props.onDataChange,props.onLoadEnd,props.onZoom]);
+  }, [geoRef, props.center, props.zoom, props.maxZoom, props.rotation, props.pitch, props.geoJson,
+    props.showLogo, props.mapOptions,
+    props.onDataChange, props.onLoadEnd, props.onZoom]);
 
   return (
     <div
@@ -129,6 +129,7 @@ function Geo(props) {
 }
 
 Geo.propTypes = {
+  mapOptions: PropTypes.object,
   width: PropTypes.number,
   height: PropTypes.number,
   center: PropTypes.array,
@@ -137,7 +138,7 @@ Geo.propTypes = {
   rotation: PropTypes.number,
   pitch: PropTypes.number,
   geoJson: PropTypes.object,
-  showLogo : PropTypes.bool,
+  showLogo: PropTypes.bool,
   onDataChange: PropTypes.func,
   onLoadEnd: PropTypes.func,
   onClick: PropTypes.func,
