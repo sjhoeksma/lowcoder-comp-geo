@@ -42,6 +42,8 @@ const Geo = ({ center, zoom, mapOptions, maxZoom, rotation }) => {
     switch (layerConfig.type) {
       case 'mvt':
         return new VectorTileLayer({
+          minZoom: layerConfig.minZoom,
+          maxZoom: layerConfig.maxZoom,
           source: new VectorTileSource({
             attributions: layerConfig.attributions,
             format: new MVT(),
@@ -50,6 +52,8 @@ const Geo = ({ center, zoom, mapOptions, maxZoom, rotation }) => {
         });
       case 'wms':
         return new TileLayer({
+          minZoom: layerConfig.minZoom,
+          maxZoom: layerConfig.maxZoom,
           source: new TileWMS({
             url: layerConfig.source.url,
             params: layerConfig.source.params,
@@ -57,6 +61,8 @@ const Geo = ({ center, zoom, mapOptions, maxZoom, rotation }) => {
         });
       case 'wfs':
         return new VectorLayer({
+          minZoom: layerConfig.minZoom,
+          maxZoom: layerConfig.maxZoom,
           source: new VectorSource({
             format: new GeoJSON(),
             url: layerConfig.source.url,
@@ -64,12 +70,16 @@ const Geo = ({ center, zoom, mapOptions, maxZoom, rotation }) => {
         });
       case 'xyz':
         return new TileLayer({
+          minZoom: layerConfig.minZoom,
+          maxZoom: layerConfig.maxZoom,
           source: new XYZ({
             url: layerConfig.source.url,
           }),
         });
       case 'geojson':
         return new VectorLayer({
+          minZoom: layerConfig.minZoom,
+          maxZoom: layerConfig.maxZoom,
           source: new VectorSource({
             features: new GeoJSON().readFeatures(layerConfig.source.data),
           }),
