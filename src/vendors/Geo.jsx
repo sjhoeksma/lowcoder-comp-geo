@@ -232,7 +232,7 @@ const Geo = ({ center, zoom, mapOptions, maxZoom, rotation }) => {
       map.getLayers().clear();
 
       // Sort layers by their 'order' property and add them back
-      const sortedLayers = mapOptions.layers
+      const sortedLayers = (mapOptions.layers ?? [])
         .sort((a, b) => a.order - b.order)
         .map(createLayer)
         .filter(layer => layer !== undefined);

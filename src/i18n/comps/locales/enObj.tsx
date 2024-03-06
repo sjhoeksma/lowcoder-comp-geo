@@ -15,7 +15,7 @@ const defaultMapData = {
         version: "1.3.0",
         params: { LAYERS: "topp:states", TILED: true },
         serverType: "geoserver",
-        crossOrigin: "anonymous",
+        // crossOrigin: "anonymous",
         transition: 0,
       },
       opacity: 1,
