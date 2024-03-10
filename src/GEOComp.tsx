@@ -75,11 +75,12 @@ let GEOComp = (function () {
   const childrenMap = {
     autoHeight: withDefault(AutoHeightControl, "fixed"),
     styles: styleControl(CompStyles),
-    center: withDefault(ArrayControl,"[4.6999,52.297]"),
-    zoom: withDefault(NumberControl,1),
-    maxZoom: withDefault(NumberControl,30),
-    rotation: withDefault(NumberControl,0),
-    pitch: withDefault(NumberControl,0),
+    defaults: withDefault(JSONObjectControl,"{center:[4.6999,52.297],zoom:10,maxZoom:30}"),
+    center: ArrayControl,
+    zoom: NumberControl,
+    maxZoom: NumberControl,
+    rotation: NumberControl,
+    pitch: NumberControl,
     geoJson : jsonObjectExposingStateControl("geoJson"),
     event : jsonObjectExposingStateControl("event"),
     showLogo : withDefault(BoolControl,true),
@@ -118,6 +119,7 @@ let GEOComp = (function () {
     rotation: number;
     geoJson: any;
     event : any;
+    defaults: any;
     /*
     values: object | null | undefined;
     svgDownload: boolean;
@@ -137,10 +139,11 @@ let GEOComp = (function () {
     props.event = event
     props.onEvent("loadend");
   };
-  const handleClick = (event : object) =>{
-    console.log("GEO Clicked",event)
+  const handleClick = (event : object,notify: any) =>{
+    console.log("GEO Clicked",event,notify)
     props.event = event
     props.onEvent("click");
+    notify.show("Clik")
   }
 
   const handleZoom= (event: ObjectEvent,newValue : number) =>{
@@ -166,6 +169,8 @@ let GEOComp = (function () {
     })
   }});
 
+
+
   return (
     <div className={styles.wrapper} style={{
       height: "100%",
@@ -179,11 +184,11 @@ let GEOComp = (function () {
       fontSize: `${props.styles.textSize}`,
     }}>
       <Geo
-        center={props.center}
+        center={ props.center}
         geoJson={props.geoJson.value}
-        zoom={props.zoom}
+        zoom={props.zoom }
         maxZoom={props.maxZoom}
-        pitch={props.pitch}
+        pitch={props.pitch }
         rotation={props.rotation}
         height={dimensions.height}
         width={dimensions.width}
@@ -193,6 +198,7 @@ let GEOComp = (function () {
         onZoom={handleZoom}
         onClick={handleClick}
         skipRedraw={skipRedraw}
+        defaults={props.defaults}
       />
     </div>
   );
@@ -209,6 +215,7 @@ let GEOComp = (function () {
         {children.rotation.propertyView({ label: "rotation" })}
         <span>Hide <b>logo</b> only if you are entitled</span>
         {children.showLogo.propertyView({ label: "Show logo" })}
+        {children.defaults.propertyView({ label: "Defaults" })}
       </Section>
       <Section name="Interaction">
         {children.onEvent.propertyView()}
@@ -232,6 +239,7 @@ GEOComp = class extends GEOComp {
 };
 
 export default withExposingConfigs(GEOComp, [
+  new NameConfig("defaults", trans("component.defaults")),
   new NameConfig("center", trans("component.center")),
   new NameConfig("zoom", trans("component.zoom")),
   new NameConfig("maxZoom", trans("component.maxZoom")),

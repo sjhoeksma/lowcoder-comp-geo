@@ -25,6 +25,7 @@ export const en = {
     "textSize": "Text Size"
   },
   "component": {
+    "defaults" : "defaults",
     "geoJson": "geoJson",
     "event" : "event",
     "zoom": "zoom",

@@ -5,45 +5,20 @@ import PropTypes from 'prop-types'
 
 //The real GEO OpenLayers packages
 import 'ol/ol.css';
-import {Map, View} from 'ol/index.js';
-import {Tile as TileLayer} from 'ol/layer.js';
+import 'ol-ext/dist/ol-ext.css';
+import {Map, View} from 'ol/index';
+import {Tile as TileLayer} from 'ol/layer';
 import {XYZ} from 'ol/source';
 //import ZoomSlider from 'ol/control/ZoomSlider.js';
-import {fromLonLat} from 'ol/proj.js';
-import {Control, defaults as defaultControls} from 'ol/control.js';
-import GeoJSON from 'ol/format/GeoJSON.js';
-import VectorLayer from 'ol/layer/Vector.js';
-import VectorSource from 'ol/source/Vector.js';
-
-
-
-class RotateNorthControl extends Control {
-  /**
-   * @param {Object} [opt_options] Control options.
-   */
-  constructor(opt_options) {
-    const options = opt_options || {};
-
-    const button = document.createElement('button');
-    button.innerHTML = 'N';
-
-  
-    const element = document.createElement('div');
-    element.className = 'rotate-north ol-unselectable ol-control';
-    element.appendChild(button);
-
-    super({
-      element: element,
-      target: options.target,
-    });
-
-    button.addEventListener('click', this.handleRotateNorth.bind(this), false);
-  }
-
-  handleRotateNorth() {
-    this.getMap().getView().setRotation(0);
-  }
-}
+import {fromLonLat} from 'ol/proj';
+import {Control, defaults as defaultControls, FullScreen, Zoom } from 'ol/control';
+import GeoJSON from 'ol/format/GeoJSON';
+import VectorLayer from 'ol/layer/Vector';
+import VectorSource from 'ol/source/Vector';
+import GeolocationBar from 'ol-ext/control/GeolocationBar'
+import OSM from 'ol/source/OSM'
+import CanvasScaleLine from 'ol-ext/control/CanvasScaleLine'
+import Notification from 'ol-ext/control/Notification'
 
 function Geo(props) {
   const [geoRef, setGeoRef] = React.useState();
@@ -76,6 +51,11 @@ function Geo(props) {
         })
       })
 
+      var osm = new TileLayer({
+        title: "OSM",
+        source: new OSM(),
+      })
+
       const geoJson = new VectorLayer({
         background: '#1a2b39',
         source: new VectorSource({
@@ -87,28 +67,63 @@ function Geo(props) {
         },
       });
 
+      // New vector layer
+      var vector = new VectorLayer({
+        name: 'tracker',
+        source: new VectorSource()
+      });
+
+      const map_controls = [ 
+        new FullScreen(),
+        new GeolocationBar({
+          source: vector.getSource(),
+          followTrack: 'auto',
+          minZoom: 16,
+          minAccuracy:10000
+        }),
+        new Zoom({
+          zoomInLabel: '+',
+          zoomOutLabel: '-'
+        }),
+      ];
+      
+
       var map = new Map({
-        controls: defaultControls().extend([new RotateNorthControl()]),
+        controls: map_controls,
         view: new View({
-          center:  fromLonLat(props.center),
-          zoom: props.zoom,
-          maxZoom: props.maxZoom, 
-          pitch : props.pitch,
-          rotation: props.rotation
+          center:  fromLonLat((props.center.length==2 ? props.center : props.defaults.center) || []),
+          zoom: props.zoom || props.defaults.zoom ,
+          maxZoom: props.maxZoom || props.defaults.maxZoom || 1000, 
+          pitch : props.pitch || props.defaults.pitch,
+          rotation: props.rotation || props.defaults.rotation
         }),
         target: 'GEO_'+ geoId,
-        layers: [baseLayer,geoJson]
+        layers: [
+        //  baseLayer,
+          osm,
+         // geoJson,
+          vector,
+        ]
       });
+
+      // CanvasScaleLine control
+      var scaleLineControl = new CanvasScaleLine();
+      map.addControl(scaleLineControl);
+
+      // Notification Control
+      var notification = new Notification({
+      });
+      map.addControl(notification);
 
       //Add the supported events
       map.on('loadend', function (event) {
-        props.onLoadEnd(event)
+        props.onLoadEnd(event,notification)
       });
       map.on('click', function(event) {
-        props.onClick(event)
+        props.onClick(event,notification)
       });
       map.getView().on('change:resolution', (event) => {
-        props.onZoom(event, map.getView().getResolution())
+        props.onZoom(event, map.getView().getResolution(),notification)
       });
 
 
@@ -118,7 +133,8 @@ function Geo(props) {
     }
   }, [geoRef, props.center,props.zoom,props.maxZoom,props.rotation, props.pitch,props.geoJson,
       props.showLogo,
-      props.onDataChange,props.onLoadEnd,props.onZoom]);
+      props.onDataChange,props.onLoadEnd,props.onZoom,props.defaults
+    ]);
 
   return (
     <div
@@ -143,6 +159,7 @@ Geo.propTypes = {
   onClick: PropTypes.func,
   onZoom: PropTypes.func,
   skipRedraw: PropTypes.func,
+  defaults: PropTypes.object,
 }
 
 export default Geo;
