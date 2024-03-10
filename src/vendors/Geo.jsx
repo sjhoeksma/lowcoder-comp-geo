@@ -1,27 +1,36 @@
-
+//CSS
+import 'ol/ol.css';
+import 'ol-ext/dist/ol-ext.css';
+import "@fortawesome/fontawesome-free/css/all.css"
 
 import React, { useState } from 'react';
 import PropTypes from 'prop-types'
 
 //The real GEO OpenLayers packages
-import 'ol/ol.css';
-import 'ol-ext/dist/ol-ext.css';
 import {Map, View} from 'ol/index';
 import {Tile as TileLayer} from 'ol/layer';
 import {XYZ} from 'ol/source';
+import {LineString,Polygon} from 'ol/geom';
 //import ZoomSlider from 'ol/control/ZoomSlider.js';
 import {fromLonLat} from 'ol/proj';
 import {Control, defaults as defaultControls, FullScreen, Zoom } from 'ol/control';
 import GeoJSON from 'ol/format/GeoJSON';
 import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
-import GeolocationBar from 'ol-ext/control/GeolocationBar'
 import OSM from 'ol/source/OSM'
+import GeolocationBar from 'ol-ext/control/GeolocationBar'
 import CanvasScaleLine from 'ol-ext/control/CanvasScaleLine'
 import Notification from 'ol-ext/control/Notification'
+import Bar from 'ol-ext/control/Bar'
+import Button from 'ol-ext/control/Button'
+import Toggle from 'ol-ext/control/Toggle'
+import Select from 'ol-ext/control/Select'
+import Draw from 'ol/interaction/Draw'
+
 
 function Geo(props) {
   const [geoRef, setGeoRef] = React.useState();
+  const [geoLoc,setGeoLoc] = React.useState();
   const geoId = Math.random().toString(16).slice(2);
 
   const variants = [
@@ -32,13 +41,33 @@ function Geo(props) {
   ];
 
   var varaint = variants[0]
- 
-  const useGeoRef = React.useCallback(ref => {
-    setGeoRef(ref);
+
+   const useGeoRef = React.useCallback(ref => {
+    //Fetch the geolocation based on browser or ip
+    navigator.geolocation.getCurrentPosition(
+      (success)=>{
+        setGeoLoc([success.coords.longitude,success.coords.latitude]) 
+        setGeoRef(ref);
+      },
+      (error)=>{
+        fetch('https://ipapi.co/json/')
+        .then(function(response) {
+          if (!response.ok) {
+            setGeoRef(ref);
+          } else {
+           response.json().then(function(data) {
+            setGeoLoc([data.longitude,data.latitude])  
+            setGeoRef(ref);
+          })
+          }
+        })
+      },
+      {maximumAge:60000,timeout:5000,enableHighAccuracy:false});
   }, []);
-  
+
   React.useEffect(() => {
     if (geoRef && !props.skipRedraw()) {
+      //console.log("Redraw")
       // Rebuild the GEOL7
       geoRef.innerHTML = "<div id='GEO_"+ geoId+ "' style='height:"+props.height+"px;position:relative'></div>"
       //const geoCanvas = document.getElementById("GEO_"+geoId) 
@@ -91,7 +120,7 @@ function Geo(props) {
       var map = new Map({
         controls: map_controls,
         view: new View({
-          center:  fromLonLat((props.center.length==2 ? props.center : props.defaults.center) || []),
+          center:  fromLonLat((props.center.length==2 ? props.center : props.defaults.center) || geoLoc || []),
           zoom: props.zoom || props.defaults.zoom ,
           maxZoom: props.maxZoom || props.defaults.maxZoom || 1000, 
           pitch : props.pitch || props.defaults.pitch,
@@ -105,6 +134,74 @@ function Geo(props) {
           vector,
         ]
       });
+
+      var mainbar = new Bar();
+      mainbar.setPosition("top-left")
+      map.addControl(mainbar);
+
+          // Edit control bar 
+      var editbar = new Bar({
+        toggleOne: true,	// one control active at the same time
+        group:false			// group controls together
+      });
+      mainbar.addControl(editbar);
+
+      // Add editing tools
+      var pedit = new Toggle({
+        html: '<i class="fa fa-map-marker" ></i>',
+        title: 'Point',
+        interaction: new Draw({
+          type: 'Point',
+          source: vector.getSource()
+        })
+      });
+      editbar.addControl ( pedit );
+
+      var ledit = new Toggle({
+        html: '<i class="fa fa-share-alt" ></i>',
+        title: 'LineString',
+        interaction: new Draw({
+          type: 'LineString',
+          source: vector.getSource(),
+          // Count inserted points
+          geometryFunction: function(coordinates, geometry) {
+              if (geometry) geometry.setCoordinates(coordinates);
+            else geometry = new LineString(coordinates);
+            this.nbpts = geometry.getCoordinates().length;
+            return geometry;
+          }
+        })
+      });
+      editbar.addControl ( ledit );
+
+      var fedit = new Toggle({
+        html: '<i class="fa fa-bookmark fa-rotate-270" ></i>',
+        title: 'Polygon',
+        interaction: new Draw({
+          type: 'Polygon',
+          source: vector.getSource(),
+          // Count inserted points
+          geometryFunction: function(coordinates, geometry) {
+            this.nbpts = coordinates[0].length;
+            if (geometry) geometry.setCoordinates([coordinates[0].concat([coordinates[0][0]])]);
+            else geometry = new Polygon(coordinates);
+            return geometry;
+          }
+        })
+      });
+      editbar.addControl ( fedit );
+
+      // Add a simple push button to save features
+      var save = new Button({
+        html: '<i class="fas fa-download"></i>',
+        title: "Save",
+        handleClick: function(e) {
+          var json= new GeoJSON().writeFeatures(vector.getSource().getFeatures());
+          console.log(json);
+        }
+      });
+      mainbar.addControl ( save );
+
 
       // CanvasScaleLine control
       var scaleLineControl = new CanvasScaleLine();
@@ -133,8 +230,8 @@ function Geo(props) {
     }
   }, [geoRef, props.center,props.zoom,props.maxZoom,props.rotation, props.pitch,props.geoJson,
       props.showLogo,
-      props.onDataChange,props.onLoadEnd,props.onZoom,props.defaults
-    ]);
+      props.onDataChange,props.onLoadEnd,props.onZoom,props.defaults,geoLoc
+  ]);
 
   return (
     <div

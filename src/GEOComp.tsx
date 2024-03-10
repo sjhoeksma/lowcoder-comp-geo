@@ -75,7 +75,7 @@ let GEOComp = (function () {
   const childrenMap = {
     autoHeight: withDefault(AutoHeightControl, "fixed"),
     styles: styleControl(CompStyles),
-    defaults: withDefault(JSONObjectControl,"{center:[4.6999,52.297],zoom:10,maxZoom:30}"),
+    defaults: withDefault(JSONObjectControl,"{zoom:10,maxZoom:30}"),
     center: ArrayControl,
     zoom: NumberControl,
     maxZoom: NumberControl,
@@ -140,10 +140,10 @@ let GEOComp = (function () {
     props.onEvent("loadend");
   };
   const handleClick = (event : object,notify: any) =>{
-    console.log("GEO Clicked",event,notify)
     props.event = event
-    props.onEvent("click");
-    notify.show("Clik")
+    if (props.onEvent("click")) {
+      notify.show("Clik")
+    }
   }
 
   const handleZoom= (event: ObjectEvent,newValue : number) =>{
@@ -215,13 +215,15 @@ let GEOComp = (function () {
         {children.rotation.propertyView({ label: "rotation" })}
         <span>Hide <b>logo</b> only if you are entitled</span>
         {children.showLogo.propertyView({ label: "Show logo" })}
-        {children.defaults.propertyView({ label: "Defaults" })}
       </Section>
       <Section name="Interaction">
         {children.onEvent.propertyView()}
       </Section>
       <Section name="Styles">
         {children.styles.getPropertyView()}
+      </Section>
+      <Section name="JSON Controled">
+        {children.defaults.propertyView({ label: "defaults" })}
       </Section>
       <div >
         <div style={{"float":"right","marginRight": "15px"}}>Version :  {version}</div>
