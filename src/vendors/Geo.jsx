@@ -11,6 +11,8 @@ import MVT from 'ol/format/MVT';
 import GeoJSON from 'ol/format/GeoJSON';
 import { fromLonLat } from 'ol/proj';
 import { Control, defaults as defaultControls } from 'ol/control';
+import { Style, Stroke, Fill, Circle as CircleStyle } from 'ol/style';
+
 
 class RotateNorthControl extends Control {
   constructor(options = {}) {
@@ -89,9 +91,30 @@ const Geo = ({ center, zoom, mapOptions, maxZoom, rotation }) => {
           maxZoom: layerConfig.maxZoom,
           visible: layerConfig.visible,
           source: new VectorSource({
-            features: new GeoJSON().readFeatures(layerConfig.source.data),
+            features: new GeoJSON().readFeatures(layerConfig.source.data, {
+              // Ensure the features are read with the correct projection
+              dataProjection: 'EPSG:4326', // Assuming the GeoJSON is in WGS 84
+              featureProjection: 'EPSG:3857' // Assuming the map projection
+            }),
+          }),
+          // Add this line to apply a generic style to the layer
+          style: new Style({
+            stroke: new Stroke({
+              color: 'blue',
+              width: 3,
+            }),
+            fill: new Fill({
+              color: 'rgba(0, 0, 255, 0.1)',
+            }),
+            image: new CircleStyle({
+              radius: 7,
+              fill: new Fill({
+                color: 'blue',
+              }),
+            }),
           }),
         });
+
       case 'cog':
         return new TileLayer({
           minZoom: layerConfig.minZoom,
