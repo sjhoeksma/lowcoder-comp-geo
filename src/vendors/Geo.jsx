@@ -42,6 +42,11 @@ const Geo = ({ center, zoom, mapOptions, maxZoom, rotation }) => {
   const [map, setMap] = useState(null);
 
   const createLayer = (layerConfig) => {
+    if (!layerConfig || !layerConfig.type) {
+      console.warn("Skipping layer due to missing type or configuration:", layerConfig);
+      return null;
+    }
+
     switch (layerConfig.type) {
       case 'mvt':
         return new VectorTileLayer({
@@ -143,26 +148,30 @@ const Geo = ({ center, zoom, mapOptions, maxZoom, rotation }) => {
         // Example: return applyStyle(new VectorTileLayer({ declutter: true }), layerConfig.source.styleURL);
         break;
       default:
-        throw new Error(`Unsupported layer type: ${layerConfig.type}`);
+        console.error(`Unsupported layer type: ${layerConfig.type}`);
+        return null;
     }
   };
 
   useEffect(() => {
     if (!map && mapElementRef.current) {
       // Sort layers based on the 'order' property before creating them
-      const sortedLayers = mapOptions.layers
-        .sort((a, b) => a.order - b.order)
+      const layers = Array.isArray(mapOptions.layers) ? mapOptions.layers : [];
+      const validatedLayers = layers.filter(layer => layer !== null && layer !== undefined);
+
+      const sortedLayers = validatedLayers
+        .sort((a, b) => (a.order || 0) - (b.order || 0))
         .map(createLayer)
-        .filter(layer => layer !== undefined);
+        .filter(layer => layer !== null && layer !== undefined);
 
       const olMap = new Map({
         target: mapElementRef.current,
-        layers: sortedLayers, // Use the sorted array of layers
+        layers: sortedLayers,
         view: new View({
           center: fromLonLat(center),
           zoom: zoom,
-          maxZoom: maxZoom,
-          rotation: rotation,
+          maxZoom: maxZoom || 22,
+          rotation: rotation || 0,
         }),
         controls: defaultControls().extend([new RotateNorthControl()]),
       });
@@ -216,7 +225,7 @@ const Geo = ({ center, zoom, mapOptions, maxZoom, rotation }) => {
 
       setMap(olMap);
     }
-  }, [map, mapOptions, center, zoom, maxZoom, rotation]); // Initial setup effect
+  }, [map, mapOptions, center, zoom, maxZoom, rotation]);
 
 
 
@@ -251,20 +260,19 @@ const Geo = ({ center, zoom, mapOptions, maxZoom, rotation }) => {
   // Dynamic layer updating
   useEffect(() => {
     if (map) {
-      // Remove all current layers from the map
-      map.getLayers().clear();
+      // Validate and create new layers
+      const layers = Array.isArray(mapOptions.layers) ? mapOptions.layers : [];
+      const validatedLayers = layers.filter(layer => layer !== null && layer !== undefined);
 
-      // Sort layers by their 'order' property and add them back
-      const sortedLayers = (mapOptions.layers ?? [])
-        .sort((a, b) => a.order - b.order)
+      const sortedLayers = validatedLayers
+        .sort((a, b) => (a.order || 0) - (b.order || 0))
         .map(createLayer)
-        .filter(layer => layer !== undefined);
+        .filter(layer => layer !== null && layer !== undefined);
 
-      sortedLayers.forEach(layer => {
-        map.addLayer(layer);
-      });
+      map.getLayers().clear();
+      sortedLayers.forEach(layer => map.addLayer(layer));
     }
-  }, [map, mapOptions.layers]); // Listen for changes in mapOptions.layers
+  }, [map, mapOptions.layers]); // Re-evaluate when layers change
 
   return <div ref={mapElementRef} style={{ height: '100%', width: '100%' }} />;
 };
