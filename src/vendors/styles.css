@@ -1,0 +1,71 @@
+.ol-menu {
+ left : 0.5em !important;
+ top: 0.5em !important;
+}
+
+.ol-zoom {
+    left : 0.5em !important;
+    top: 2.0em !important;
+}
+.ol-zoom.nomenu {
+    left : 0.5em !important;
+    top: 0.5em !important;
+}
+
+.ol-overlay.menu {
+    width: 30%;
+    background: #fff;
+    color: #333;
+    box-shadow: 0px 0px 5px #000;
+    padding: 0.5em;
+    -webkit-transition: all 0.25s;
+    transition: all 0.25s;
+  }
+  /* style the close box */
+  .ol-overlay.menu .ol-closebox {
+    left: 1em;
+    top: 0.5em;
+  }
+  .ol-overlay.menu .ol-closebox:before {
+    content:"\f0c9";
+    font-family:FontAwesome;
+  }
+  /* menu button */
+  .ol-control.menu {
+    top: 0.5em;
+    left: 0.5em;
+  }
+  .mainbar.ol-top {
+    top: 5.5em !important;
+  }
+  .mainbar.ol-top.nomenu {
+    top: 4.5em !important;
+  }
+  #menuTitle{
+    margin-top: -0.5em;
+    padding-left: 2.5em;
+    font-size: 0.7em;
+  }
+  #menuContent {
+    margin-top: -0.5em;
+    font-size: 0.9em;
+  }
+  .ol-timeline .ol-scroll {
+    height: 3em;
+  }
+  .ol-timeline .ol-feature {
+    transform: translateX(-50%);
+  }
+  .ol-timeline.ol-zoomhover .ol-scroll .ol-feature:hover, 
+  .ol-timeline.ol-zoomhover .ol-scroll .ol-feature.ol-select {
+    transform: translateX(-50%) scale(2);
+  }
+  .ol-bar.timeline {
+    bottom : 3.5em !important;
+  }
+  .ol-geobt.timeline {
+    bottom : 5.5em ;
+  }
+  .ol-scale-line.timeline {
+    bottom : 3.5em;
+  }

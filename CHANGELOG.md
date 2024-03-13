@@ -11,12 +11,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add configruation by definition single json file using query
 - Add definitions of layers which can be loaded from array of objects using query
 - Add Layer Selection based on list
-- Add option to focus on browers/ip location
 - Add option to have gpsRecord vector
 - Add global property array which is used as default
 - Add Historic map: https://viglino.github.io/ol-ext/examples/storymap/map.historical.html
 - Add Swipe https://viglino.github.io/ol-ext/examples/control/map.control.swipe.html
 - Add overlay menu : https://viglino.github.io/ol-ext/examples/control/map.control.overlay.menu.html
+- Add method for notification, move var outside
+- Use Translate
+- Split code into create mapviewer and update controls
+
+
 
 
 <!-- 
