@@ -9,7 +9,7 @@ import GeoTIFF from 'ol/source/GeoTIFF.js';
 import TileLayer from 'ol/layer/WebGLTile.js';
 import MVT from 'ol/format/MVT';
 import GeoJSON from 'ol/format/GeoJSON';
-import { fromLonLat } from 'ol/proj';
+import { fromLonLat, transformExtent } from 'ol/proj';
 import { Control, defaults as defaultControls } from 'ol/control';
 import { Style, Stroke, Fill, Circle as CircleStyle } from 'ol/style';
 
@@ -37,7 +37,7 @@ class RotateNorthControl extends Control {
 }
 
 
-const Geo = ({ center, zoom, mapOptions, maxZoom, rotation }) => {
+const Geo = ({ center, zoom, onZoom, mapOptions, maxZoom, rotation, onBboxChange }) => {
   const mapElementRef = useRef();
   const [map, setMap] = useState(null);
 
@@ -240,8 +240,18 @@ const Geo = ({ center, zoom, mapOptions, maxZoom, rotation }) => {
   useEffect(() => {
     if (map) {
       map.getView().setZoom(zoom);
+      onZoom(zoom);
+
     }
   }, [zoom, map]);
+
+  // onZoom change get current zoom
+  useEffect(() => {
+    if (map) {
+      const zoom = map.getView().getZoom();
+      onZoom(zoom);
+    }
+  }, [map, onZoom]);
 
   // Effect to update rotation
   useEffect(() => {
@@ -250,12 +260,21 @@ const Geo = ({ center, zoom, mapOptions, maxZoom, rotation }) => {
     }
   }, [rotation, map]);
 
-  // Placeholder for pitch handling (Openlayer 2D not pitch for now)
-  // useEffect(() => {
-  //   if (map && pitch is supported) {
-  //     // Update map view or camera to adjust pitch
-  //   }
-  // }, [pitch, map]);
+  // BBOX change 
+  useEffect(() => {
+    if (map) {
+
+      const updateBbox = () => {
+        const extent = map.getView().calculateExtent(map.getSize()); // Get the current extent
+        const transformedExtent = transformExtent(extent, 'EPSG:3857', 'EPSG:4326'); // Transform the extent to WGS 84
+        onBboxChange(transformedExtent); // Call the callback with the updated bbox
+      };
+
+      map.on('moveend', updateBbox);
+      // Cleanup function
+      return () => map.un('moveend', updateBbox);
+    }
+  }, [map, onBboxChange]);
 
   // Dynamic layer updating
   useEffect(() => {
@@ -282,17 +301,18 @@ Geo.propTypes = {
   width: PropTypes.number.isRequired,
   height: PropTypes.number.isRequired,
   center: PropTypes.arrayOf(PropTypes.number).isRequired,
-  zoom: PropTypes.number.isRequired,
+  zoom: PropTypes.number,
   maxZoom: PropTypes.number,
   rotation: PropTypes.number,
   geoJson: PropTypes.object,
   showLogo: PropTypes.bool,
   onDataChange: PropTypes.func,
   onLoadEnd: PropTypes.func,
-  onClick: PropTypes.func.isRequired,
-  onZoom: PropTypes.func.isRequired,
-  skipRedraw: PropTypes.func.isRequired,
-  pitch: PropTypes.number,
+  onClick: PropTypes.func,
+  onZoom: PropTypes.func,
+  skipRedraw: PropTypes.func,
+  onBboxChange: PropTypes.func,
+  currentBbox: PropTypes.object,
 }
 
 export default Geo;

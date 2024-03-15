@@ -4,6 +4,7 @@ import {
   BoolControl,
   stringSimpleControl,
   JSONObjectControl,
+  arrayStringExposingStateControl,
   NumberControl,
   ArrayControl,
   Section,
@@ -23,7 +24,6 @@ import { Geo } from "./vendors";
 import { useResizeDetector } from "react-resize-detector";
 import { useState } from "react";
 import { version } from "../package.json";
-import { ObjectEvent } from "ol/Object";
 
 export const CompStyles = [
   {
@@ -63,8 +63,6 @@ export const CompStyles = [
   },
 ] as const;
 
-const defaultMapOptions = i18nObjs.defaultMapJsonOption;
-
 let GEOComp = (function () {
   //Function to prevent unneeded redrawsUICompBuilder
   var _skipRedraw = false;
@@ -79,9 +77,12 @@ let GEOComp = (function () {
     styles: styleControl(CompStyles),
     center: withDefault(ArrayControl, "[4.6999,52.297]"),
     zoom: withDefault(NumberControl, 1),
+    currentBbox: withDefault(
+      arrayStringExposingStateControl("currentBbox"),
+      "[-180,-90,180,90]"
+    ),
     maxZoom: withDefault(NumberControl, 30),
     rotation: withDefault(NumberControl, 0),
-    pitch: withDefault(NumberControl, 0),
     geoJson: jsonObjectExposingStateControl("geoJson"),
     mapOptions: jsonControl(toObject, i18nObjs.defaultMapJsonOption),
     event: jsonObjectExposingStateControl("event"),
@@ -107,6 +108,11 @@ let GEOComp = (function () {
         value: "zoom",
         description: "Triggers when there is a zoom change within the viewer",
       },
+      {
+        label: "onBboxChange",
+        value: "currentBbox",
+        description: "Triggers when there is a bbox change within the viewer",
+      },
     ] as const),
   };
 
@@ -124,19 +130,13 @@ let GEOComp = (function () {
         textSize: any;
       };
       center: any;
-      pitch: number;
       zoom: number;
+      currentBbox: any;
       maxZoom: number;
       rotation: number;
       geoJson: any;
       mapOptions: any;
       event: any;
-      /*
-    values: object | null | undefined;
-    svgDownload: boolean;
-    imageName : string;
-    designer: boolean;
-    */
       showLogo: boolean;
       autoHeight: boolean;
     }) => {
@@ -156,10 +156,20 @@ let GEOComp = (function () {
         props.onEvent("click");
       };
 
-      const handleZoom = (event: ObjectEvent, newValue: number) => {
-        props.event = Object.assign({}, event, { newValue });
-        props.onEvent("zoom");
+      const handleZoom = (newValue: any) => {
+        console.log("Zoom changed to:", newValue);
+        props.onEvent("zoom", newValue);
+        // set zoom to state
+        // props.zoom.onChange(newValue);
       };
+
+      const handleBboxChange = (bbox: any) => {
+        console.log("Current Bbox:", bbox);
+        props.onEvent("currentBbox", bbox);
+        // set currentBbox to state
+        props.currentBbox.onChange(bbox);
+      };
+
       const [dimensions, setDimensions] = useState({ width: 480, height: 415 });
       const {
         width,
@@ -184,7 +194,7 @@ let GEOComp = (function () {
           });
         },
       });
-      console.log("mapOptions prop before passing to Geo:", props.mapOptions);
+      console.log("mapOptions prop before passing to Geo:", props);
       return (
         <div
           className={styles.wrapper}
@@ -206,7 +216,6 @@ let GEOComp = (function () {
             mapOptions={props.mapOptions}
             zoom={props.zoom}
             maxZoom={props.maxZoom}
-            pitch={props.pitch}
             rotation={props.rotation}
             height={dimensions.height}
             width={dimensions.width}
@@ -216,6 +225,8 @@ let GEOComp = (function () {
             onZoom={handleZoom}
             onClick={handleClick}
             skipRedraw={skipRedraw}
+            onBboxChange={handleBboxChange}
+            currentBbox={props.currentBbox}
           />
         </div>
       );
@@ -230,7 +241,6 @@ let GEOComp = (function () {
             {children.center.propertyView({ label: "center" })}
             {children.zoom.propertyView({ label: "zoom" })}
             {children.maxZoom.propertyView({ label: "maxZoom" })}
-            {children.pitch.propertyView({ label: "pitch" })}
             {children.rotation.propertyView({ label: "rotation" })}
             <span>
               Hide <b>logo</b> only if you are entitled
@@ -275,9 +285,9 @@ export default withExposingConfigs(GEOComp, [
   new NameConfig("zoom", trans("component.zoom")),
   new NameConfig("maxZoom", trans("component.maxZoom")),
   new NameConfig("rotation", trans("component.rotation")),
-  new NameConfig("pitch", trans("component.pitch")),
   new NameConfig("geoJson", trans("component.geoJson")),
   new NameConfig("mapOptions", trans("component.mapOptions")),
   new NameConfig("event", trans("component.event")),
   new NameConfig("showLogo", trans("component.showLogo")),
+  new NameConfig("currentBbox", trans("component.currentBbox")),
 ]);
