@@ -3,6 +3,8 @@ import { CompIDE } from "lowcoder-sdk";
 import { name, version, lowcoder } from "./package.json";
 import compMap from "./src/index";
 import "lowcoder-sdk/dist/style.css";
+import "./dev.css";
+
 
 function CompDevApp() {
   return (

@@ -19,7 +19,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add method for notification, move var outside
 - Use Translate
 - Split code into create mapviewer and update controls
+- Add select, delete, modify buttons
+- Geo Event handler function
+- Catch event when line drawing finished and fire the change event
 
+- In dev environment set "ant-col ant-form-item-control css-dev-only-do-not-override-dkbvqv" max-width:
 
 
 

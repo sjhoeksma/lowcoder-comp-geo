@@ -26,14 +26,17 @@ export const en = {
   },
   "component": {
     "defaults" : "defaults",
-    "geoJson": "geoJson",
+    "drawLayer": "draw",
+    "trackerLayer": "tracker",
     "event" : "event",
     "zoom": "zoom",
     "maxZoom": "Max Zoom",
     "rotation": "rotation",
-    "pitch": "pitch",
+    "bbox": "bbox",
+    "layers": "layers",
     "center" : "center",
     "designer": "Designer mode",
+    "buttons": "Buttons",
     "showLogo" : "Show logo"
   },
   "methods": {

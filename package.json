@@ -21,7 +21,7 @@
     "vite": "^5.1.4"
   },
   "lowcoder": {
-    "description": "A L7 Geo Lowcoder Component Plugin",
+    "description": "A Geo Lowcoder Component Plugin",
     "comps": {
       "geo": {
         "name": "geo",
