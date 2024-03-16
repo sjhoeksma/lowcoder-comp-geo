@@ -18,6 +18,7 @@ import {LineString,Polygon} from 'ol/geom';
 import { fromLonLat, transformExtent } from 'ol/proj';
 import {FullScreen, Zoom } from 'ol/control';
 import {GeoJSON}  from 'ol/format';
+import {Draw,Modify,Snap,Select} from 'ol/interaction'
 
 //Openlayer Extend imports
 import GeolocationBar from 'ol-ext/control/GeolocationBar'
@@ -27,11 +28,9 @@ import Notification from 'ol-ext/control/Notification'
 import Bar from 'ol-ext/control/Bar'
 import Button from 'ol-ext/control/Button'
 import Toggle from 'ol-ext/control/Toggle'
-import Select from 'ol-ext/control/Select'
 import Overlay from 'ol-ext/control/Overlay'
 import Timeline from 'ol-ext/control/Timeline'
 import Swipe from 'ol-ext/control/Swipe'
-import {Draw} from 'ol/interaction'
 import UndoRedo from 'ol-ext/interaction/UndoRedo'
 
 ///Local import
@@ -48,7 +47,7 @@ function Geo(props) {
   //Global notification item
   const [notification] = useState(new Notification({}))
   // Vector layer for drawing
-  const [drawVector] = useState(new VectorLayer({
+  const [drawVector] =useState(new VectorLayer({
       name: 'draw',
       source: new VectorSource(),
       style: geoJsonStyle
@@ -72,8 +71,10 @@ function Geo(props) {
 
   //All buttons are shown by default
   const showButton = function (name ) {
-    return ((props.buttons && props.buttons[name]===false) ||
-      (props.defaults && props.defaults.buttons && props.defaults.buttons[name]===false)) ? false : true
+    var btnBlock = name.split(':')[0]
+    return ((props.buttons && (props.buttons[name]===false || props.buttons[btnBlock]===false)) ||
+      (props.defaults && props.defaults.buttons && (props.defaults.buttons[name]===false || props.defaults.buttons[btnBlock]===false)))
+       ? false : true
   }
   
   //Fetch the geolocation based on browser or ip when center is not set
@@ -121,65 +122,6 @@ function Geo(props) {
          layers: []
        });
 
-      // Click event listener for vector features and WMS GetFeatureInfo
-      olMap.on('singleclick', function (evt) {
-        let hasFeature = false;
-        fireEvent('click:single',evt)
-
-        olMap.forEachFeatureAtPixel(evt.pixel, function (feature, layer) {
-          // Vector feature click logic
-          hasFeature = true; // Indicate that a vector feature was clicked
-          fireEvent('click:feature',{properties: feature.getProperties(),layer})
-          return true; // Stop iterating through features
-        });
-
-        // WMS GetFeatureInfo logic
-        if (!hasFeature) { // Only proceed if no vector feature was clicked
-          olMap.getLayers().forEach(layer => {
-            if (layer instanceof TileLayer && layer.getSource() instanceof TileWMS) {
-              const view = olMap.getView();
-              const viewResolution = view.getResolution();
-              const url = layer.getSource().getFeatureInfoUrl(
-                evt.coordinate,
-                viewResolution,
-                'EPSG:3857',
-                { 'INFO_FORMAT': 'text/html' }, // or application/json ?
-              );
-              if (url) {
-                fetch(url)
-                  .then(response => response.text())
-                  .then(html => {
-                    // Display the HTML response in an element, or process JSON as needed
-                    fireEvent('click:reponse',{reponse: html})
-                    // Example: document.getElementById('info').innerHTML = html;
-                  });
-              }
-            }
-          });
-        }
-      });
-
-      // Optional: pointer move logic for changing cursor over WMS layers
-      olMap.on('pointermove', function (evt) {
-        if (evt.dragging) return;
-        const pixel = olMap.getEventPixel(evt.originalEvent);
-        const hit = olMap.hasFeatureAtPixel(pixel);
-        olMap.getTargetElement().style.cursor = hit ? 'pointer' : '';
-      });
-
-      // Notification Control
-      olMap.addControl(notification);
-
-      //Handle the loaded event
-      olMap.on('loadend', function (event) {
-        fireEvent('loaded',event)
-      });
-
-      //Handle zoom event
-      olMap.getView().on('change:resolution', (event) => {
-        fireEvent('zoom',Object.assign({},event,{newValue: olMap.getView().getResolution()}))
-      });
-
       //Add the buttons contols
       var zoom =  new Zoom({
         className:'ol-zoom',
@@ -193,8 +135,9 @@ function Geo(props) {
       var mainbar = new Bar({className:"mainbar"});
       mainbar.setPosition("top-left")
       if (!showButton('menu')) mainbar.element.classList.add('nomenu')
-      if (showButton('point')|| showButton('line') || showButton('polygon') ||
-      showButton('undo') || showButton('redo') || showButton('save'))  
+      if (showButton('draw:move') || showButton('draw:point') || showButton('draw:line') 
+        || showButton('draw:polygon') || showButton('draw:undo') || showButton('draw:redo') 
+        || showButton('draw:delete' )|| showButton('tracker:save')) 
         olMap.addControl(mainbar);
 
       // Edit control bar 
@@ -202,22 +145,55 @@ function Geo(props) {
         toggleOne: true,	// one control active at the same time
         group:false			// group controls together
       });
-      mainbar.addControl(editbar);
+      if (showButton('draw:move') || showButton('draw:point')|| showButton('draw:line') 
+        || showButton('draw:polygon') || showButton('draw:undo') || showButton('draw:redo') 
+        || showButton('draw:delete'))
+       mainbar.addControl(editbar);
+
+      //Add modify interaction
+      const modify = new Modify({source: drawVector.getSource()});
+      const snap = new Snap({source: drawVector.getSource()});
+      // Add move tools
+      var pmove = new Toggle({
+        html: '<i class="fa fa-up-down-left-right" ></i>',
+        title: 'Move',
+        onToggle: (active)=>{
+          olMap.removeInteraction(snap);
+          olMap.removeInteraction(modify);
+          if (active) {
+            olMap.addInteraction(modify);
+            olMap.addInteraction(snap);
+          }
+        }
+      });
+      pmove.on('change:disable',function(){
+        olMap.removeInteraction(snap);
+        olMap.removeInteraction(modify);
+      })
+      if (showButton('draw:move')) editbar.addControl ( pmove );    
 
       // Add editing tools
       var pedit = new Toggle({
         html: '<i class="fa fa-map-marker" ></i>',
         title: 'Point',
+        onToggle: ()=> {
+          olMap.removeInteraction(snap);
+          olMap.removeInteraction(modify);
+        },
         interaction: new Draw({
           type: 'Point',
-          source: drawVector.getSource()
+          source: drawVector.getSource(),
         })
       });
-      if (showButton('point')) editbar.addControl ( pedit );
+      if (showButton('draw:point')) editbar.addControl ( pedit );
 
       var ledit = new Toggle({
         html: '<i class="fa fa-share-alt" ></i>',
         title: 'Line',
+        onToggle: ()=> {
+          olMap.removeInteraction(snap);
+          olMap.removeInteraction(modify);
+        },
         interaction: new Draw({
           type: 'LineString',
           source: drawVector.getSource(),
@@ -230,11 +206,15 @@ function Geo(props) {
           }
         })
       });
-      if (showButton('line')) editbar.addControl ( ledit );
+      if (showButton('draw:line')) editbar.addControl ( ledit );
 
       var fedit = new Toggle({
         html: '<i class="fa fa-bookmark fa-rotate-270" ></i>',
         title: 'Polygon',
+        onToggle: ()=> {
+          olMap.removeInteraction(snap);
+          olMap.removeInteraction(modify);
+        },
         interaction: new Draw({
           type: 'Polygon',
           style: [lightStroke, darkStroke],
@@ -248,16 +228,33 @@ function Geo(props) {
           }
         })
       });
-      if (showButton('polygon')) editbar.addControl ( fedit );
+      if (showButton('draw:polygon')) editbar.addControl ( fedit );
+
+      //Delete editing tools
+      const pSelect = new Select({source : drawVector.getSource()});
+      pSelect.on('select',(event)=>{
+        event.selected.forEach((f)=>{drawVector.getSource().removeFeature(f)})
+      })
+      var pdelete = new Toggle({
+        html: '<i class="fa fa-trash-can" ></i>',
+        title: 'Delete',
+        interaction: pSelect,
+        onToggle: (active)=>{
+          olMap.removeInteraction(snap);
+          olMap.removeInteraction(modify);
+          if (active) {
+            olMap.addInteraction(snap);
+          }
+        }
+      });
+      if (showButton('draw:delete')) editbar.addControl ( pdelete );
 
       // Undo redo interaction
       var undoInteraction = new UndoRedo();
       undoInteraction.on('stack:add',function(e){
-        _setSkipRedraw(true)
         fireEvent("draw:add", new GeoJSON().writeFeaturesObject(drawVector.getSource().getFeatures()))
       })
       undoInteraction.on('stack:remove',function(e){
-        _setSkipRedraw(true)
         fireEvent("draw:remove", new GeoJSON().writeFeaturesObject(drawVector.getSource().getFeatures()))
       })
       olMap.addInteraction(undoInteraction);
@@ -270,7 +267,7 @@ function Geo(props) {
           undoInteraction.undo();
         }
       });
-      if (showButton('undo')) mainbar.addControl (undo );
+      if (showButton('draw:undo')) mainbar.addControl (undo );
       
       // Add a simple push button to redo features
       var redo = new Button({
@@ -280,7 +277,7 @@ function Geo(props) {
           undoInteraction.redo();
         }
       });
-      if (showButton('redo')) mainbar.addControl (redo);
+      if (showButton('draw:redo')) mainbar.addControl (redo);
 
       // Add a simple push button to save features
       var save = new Button({
@@ -290,7 +287,7 @@ function Geo(props) {
           fireEvent("tracker:save",new GeoJSON().writeFeaturesObjects(trackerVector.getSource().getFeatures()))
         }
       });
-      if (showButton('save')) mainbar.addControl (save );
+      if (showButton('tracker:save')) mainbar.addControl (save );
 
       //Fullscreen
       var fullscreen = new FullScreen()
@@ -316,7 +313,7 @@ function Geo(props) {
         toggleOne: true,	// one control active at the same time
         group:false			// group controls together
       });
-      if (showButton('swipeVertical') || showButton('swipeHorizontal'))
+      if (showButton('swipe:vertical') || showButton('swipe:horizontal'))
           secondbar.addControl(swipebar);
 
       var swipectrl = new Swipe({});
@@ -324,7 +321,7 @@ function Geo(props) {
       //Todo Add the layers for the swipe control
 
       var swipeHorz = new Toggle({
-        html: '<i class="fa fa-grip-lines-vertical"></i>', 
+        html: '<i class="fa fa-grip-lines-vertical fa-rotate-90"></i>', 
         title: "Swipe Horizontal",
         onToggle: function(event) {
           if (event.active) {
@@ -336,10 +333,10 @@ function Geo(props) {
           fireEvent("swipe:horizontal",event)
         }
       });
-      if (showButton('swipeHorizontal')) swipebar.addControl (swipeHorz );
+      if (showButton('swipe:horizontal')) swipebar.addControl (swipeHorz );
 
       var swipeVert = new Toggle({
-        html: '<i class="fa fa-grip-lines-vertical fa-rotate-90"></i>', 
+        html: '<i class="fa fa-grip-lines-vertical "></i>', 
         title: "Swipe Vertical",
         onToggle: function(event) {
           if (event.active) {
@@ -351,7 +348,7 @@ function Geo(props) {
           fireEvent("swipe:vertical",event)
         }
       });
-      if (showButton('swipeVertical')) swipebar.addControl (swipeVert );
+      if (showButton('swipe:vertical')) swipebar.addControl (swipeVert );
 
 
       // Menu Overlay
@@ -467,12 +464,76 @@ function Geo(props) {
         minAccuracy:10000
       });
       if (showButton('tracker')) olMap.addControl(geoTracker)
+
+      //rotateNorth control
       var rotateNorth = new RotateNorthControl();
       if (showButton('rotateNorth')) mainbar.addControl (rotateNorth );
 
       // CanvasScaleLine control
       var scaleLineControl = new CanvasScaleLine();
       if (showButton('scale')) olMap.addControl(scaleLineControl);
+
+      //Handling Events
+      const singleClick =  function (evt) {
+
+        var hasFeature = false;
+        fireEvent('click:single',evt)
+
+        olMap.forEachFeatureAtPixel(evt.pixel, function (feature, layer) {
+          // Vector feature click logic
+          hasFeature = true; // Indicate that a vector feature was clicked
+          fireEvent('click:feature',{properties: feature.getProperties(),layer})
+          return true; // Stop iterating through features
+        });
+
+        // WMS GetFeatureInfo logic
+        if (!hasFeature) { // Only proceed if no vector feature was clicked
+          olMap.getLayers().forEach(layer => {
+            if (layer instanceof TileLayer && layer.getSource() instanceof TileWMS) {
+              const view = olMap.getView();
+              const viewResolution = view.getResolution();
+              const url = layer.getSource().getFeatureInfoUrl(
+                evt.coordinate,
+                viewResolution,
+                'EPSG:3857',
+                { 'INFO_FORMAT': 'text/html' }, // or application/json ?
+              );
+              if (url) {
+                fetch(url)
+                  .then(response => response.text())
+                  .then(html => {
+                    // Display the HTML response in an element, or process JSON as needed
+                    fireEvent('click:reponse',{reponse: html})
+                    // Example: document.getElementById('info').innerHTML = html;
+                  });
+              }
+            }
+          });
+        }
+      }
+      // Click event listener for vector features and WMS GetFeatureInfo
+      olMap.on('singleclick', singleClick);
+
+      // Optional: pointer move logic for changing cursor over WMS layers
+      olMap.on('pointermove', function (evt) {
+        if (evt.dragging) return;
+        const pixel = olMap.getEventPixel(evt.originalEvent);
+        const hit = olMap.hasFeatureAtPixel(pixel);
+        olMap.getTargetElement().style.cursor = hit ? 'pointer' : '';
+      });
+
+      // Notification Control
+      olMap.addControl(notification);
+
+      //Handle the loaded event
+      olMap.on('loadend', function (event) {
+        fireEvent('loaded',event)
+      });
+
+      //Handle zoom event
+      olMap.getView().on('change:resolution', (event) => {
+        fireEvent('zoom',Object.assign({},event,{newValue: olMap.getView().getResolution()}))
+      });
 
       //On move
       olMap.on('moveend', () => {
@@ -537,24 +598,24 @@ function Geo(props) {
         sortedLayers.forEach(layer => map.addLayer(layer));
         //ToDo connect to the switch controler, add draw and tracker layer
 
+        //Trackerlayer
+        map.addLayer(trackerVector)
+   
         //Add drawLayer and values if set
-        var drawSource = new VectorSource()
-        drawVector.setSource(drawSource)
-        map.addLayer(drawVector)
+        drawVector.getSource().clear()
         if (props.drawLayer) {
           try {
             var geojsonFormat = new GeoJSON();
             // reads and converts GeoJSon to Feature Object
             var features = geojsonFormat.readFeatures(props.drawLayer);
-            drawSource.addFeatures(features)
+            drawVector.getSource().addFeatures(features)
           } catch(e){
             if (props.debug) console.log("drawLayer invalid json")
           }
         }
+        map.addLayer(drawVector)
 
-        //Trackerlayer
-        map.addLayer(trackerVector)
-        fireEvent("layers:update",layers)
+       fireEvent("layers:update",layers)
       }
     }, [map, props.layers, props.drawLayer]); // Re-evaluate when layers change
   return (

@@ -32,3 +32,13 @@ export const geoJsonStyle =  new Style({
       }),
     })
 });
+
+export const selectedStyle = new Style({
+  fill: new Fill({
+    color: '#eeeeee',
+  }),
+  stroke: new Stroke({
+    color: 'rgba(255, 255, 255, 0.7)',
+    width: 2,
+  }),
+});

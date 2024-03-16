@@ -68,12 +68,15 @@ var GEOComp = (function () {
      buttons: { //All buttons are shown by default
         menu: false,
         zoom: false,
-        point : false,
-        line: false,
-        polygon: false,
-        redo: false,
-        undo: false,
-        save:false,
+        draw: false, //Will disable all draw buttons
+        draw:select : false,
+        draw:point : false,
+        draw:line: false,
+        draw:polygon: false,
+        draw:delete: false
+        draw:redo: false,
+        draw:undo: false,
+        tracker:save:false,
         scale:false,
         fullscreen:false,
         layers:false,
@@ -81,7 +84,7 @@ var GEOComp = (function () {
         swipeHorizontal: false,
         timeline: false,
         location:false,
-        tracker:false,
+        tracker :false,
         rotateNorth: false,
       }
   */
@@ -135,6 +138,9 @@ var GEOComp = (function () {
       maxZoom:30,
       menuTitle: "Menu",
       menuContent: "No Content",
+      buttons: { 
+        draw: true
+      },
       debug:true
     }`),
     center: ArrayControl,
@@ -153,7 +159,7 @@ var GEOComp = (function () {
     menuTitle: stringSimpleControl(""),
     menuContent: stringSimpleControl(""),
     drawLayer : jsonObjectExposingStateControl("drawLayer",{"type":"FeatureCollection","features":[{"type":"Feature","geometry":{"type":"LineString","coordinates":[[514138.9757700867,6865494.523372142],[528910.431486197,6856739.497812072]]},"properties":null}]}),
-    trackerLayer : jsonObjectExposingStateControl("trackerLayer",{"type":"FeatureCollection","features":[{"type":"Feature","geometry":{"type":"LineString","coordinates":[[514138.9757700867,6865494.523372142],[528910.431486197,6856739.497812072]]},"properties":null}]}),
+    trackerLayer : jsonObjectExposingStateControl("trackerLayer"),
     event : jsonObjectExposingStateControl("event"),
     buttons: withDefault(JSONObjectControl,""),
     onEvent: eventHandlerControl(events),
