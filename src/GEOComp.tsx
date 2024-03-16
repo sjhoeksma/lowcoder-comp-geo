@@ -128,7 +128,7 @@ var GEOComp = (function () {
     },
   ];
   const childrenMap = {
-    autoHeight: withDefault(AutoHeightControl, "fixed"),
+    autoHeight: withDefault(AutoHeightControl, "auto"),
     styles: styleControl(CompStyles),
     defaults: withDefault(JSONObjectControl,`{
       zoom:10,
@@ -288,6 +288,7 @@ var GEOComp = (function () {
         {children.onEvent.propertyView()}
       </Section>
       <Section name="Styles">
+      {children.autoHeight.getPropertyView()}
         {children.styles.getPropertyView()}
       </Section>
       <Section name="Advanced">
