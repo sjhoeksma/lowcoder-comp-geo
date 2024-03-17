@@ -620,7 +620,7 @@ function Geo(props) {
           .map(createLayer)
           .filter(layer => layer !== null && layer !== undefined);
         map.getLayers().clear();
-        sortedLayers.forEach(layer => map.addLayer(layer));
+        sortedLayers.forEach(layer => {if (layer) map.addLayer(layer)});
 
         //Trackerlayer
         if (featureEnabled('tracker')){

@@ -98,6 +98,5 @@ export function createLayer (layerConfig) {
         break;
       default:
         console.error(`Unsupported layer type: ${layerConfig.type}`);
-        return null;
     }
   };

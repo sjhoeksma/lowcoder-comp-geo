@@ -22,31 +22,17 @@
   and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [ToDo]
-
-- Add Buttons to drawlines, undo
-- Make view mobile friendly
+- Make view mobile friendly, lager fonts for buttons
 - Add left mouse menu
 - Add configruation by definition single json file using query
-- Add definitions of layers which can be loaded from array of objects using query
 - Add Layer Selection based on list
-- Add option to have gpsRecord vector
-- Add global property array which is used as default
-- Add Historic map: https://viglino.github.io/ol-ext/examples/storymap/map.historical.html
-- Add Swipe https://viglino.github.io/ol-ext/examples/control/map.control.swipe.html
-- Add overlay menu : https://viglino.github.io/ol-ext/examples/control/map.control.overlay.menu.html
-- Add method for notification, move var outside
+- Add method for notification, outside geo
 - Use Translate
 - Split code into create mapviewer and update controls
-- Add select, delete, modify buttons
 - Geo Event handler function
 - Catch event when line drawing finished and fire the change event
 - Add feature options, to allow drawing,tracker
-
-- In dev environment set "ant-col ant-form-item-control css-dev-only-do-not-override-dkbvqv" max-width:
-
-<!--
-## [Development]
-### Added
-### Changed
-### Removed
--->
+- In developer mode ensure size is set so we remove autoheight and use 100%
+- Add properties viewers for layers, buttons, features
+- Implement kind of layers and do loading of baselayers first
+- Error layer
