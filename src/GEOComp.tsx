@@ -148,7 +148,7 @@ var GEOComp = (function () {
       {
         type : 'xyz',
         source : {
-          url :  'https://service.pdok.nl/brt/achtergrondkaart/wmts/v2_0/standaard/EPSG:3857/{z}/{x}/{y}.png'
+          url :  'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
         }
       }
     ]`),

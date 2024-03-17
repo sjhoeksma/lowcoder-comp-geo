@@ -17,6 +17,11 @@ jobs:
           scope: "@yharby"
       - run: npm install -g yarn
       - run: yarn
-      - run: yarn build_publish
+      - name: Create Release Pull Request or Publish
+        id: changeset
+        uses: changesets/action@v1.4.6
+        with:
+          publish: yarn build_publish
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
