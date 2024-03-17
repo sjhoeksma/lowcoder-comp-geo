@@ -303,7 +303,7 @@ function Geo(props) {
         html: '<i class="fa fa-layer-group"></i>',
         title: "Layers",
         onToggle: function(e) {
-          fireEvent("layers")
+          fireEvent("toggle:layers")
         }
       });
       if (showButton('layers')) secondbar.addControl (layersMenu );
@@ -330,7 +330,7 @@ function Geo(props) {
           } else {
             olMap.removeControl(swipectrl)
           }
-          fireEvent("swipe:horizontal",event)
+          fireEvent("toggle:swipe:horizontal",event)
         }
       });
       if (showButton('swipe:horizontal')) swipebar.addControl (swipeHorz );
@@ -345,7 +345,7 @@ function Geo(props) {
           } else {
             olMap.removeControl(swipectrl)
           }
-          fireEvent("swipe:vertical",event)
+          fireEvent("toggle:swipe:vertical",event)
         }
       });
       if (showButton('swipe:vertical')) swipebar.addControl (swipeVert );
@@ -368,7 +368,7 @@ function Geo(props) {
         title: "Menu",
         onToggle: function(event) { 
           menu.toggle(); 
-          fireEvent("menu:toggle",event)
+          fireEvent("toggle:menu",event)
         }
       });
       if (showButton('menu')) olMap.addControl(toggle);
@@ -417,7 +417,7 @@ function Geo(props) {
         html: '<i class="fa fa-clock"></i>', 
         title: "Timeline",
         onToggle: function(e) {
-          fireEvent("timeline",e)
+          fireEvent("toggle:timeline",e)
         }
       });
       if (showButton('timeline')) secondbar.addControl (timeline );
@@ -527,13 +527,15 @@ function Geo(props) {
 
       //Handle the loaded event
       olMap.on('loadend', function (event) {
-        fireEvent('loaded',event)
+        fireEvent('map:loaded',event)
       });
 
       //Handle zoom event
+      /*
       olMap.getView().on('change:resolution', (event) => {
-        fireEvent('zoom',Object.assign({},event,{newValue: olMap.getView().getResolution()}))
+        fireEvent('map:zoom',Object.assign({},event,{newValue: olMap.getView().getResolution()}))
       });
+      */
 
       //On move
       olMap.on('moveend', () => {
@@ -615,7 +617,7 @@ function Geo(props) {
         }
         map.addLayer(drawVector)
 
-       fireEvent("layers:update",layers)
+       fireEvent("map:layers",layers)
       }
     }, [map, props.layers, props.drawLayer]); // Re-evaluate when layers change
   return (

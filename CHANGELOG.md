@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add select, delete, modify buttons
 - Geo Event handler function
 - Catch event when line drawing finished and fire the change event
+- Add feature options, to allow drawing,tracker
 
 - In dev environment set "ant-col ant-form-item-control css-dev-only-do-not-override-dkbvqv" max-width:
 

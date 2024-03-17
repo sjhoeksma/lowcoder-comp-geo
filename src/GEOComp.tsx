@@ -101,7 +101,7 @@ var GEOComp = (function () {
     },
     {
       label: "onLoad",
-      value: "loaded",
+      value: "map:loaded",
       description: "Triggers when GEO data is loaded",
     },
     {
@@ -115,18 +115,13 @@ var GEOComp = (function () {
       description: "Triggers when there is a click within the viewer",
     },
     {
-      label: "onZoom",
-      value: "zoom",
-      description: "Triggers when there is a zoom change within the viewer",
-    },
-    {
       label: "onBbox",
       value: "bbox",
       description: "Triggers when there is a bbox change",
     },
     {
-      label: "onOther",
-      value: "other",
+      label: "onEvent",
+      value: "event",
       description: "Triggers when there is no special event handler is triggered",
     },
   ];
@@ -203,8 +198,8 @@ var GEOComp = (function () {
       current   : name
     }))
     var n = name.split(":")[0]
-    var eventName = "other"
-    events.forEach((k)=>{if (k.value==n) {eventName=k.value}})
+    var eventName = "event"
+    events.forEach((k)=>{if (k.value==n || k.value==name) {eventName=k.value}})
     switch (eventName){
       case 'draw': 
          setIgnoreUpdate('drawLayer')
