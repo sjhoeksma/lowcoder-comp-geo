@@ -7,10 +7,7 @@ Edit properties explained:
 
 
 # Example
-To help you with understanding how you can use this plugin we have added an [example application](https://github.com/sjhoeksma/lowcoder-comp-geo/blob/main/lowcoder-example/lowcoder-comp-geo.json?raw=true). Just download the json application file and import it within lowcoder. The two images below show the difference between designer and viewer. Within the viewer you see the variable replacement working. 
-
-#### Designer 
-![designer](https://github.com/sjhoeksma/lowcoder-comp-geo/blob/main/images/designer-example.png?raw=true)
+To help you with understanding how you can use this plugin we have added an [example application](https://github.com/sjhoeksma/lowcoder-comp-geo/blob/main/lowcoder-example/lowcoder-comp-geo.json?raw=true). Just download the json application file and import it within lowcoder. 
 
 #### Viewer
 ![viewer](https://github.com/sjhoeksma/lowcoder-comp-geo/blob/main/images/viewer-example.png?raw=true)
