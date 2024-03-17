@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.1
+
+### Patch Changes
+
+- 2c48f97: fix gh actions
+
 ## 0.1.0
 
 ### Minor Changes
