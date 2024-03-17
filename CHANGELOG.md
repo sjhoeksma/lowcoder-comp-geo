@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.1
+
+### Patch Changes
+
+- d938fec: Control Features
+
 ## 0.1.1
 
 ### Patch Changes
