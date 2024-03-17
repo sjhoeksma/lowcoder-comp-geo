@@ -63,6 +63,11 @@ function Geo(props) {
     return !(props.ignoreUpdate && props.ignoreUpdate(name))
   }
 
+  //Function to check if updating of a variable is allowed
+  const featureEnabled = function(name){
+    return !((props.features && props.features[name]===false))
+  }
+
   const fireEvent = function(name ,eventObject ){
     if (props.onEvent) {
       props.onEvent(name,eventObject || {},notification)
@@ -79,7 +84,9 @@ function Geo(props) {
   
   //Fetch the geolocation based on browser or ip when center is not set
   const elementRef = useCallback(ref => {
-    if ((props.center && props.center.length==2) || (props.defaults && props.defaults.center)) {
+    if (!featureEnabled('gpsCentered') || (props.center && props.center.length==2) || (props.defaults && props.defaults.center)) {
+      setGeoLoc((props.center && props.center.length==2) ? props.center : 
+        (props.defaults && props.defaults.center) ? props.defaults.center : [0,0]) 
       setGeoRef(ref);
     } else {
     navigator.geolocation.getCurrentPosition(
@@ -91,6 +98,8 @@ function Geo(props) {
         fetch('https://ipapi.co/json/')
         .then(function(response) {
           if (!response.ok) {
+            setGeoLoc((props.center && props.center.length==2) ? props.center : 
+               (props.defaults && props.defaults.center) ? props.defaults.center : [0,0]) 
             setGeoRef(ref);
           } else {
            response.json().then(function(data) {
@@ -135,159 +144,166 @@ function Geo(props) {
       var mainbar = new Bar({className:"mainbar"});
       mainbar.setPosition("top-left")
       if (!showButton('menu')) mainbar.element.classList.add('nomenu')
-      if (showButton('draw:move') || showButton('draw:point') || showButton('draw:line') 
+      if ((featureEnabled('draw')
+        && (showButton('draw:move') || showButton('draw:point') || showButton('draw:line') 
         || showButton('draw:polygon') || showButton('draw:undo') || showButton('draw:redo') 
-        || showButton('draw:delete' )|| showButton('tracker:save')) 
+        || showButton('draw:delete' )))
+        && (featureEnabled('tracker') && showButton('tracker:save'))) 
         olMap.addControl(mainbar);
 
-      // Edit control bar 
-      var editbar = new Bar({
-        toggleOne: true,	// one control active at the same time
-        group:false			// group controls together
-      });
-      if (showButton('draw:move') || showButton('draw:point')|| showButton('draw:line') 
-        || showButton('draw:polygon') || showButton('draw:undo') || showButton('draw:redo') 
-        || showButton('draw:delete'))
-       mainbar.addControl(editbar);
+      if (featureEnabled('draw')) {
+        // Edit control bar 
+        var editbar = new Bar({
+          toggleOne: true,	// one control active at the same time
+          group:false			// group controls together
+        });
+        if (showButton('draw:move') || showButton('draw:point')|| showButton('draw:line') 
+          || showButton('draw:polygon') || showButton('draw:undo') || showButton('draw:redo') 
+          || showButton('draw:delete'))
+        mainbar.addControl(editbar);
 
-      //Add modify interaction
-      const modify = new Modify({source: drawVector.getSource()});
-      const snap = new Snap({source: drawVector.getSource()});
-      // Add move tools
-      var pmove = new Toggle({
-        html: '<i class="fa fa-up-down-left-right" ></i>',
-        title: 'Move',
-        onToggle: (active)=>{
-          olMap.removeInteraction(snap);
-          olMap.removeInteraction(modify);
-          if (active) {
-            olMap.addInteraction(modify);
-            olMap.addInteraction(snap);
+        //Add modify interaction
+        const modify = new Modify({source: drawVector.getSource()});
+        const snap = new Snap({source: drawVector.getSource()});
+        // Add move tools
+        var pmove = new Toggle({
+          html: '<i class="fa fa-up-down-left-right" ></i>',
+          title: 'Move',
+          onToggle: (active)=>{
+            olMap.removeInteraction(snap);
+            olMap.removeInteraction(modify);
+            if (active) {
+              olMap.addInteraction(modify);
+              olMap.addInteraction(snap);
+            }
           }
-        }
-      });
-      pmove.on('change:disable',function(){
-        olMap.removeInteraction(snap);
-        olMap.removeInteraction(modify);
-      })
-      if (showButton('draw:move')) editbar.addControl ( pmove );    
-
-      // Add editing tools
-      var pedit = new Toggle({
-        html: '<i class="fa fa-map-marker" ></i>',
-        title: 'Point',
-        onToggle: ()=> {
+        });
+        pmove.on('change:disable',function(){
           olMap.removeInteraction(snap);
           olMap.removeInteraction(modify);
-        },
-        interaction: new Draw({
-          type: 'Point',
-          source: drawVector.getSource(),
         })
-      });
-      if (showButton('draw:point')) editbar.addControl ( pedit );
+        if (showButton('draw:move')) editbar.addControl ( pmove );    
 
-      var ledit = new Toggle({
-        html: '<i class="fa fa-share-alt" ></i>',
-        title: 'Line',
-        onToggle: ()=> {
-          olMap.removeInteraction(snap);
-          olMap.removeInteraction(modify);
-        },
-        interaction: new Draw({
-          type: 'LineString',
-          source: drawVector.getSource(),
-          // Count inserted points
-          geometryFunction: function(coordinates, geometry) {
-            if (geometry) geometry.setCoordinates(coordinates);
-            else geometry = new LineString(coordinates);
-            this.nbpts = geometry.getCoordinates().length;
-            return geometry;
-          }
+        // Add editing tools
+        var pedit = new Toggle({
+          html: '<i class="fa fa-map-marker" ></i>',
+          title: 'Point',
+          onToggle: ()=> {
+            olMap.removeInteraction(snap);
+            olMap.removeInteraction(modify);
+          },
+          interaction: new Draw({
+            type: 'Point',
+            source: drawVector.getSource(),
+          })
+        });
+        if (showButton('draw:point')) editbar.addControl ( pedit );
+
+        var ledit = new Toggle({
+          html: '<i class="fa fa-share-alt" ></i>',
+          title: 'Line',
+          onToggle: ()=> {
+            olMap.removeInteraction(snap);
+            olMap.removeInteraction(modify);
+          },
+          interaction: new Draw({
+            type: 'LineString',
+            source: drawVector.getSource(),
+            // Count inserted points
+            geometryFunction: function(coordinates, geometry) {
+              if (geometry) geometry.setCoordinates(coordinates);
+              else geometry = new LineString(coordinates);
+              this.nbpts = geometry.getCoordinates().length;
+              return geometry;
+            }
+          })
+        });
+        if (showButton('draw:line')) editbar.addControl ( ledit );
+
+        var fedit = new Toggle({
+          html: '<i class="fa fa-bookmark fa-rotate-270" ></i>',
+          title: 'Polygon',
+          onToggle: ()=> {
+            olMap.removeInteraction(snap);
+            olMap.removeInteraction(modify);
+          },
+          interaction: new Draw({
+            type: 'Polygon',
+            style: [lightStroke, darkStroke],
+            source: drawVector.getSource(),
+            // Count inserted points
+            geometryFunction: function(coordinates, geometry) {
+              //this.nbpts = coordinates[0].length;
+              if (geometry) geometry.setCoordinates([coordinates[0].concat([coordinates[0][0]])]);
+              else geometry = new Polygon(coordinates);
+              return geometry;
+            }
+          })
+        });
+        if (showButton('draw:polygon')) editbar.addControl ( fedit );
+
+        //Delete editing tools
+        const pSelect = new Select({source : drawVector.getSource()});
+        pSelect.on('select',(event)=>{
+          event.selected.forEach((f)=>{drawVector.getSource().removeFeature(f)})
         })
-      });
-      if (showButton('draw:line')) editbar.addControl ( ledit );
-
-      var fedit = new Toggle({
-        html: '<i class="fa fa-bookmark fa-rotate-270" ></i>',
-        title: 'Polygon',
-        onToggle: ()=> {
-          olMap.removeInteraction(snap);
-          olMap.removeInteraction(modify);
-        },
-        interaction: new Draw({
-          type: 'Polygon',
-          style: [lightStroke, darkStroke],
-          source: drawVector.getSource(),
-          // Count inserted points
-          geometryFunction: function(coordinates, geometry) {
-            //this.nbpts = coordinates[0].length;
-            if (geometry) geometry.setCoordinates([coordinates[0].concat([coordinates[0][0]])]);
-            else geometry = new Polygon(coordinates);
-            return geometry;
+        var pdelete = new Toggle({
+          html: '<i class="fa fa-trash-can" ></i>',
+          title: 'Delete',
+          interaction: pSelect,
+          onToggle: (active)=>{
+            olMap.removeInteraction(snap);
+            olMap.removeInteraction(modify);
+            if (active) {
+              olMap.addInteraction(snap);
+            }
           }
+        });
+        if (showButton('draw:delete')) editbar.addControl ( pdelete );
+
+        // Undo redo interaction
+        var undoInteraction = new UndoRedo();
+        undoInteraction.on('stack:add',function(e){
+          fireEvent("draw:add", new GeoJSON().writeFeaturesObject(drawVector.getSource().getFeatures()))
         })
-      });
-      if (showButton('draw:polygon')) editbar.addControl ( fedit );
+        undoInteraction.on('stack:remove',function(e){
+          fireEvent("draw:remove", new GeoJSON().writeFeaturesObject(drawVector.getSource().getFeatures()))
+        })
+        olMap.addInteraction(undoInteraction);
 
-      //Delete editing tools
-      const pSelect = new Select({source : drawVector.getSource()});
-      pSelect.on('select',(event)=>{
-        event.selected.forEach((f)=>{drawVector.getSource().removeFeature(f)})
-      })
-      var pdelete = new Toggle({
-        html: '<i class="fa fa-trash-can" ></i>',
-        title: 'Delete',
-        interaction: pSelect,
-        onToggle: (active)=>{
-          olMap.removeInteraction(snap);
-          olMap.removeInteraction(modify);
-          if (active) {
-            olMap.addInteraction(snap);
+        // Add a simple push button to undo features
+        var undo = new Button({
+          html: '<i class="fa fa-undo"></i>',
+          title: "Undo",
+          handleClick: function(e) {
+            undoInteraction.undo();
           }
-        }
-      });
-      if (showButton('draw:delete')) editbar.addControl ( pdelete );
+        });
+        if (showButton('draw:undo')) mainbar.addControl (undo );
+        
+        // Add a simple push button to redo features
+        var redo = new Button({
+          html: '<i class="fa fa-redo"></i>',
+          title: "Redo",
+          handleClick: function(e) {
+            undoInteraction.redo();
+          }
+        });
+        if (showButton('draw:redo')) mainbar.addControl (redo);
+      }
 
-      // Undo redo interaction
-      var undoInteraction = new UndoRedo();
-      undoInteraction.on('stack:add',function(e){
-        fireEvent("draw:add", new GeoJSON().writeFeaturesObject(drawVector.getSource().getFeatures()))
-      })
-      undoInteraction.on('stack:remove',function(e){
-        fireEvent("draw:remove", new GeoJSON().writeFeaturesObject(drawVector.getSource().getFeatures()))
-      })
-      olMap.addInteraction(undoInteraction);
-
-      // Add a simple push button to undo features
-      var undo = new Button({
-        html: '<i class="fa fa-undo"></i>',
-        title: "Undo",
-        handleClick: function(e) {
-          undoInteraction.undo();
-        }
-      });
-      if (showButton('draw:undo')) mainbar.addControl (undo );
-      
-      // Add a simple push button to redo features
-      var redo = new Button({
-        html: '<i class="fa fa-redo"></i>',
-        title: "Redo",
-        handleClick: function(e) {
-          undoInteraction.redo();
-        }
-      });
-      if (showButton('draw:redo')) mainbar.addControl (redo);
-
-      // Add a simple push button to save features
-      var save = new Button({
-        html: '<i class="fa fa-download"></i>',
-        title: "Save",
-        handleClick: function(e) {
-          fireEvent("tracker:save",new GeoJSON().writeFeaturesObjects(trackerVector.getSource().getFeatures()))
-        }
-      });
-      if (showButton('tracker:save')) mainbar.addControl (save );
+      //Are we supporting tracker
+      if (featureEnabled('tracker')) {
+        // Add a simple push button to save features
+        var save = new Button({
+          html: '<i class="fa fa-download"></i>',
+          title: "Save",
+          handleClick: function(e) {
+            fireEvent("tracker:save",new GeoJSON().writeFeaturesObjects(trackerVector.getSource().getFeatures()))
+          }
+        });
+        if (showButton('tracker:save')) mainbar.addControl (save );
+      }
 
       //Fullscreen
       var fullscreen = new FullScreen()
@@ -295,8 +311,9 @@ function Geo(props) {
 
       var secondbar = new Bar();
       secondbar.setPosition("top-right")
-      if (showButton('layers')|| showButton('swipeHorizontal') ||showButton('swipeVertical') 
-        || showButton('timeline') ) olMap.addControl(secondbar);
+      if ((featureEnabled('swipe') && (showButton('swipeHorizontal') ||showButton('swipeVertical')))
+        || (featureEnabled('timeline') && showButton('timeline'))
+        || showButton('layers')) olMap.addControl(secondbar);
 
       // Add a simple push button to save features
       var layersMenu = new Toggle({
@@ -308,48 +325,50 @@ function Geo(props) {
       });
       if (showButton('layers')) secondbar.addControl (layersMenu );
 
-      // Swipe control bar 
-      var swipebar = new Bar({
-        toggleOne: true,	// one control active at the same time
-        group:false			// group controls together
-      });
-      if (showButton('swipe:vertical') || showButton('swipe:horizontal'))
-          secondbar.addControl(swipebar);
+       // Swipe control bar 
+      if (featureEnabled('swipe')) {
+        // Swipe control bar 
+        var swipebar = new Bar({
+          toggleOne: true,	// one control active at the same time
+          group:false			// group controls together
+        });
+        if (showButton('swipe:vertical') || showButton('swipe:horizontal'))
+            secondbar.addControl(swipebar);
 
-      var swipectrl = new Swipe({});
-      swipectrl.set('position',0,5)
-      //Todo Add the layers for the swipe control
+        var swipectrl = new Swipe({});
+        swipectrl.set('position',0,5)
+        //Todo Add the layers for the swipe control
 
-      var swipeHorz = new Toggle({
-        html: '<i class="fa fa-grip-lines-vertical fa-rotate-90"></i>', 
-        title: "Swipe Horizontal",
-        onToggle: function(event) {
-          if (event.active) {
-            swipectrl.set('orientation','horizontal')
-            olMap.addControl(swipectrl)
-          } else {
-            olMap.removeControl(swipectrl)
+        var swipeHorz = new Toggle({
+          html: '<i class="fa fa-grip-lines-vertical fa-rotate-90"></i>', 
+          title: "Swipe Horizontal",
+          onToggle: function(event) {
+            if (event.active) {
+              swipectrl.set('orientation','horizontal')
+              olMap.addControl(swipectrl)
+            } else {
+              olMap.removeControl(swipectrl)
+            }
+            fireEvent("toggle:swipe:horizontal",event)
           }
-          fireEvent("toggle:swipe:horizontal",event)
-        }
-      });
-      if (showButton('swipe:horizontal')) swipebar.addControl (swipeHorz );
+        });
+        if (showButton('swipe:horizontal')) swipebar.addControl (swipeHorz );
 
-      var swipeVert = new Toggle({
-        html: '<i class="fa fa-grip-lines-vertical "></i>', 
-        title: "Swipe Vertical",
-        onToggle: function(event) {
-          if (event.active) {
-            swipectrl.set('orientation','vertical')
-            olMap.addControl(swipectrl)
-          } else {
-            olMap.removeControl(swipectrl)
+        var swipeVert = new Toggle({
+          html: '<i class="fa fa-grip-lines-vertical "></i>', 
+          title: "Swipe Vertical",
+          onToggle: function(event) {
+            if (event.active) {
+              swipectrl.set('orientation','vertical')
+              olMap.addControl(swipectrl)
+            } else {
+              olMap.removeControl(swipectrl)
+            }
+            fireEvent("toggle:swipe:vertical",event)
           }
-          fireEvent("toggle:swipe:vertical",event)
-        }
-      });
-      if (showButton('swipe:vertical')) swipebar.addControl (swipeVert );
-
+        });
+        if (showButton('swipe:vertical')) swipebar.addControl (swipeVert );
+      }
 
       // Menu Overlay
       var menu = new Overlay ({ 
@@ -373,77 +392,79 @@ function Geo(props) {
       });
       if (showButton('menu')) olMap.addControl(toggle);
 
-      var histo = [
-        /* no more ?
-        new ol.layer.Geoportail({ 
-          name: '1970',
-          title: '1965-1980',
-          key: 'orthohisto',
-          layer: 'ORTHOIMAGERY.ORTHOPHOTOS.1965-1980' 
-        }),
-        */
-      ]
-      //Timeline
-      var tline = new Timeline({
-        className: 'ol-pointer ol-zoomhover ol-timeline',
-        features: histo,
-        minDate: new Date('1923'),
-        maxDate: new Date(),
-        getFeatureDate: function(l) { return l.get('name'); },
-        getHTML: function(l) { return l.get('name'); }
-      });
-
-      tline.on('scroll', function(e) {
-        var layer, dmin = Infinity;
-        histo.forEach(function(l, i) {
-          var d = new Date(l.get('name'));
-          var dt = Math.abs(e.date-d);
-          if (dt < dmin) {
-            layer = l;
-            dmin = dt;
-          }
-          if (i!==0) l.setVisible(false);
+      if (featureEnabled('timeline')) {
+        var histo = [
+          /* no more ?
+          new ol.layer.Geoportail({ 
+            name: '1970',
+            title: '1965-1980',
+            key: 'orthohisto',
+            layer: 'ORTHOIMAGERY.ORTHOPHOTOS.1965-1980' 
+          }),
+          */
+        ]
+        //Timeline
+        var tline = new Timeline({
+          className: 'ol-pointer ol-zoomhover ol-timeline',
+          features: histo,
+          minDate: new Date('1923'),
+          maxDate: new Date(),
+          getFeatureDate: function(l) { return l.get('name'); },
+          getHTML: function(l) { return l.get('name'); }
         });
-        if (layer){
-          layer.setVisible(true);
-          $('.date').text(layer.get('title') || layer.get('name'));
-        }
-      });
-      tline.on('select', function(e) {
-        tline.setDate(e.feature);
-      });
 
-      var timeline = new Toggle({
-        html: '<i class="fa fa-clock"></i>', 
-        title: "Timeline",
-        onToggle: function(e) {
-          fireEvent("toggle:timeline",e)
-        }
-      });
-      if (showButton('timeline')) secondbar.addControl (timeline );
-      //Toggle the timeline classes
-      timeline.on("change:active",(event)=>{
-        if (event.active) {
-          scaleLineControl.element.classList.add('timeline')
-          geoTracker.element.classList.add('timeline')
-          geoloc.element.classList.add('timeline')
-          olMap.addControl(tline);
-          fireEvent('timeline:active')
-        } else {
-          scaleLineControl.element.classList.remove('timeline')
-          geoTracker.element.classList.remove('timeline')
-          geoloc.element.classList.remove('timeline')
-          olMap.removeControl(tline);
-          //Work arround voor scaleLineControl not moving
-          olMap.removeControl(scaleLineControl);
-          olMap.addControl(scaleLineControl);
-          fireEvent('timeline:inactive')
-        }
-      });
+        tline.on('scroll', function(e) {
+          var layer, dmin = Infinity;
+          histo.forEach(function(l, i) {
+            var d = new Date(l.get('name'));
+            var dt = Math.abs(e.date-d);
+            if (dt < dmin) {
+              layer = l;
+              dmin = dt;
+            }
+            if (i!==0) l.setVisible(false);
+          });
+          if (layer){
+            layer.setVisible(true);
+            $('.date').text(layer.get('title') || layer.get('name'));
+          }
+        });
+        tline.on('select', function(e) {
+          tline.setDate(e.feature);
+        });
+
+        var timeline = new Toggle({
+          html: '<i class="fa fa-clock"></i>', 
+          title: "Timeline",
+          onToggle: function(e) {
+            fireEvent("toggle:timeline",e)
+          }
+        });
+        if (showButton('timeline')) secondbar.addControl (timeline );
+        //Toggle the timeline classes
+        timeline.on("change:active",(event)=>{
+          if (event.active) {
+            scaleLineControl.element.classList.add('timeline')
+            geoTracker.element.classList.add('timeline')
+            geoloc.element.classList.add('timeline')
+            olMap.addControl(tline);
+            fireEvent('timeline:active')
+          } else {
+            scaleLineControl.element.classList.remove('timeline')
+            geoTracker.element.classList.remove('timeline')
+            geoloc.element.classList.remove('timeline')
+            olMap.removeControl(tline);
+            //Work arround voor scaleLineControl not moving
+            olMap.removeControl(scaleLineControl);
+            olMap.addControl(scaleLineControl);
+            fireEvent('timeline:inactive')
+          }
+        });
+      }
 
       //GeoLocation
       var geoloc = new GeolocationButton({
-        title : "GeoLocation",
+        title : "Focus my GeoLocation",
         delay : 5000
       });
       if (showButton('location')) olMap.addControl(geoloc);
@@ -455,15 +476,17 @@ function Geo(props) {
       });
       //change:active
     
-      //Add a GeoTracker
-      var geoTracker = new GeolocationBar({
-        source: trackerVector.getSource(),
-        delay : 5000,
-        followTrack: 'auto',
-        minZoom: 16,
-        minAccuracy:10000
-      });
-      if (showButton('tracker')) olMap.addControl(geoTracker)
+      if (featureEnabled('tracker')) {
+        //Add a GeoTracker
+        var geoTracker = new GeolocationBar({
+          source: trackerVector.getSource(),
+          delay : 5000,
+          followTrack: 'auto',
+          minZoom: 16,
+          minAccuracy:10000
+        });
+        if (showButton('tracker')) olMap.addControl(geoTracker)
+      }
 
       //rotateNorth control
       var rotateNorth = new RotateNorthControl();
@@ -522,9 +545,6 @@ function Geo(props) {
         olMap.getTargetElement().style.cursor = hit ? 'pointer' : '';
       });
 
-      // Notification Control
-      olMap.addControl(notification);
-
       //Handle the loaded event
       olMap.on('loadend', function (event) {
         fireEvent('map:loaded',event)
@@ -544,6 +564,9 @@ function Geo(props) {
         fireEvent('bbox:change',transformedExtent); // Call the callback with the updated bbox
       }
      );
+
+      // Notification Control
+      olMap.addControl(notification);
 
       setMap(olMap)
       }
@@ -598,24 +621,27 @@ function Geo(props) {
           .filter(layer => layer !== null && layer !== undefined);
         map.getLayers().clear();
         sortedLayers.forEach(layer => map.addLayer(layer));
-        //ToDo connect to the switch controler, add draw and tracker layer
 
         //Trackerlayer
-        map.addLayer(trackerVector)
+        if (featureEnabled('tracker')){
+          map.addLayer(trackerVector)
+        }
    
         //Add drawLayer and values if set
-        drawVector.getSource().clear()
-        if (props.drawLayer) {
-          try {
-            var geojsonFormat = new GeoJSON();
-            // reads and converts GeoJSon to Feature Object
-            var features = geojsonFormat.readFeatures(props.drawLayer);
-            drawVector.getSource().addFeatures(features)
-          } catch(e){
-            if (props.debug) console.log("drawLayer invalid json")
+        if (featureEnabled('draw')){
+          drawVector.getSource().clear()
+          if (props.drawLayer) {
+            try {
+              var geojsonFormat = new GeoJSON();
+              // reads and converts GeoJSon to Feature Object
+              var features = geojsonFormat.readFeatures(props.drawLayer);
+              drawVector.getSource().addFeatures(features)
+            } catch(e){
+              if (props.debug) console.log("drawLayer invalid json")
+            }
           }
+          map.addLayer(drawVector)
         }
-        map.addLayer(drawVector)
 
        fireEvent("map:layers",layers)
       }
@@ -647,6 +673,7 @@ Geo.propTypes = {
   ignoreUpdate: PropTypes.func,
   layers: PropTypes.array,
   defaults: PropTypes.object,
+  features: PropTypes.object,
 }
 
 export default Geo;

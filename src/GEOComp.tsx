@@ -156,7 +156,8 @@ var GEOComp = (function () {
     drawLayer : jsonObjectExposingStateControl("drawLayer",{"type":"FeatureCollection","features":[{"type":"Feature","geometry":{"type":"LineString","coordinates":[[514138.9757700867,6865494.523372142],[528910.431486197,6856739.497812072]]},"properties":null}]}),
     trackerLayer : jsonObjectExposingStateControl("trackerLayer"),
     event : jsonObjectExposingStateControl("event"),
-    buttons: withDefault(JSONObjectControl,""),
+    buttons: withDefault(JSONObjectControl,"{menu:false}"),
+    features: withDefault(JSONObjectControl,"{draw:false,swipe:false,tracker:false,timeline:false,gpsCentered:false}"),
     onEvent: eventHandlerControl(events),
   };
 
@@ -186,6 +187,7 @@ var GEOComp = (function () {
     event : any;
     defaults: any;
     buttons: any;
+    features: any;
     menuTitle:string;
     menuContent:string;
     autoHeight: boolean;
@@ -260,6 +262,7 @@ var GEOComp = (function () {
         menuContent={props.menuContent}
         menuTitle={props.menuTitle}
         defaults={props.defaults}
+        features={props.features}
         layers={props.layers}
         onEvent={handleEvent}
         ignoreUpdate={ignoreUpdate}
@@ -270,23 +273,24 @@ var GEOComp = (function () {
 .setPropertyViewFn((children: any) => {
   return (
     <>
-      <Section name="Map Layers">
+      <Section name="Map">
       {children.layers.propertyView({ label: "layers" })}
-      {children.drawLayer.propertyView({ label: "draw" })}
+      {children.drawLayer.propertyView({ label: "drawing" })}
       </Section>
       <Section name="View">
         {children.center.propertyView({ label: "center" })}
         {children.zoom.propertyView({ label: "zoom" })}
         {children.maxZoom.propertyView({ label: "maxZoom" })}
         {children.rotation.propertyView({ label: "rotation" })}
-        {children.buttons.propertyView({ label: "buttons" })}
-      </Section>
-      <Section name="Menu">
-        {children.menuTitle.propertyView({ label: "title" })}
-        {children.menuContent.propertyView({ label: "content" })}
       </Section>
       <Section name="Interaction">
         {children.onEvent.propertyView()}
+      </Section>
+      <Section name="Behavior">
+       {children.features.propertyView({ label: "Enabled features" })}
+       {children.buttons.propertyView({ label: "Visible buttons" })}
+       {children.menuTitle.propertyView({ label: "Menu title" })}
+       {children.menuContent.propertyView({ label: "Menu content" })}
       </Section>
       <Section name="Styles">
       {children.autoHeight.getPropertyView()}
