@@ -13,8 +13,6 @@ jobs:
         with:
           node-version: "20.11.1"
           registry-url: "https://registry.npmjs.org"
-          # Defaults to the user or organization that owns the workflow file
-          scope: "sjhoeksma"
       - run: npm install -g yarn
       - run: yarn
       - name: Create Release Pull Request or Publish
