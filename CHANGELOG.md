@@ -1,3 +1,10 @@
+## [1.0.1-dev.1](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.0.0...v1.0.1-dev.1) (2024-03-18)
+
+
+### Bug Fixes
+
+* Update .releaserc.json and package.json*** ([c7c73dd](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/c7c73ddf6b407af6b749f7903bf59029dad7a918))
+
 # 1.0.0 (2024-03-18)
 
 
