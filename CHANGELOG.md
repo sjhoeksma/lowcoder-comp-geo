@@ -1,3 +1,16 @@
+# [1.1.0](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.0.1...v1.1.0) (2024-03-18)
+
+
+### Bug Fixes
+
+* ci publish ton npm ([99e9a07](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/99e9a0713066a541cf2a815d20410fc618f73f72))
+* testing releases 2 ([bc77406](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/bc77406e0d35a5c854010bc355333c0ca7f1c4de))
+* testing releases 3 ([54fe455](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/54fe4551b831416bfd58a596534fbb9ed6d59669))
+
+
+### Features
+
+* testing releases 1 ([f4e60ad](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/f4e60ad9ad7453c1c0801075d6053b7c2f5f83df))
 
 # [1.1.0-dev.3](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.1.0-dev.2...v1.1.0-dev.3) (2024-03-18)
 
