@@ -35,4 +35,4 @@
 - In developer mode ensure size is set so we remove autoheight and use 100%
 - Add properties viewers for layers, buttons, features
 - Implement kind of layers and do loading of baselayers first
-- Error layer
+- method which will allow to load data into layer, instead of passing it by layer and can be bound to query

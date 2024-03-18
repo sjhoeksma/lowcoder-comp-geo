@@ -568,6 +568,9 @@ function Geo(props) {
       // Notification Control
       olMap.addControl(notification);
 
+      //Add map init event
+      fireEvent('map:init',olMap);
+
       setMap(olMap)
       }
     }, [geoRef,props.defaults, props.buttons]);  
