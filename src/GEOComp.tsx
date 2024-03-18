@@ -105,6 +105,11 @@ var GEOComp = (function () {
       description: "Triggers when GEO data is loaded",
     },
     {
+      label: "onInit",
+      value: "map:init",
+      description: "Triggers when the mapobject is created",
+    },
+    {
       label: "onSwipe",
       value: "swipe",
       description: "Triggers when on swipe events",
@@ -157,7 +162,7 @@ var GEOComp = (function () {
     trackerLayer : jsonObjectExposingStateControl("trackerLayer"),
     event : jsonObjectExposingStateControl("event"),
     buttons: withDefault(JSONObjectControl,"{menu:false}"),
-    features: withDefault(JSONObjectControl,"{draw:false,swipe:false,tracker:false,timeline:false,gpsCentered:false}"),
+    features: withDefault(JSONObjectControl,"{draw:false,swipe:false,tracker:false,timeline:false,gpsCentered:true}"),
     onEvent: eventHandlerControl(events),
   };
 
@@ -313,6 +318,25 @@ GEOComp = class extends GEOComp {
     return this.children.autoHeight.getView();
   }
 };
+
+/*
+const ModuleCompWithExposingMethods = withMethodExposing(GEOComp, (comp) => {
+  return comp.getModuleMethodConfigInfo();
+});
+
+
+export const ModuleComp = withExposingRaw(
+  ModuleCompWithExposingMethods,
+  (comp) => comp.getOutputDesc(),
+  (comp) => {
+    if (!comp.isModuleLayoutComp()) {
+      return emptyExposing;
+    }
+    // FIXME: keeps the reference unchanged
+    return fromRecord(comp.getOutputNodes());
+  }
+);
+*/
 
 export default withExposingConfigs(GEOComp, [
   new NameConfig("drawLayer", trans("component.drawLayer")),

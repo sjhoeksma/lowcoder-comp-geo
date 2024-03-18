@@ -84,33 +84,7 @@ function Geo(props) {
   
   //Fetch the geolocation based on browser or ip when center is not set
   const elementRef = useCallback(ref => {
-    if (!featureEnabled('gpsCentered') || (props.center && props.center.length==2) || (props.defaults && props.defaults.center)) {
-      setGeoLoc((props.center && props.center.length==2) ? props.center : 
-        (props.defaults && props.defaults.center) ? props.defaults.center : [0,0]) 
-      setGeoRef(ref);
-    } else {
-    navigator.geolocation.getCurrentPosition(
-      (success)=>{
-        setGeoLoc([success.coords.longitude,success.coords.latitude]) 
-        setGeoRef(ref);
-      },
-      (error)=>{
-        fetch('https://ipapi.co/json/')
-        .then(function(response) {
-          if (!response.ok) {
-            setGeoLoc((props.center && props.center.length==2) ? props.center : 
-               (props.defaults && props.defaults.center) ? props.defaults.center : [0,0]) 
-            setGeoRef(ref);
-          } else {
-           response.json().then(function(data) {
-            setGeoLoc([data.longitude,data.latitude])  
-            setGeoRef(ref);
-          })
-          }
-        })
-      },
-      {maximumAge:60000,timeout:5000,enableHighAccuracy:false});
-    }
+    setGeoRef(ref);
   }, []);
 
   //Configuration of Map component, changing watch props will rebuild map object
@@ -122,7 +96,7 @@ function Geo(props) {
       var olMap = new Map({
         controls: [],
          view: new View({
-           center:  fromLonLat((props.center.length==2 ? props.center : props.defaults.center) || geoLoc || []),
+           center:  fromLonLat((props.center.length==2 ? props.center : props.defaults.center)|| geoLoc || [0,0]),
            zoom: props.zoom || props.defaults.zoom ,
            maxZoom: props.maxZoom || props.defaults.maxZoom || 100, 
            rotation: props.rotation || props.defaults.rotation
@@ -148,7 +122,7 @@ function Geo(props) {
         && (showButton('draw:move') || showButton('draw:point') || showButton('draw:line') 
         || showButton('draw:polygon') || showButton('draw:undo') || showButton('draw:redo') 
         || showButton('draw:delete' )))
-        && (featureEnabled('tracker') && showButton('tracker:save'))) 
+        || (featureEnabled('tracker') && showButton('tracker:save'))) 
         olMap.addControl(mainbar);
 
       if (featureEnabled('draw')) {
@@ -433,6 +407,21 @@ function Geo(props) {
           tline.setDate(e.feature);
         });
 
+
+      //GeoLocation
+      var geoLocation = new GeolocationButton({
+        title : "Focus my GeoLocation",
+        delay : 5000
+      });
+      if (showButton('location')) olMap.addControl(geoloc);
+      geoLocation.on("change:active",(event)=>{
+        if (event.active) {
+          notification.show("Searching GPS",3000)
+          fireEvent("geoloc:search")
+        }
+      });
+      //change:active
+
         var timeline = new Toggle({
           html: '<i class="fa fa-clock"></i>', 
           title: "Timeline",
@@ -446,13 +435,13 @@ function Geo(props) {
           if (event.active) {
             scaleLineControl.element.classList.add('timeline')
             geoTracker.element.classList.add('timeline')
-            geoloc.element.classList.add('timeline')
+            geoLocation.element.classList.add('timeline')
             olMap.addControl(tline);
             fireEvent('timeline:active')
           } else {
             scaleLineControl.element.classList.remove('timeline')
             geoTracker.element.classList.remove('timeline')
-            geoloc.element.classList.remove('timeline')
+            geoLocation.element.classList.remove('timeline')
             olMap.removeControl(tline);
             //Work arround voor scaleLineControl not moving
             olMap.removeControl(scaleLineControl);
@@ -461,20 +450,6 @@ function Geo(props) {
           }
         });
       }
-
-      //GeoLocation
-      var geoloc = new GeolocationButton({
-        title : "Focus my GeoLocation",
-        delay : 5000
-      });
-      if (showButton('location')) olMap.addControl(geoloc);
-      geoloc.on("change:active",(event)=>{
-        if (event.active) {
-          notification.show("Searching GPS",3000)
-          fireEvent("geoloc:search")
-        }
-      });
-      //change:active
     
       if (featureEnabled('tracker')) {
         //Add a GeoTracker
@@ -573,7 +548,7 @@ function Geo(props) {
 
       setMap(olMap)
       }
-    }, [geoRef,props.defaults, props.buttons]);  
+    }, [geoRef,props.defaults, props.buttons,props.features]);  
 
     //Zoom handling
     useEffect(() => {
@@ -592,10 +567,15 @@ function Geo(props) {
         map.getView().setRotation(props.rotation)
       }
     },[props.rotation]);
-    //Center handling
+    //Center the location on map
     useEffect(() => {
-      if (map && props.center && props.center.length==2) map.getView().setCenter(props.center)
-    },[props.center]);
+      if (map){
+        if (props.center && props.center.length==2) map.getView().setCenter(fromLonLat(props.center))
+        else if (geoLoc) {
+          map.getView().setCenter(fromLonLat(geoLoc)) 
+        }
+    }
+    },[map,props.center,geoLoc]);
     //Menu title
     useEffect(() => {
       if (map) {
@@ -649,6 +629,29 @@ function Geo(props) {
        fireEvent("map:layers",layers)
       }
     }, [map, props.layers, props.drawLayer]); // Re-evaluate when layers change
+
+    //GPS location
+    useEffect(() => {
+    
+      if (featureEnabled('gpsCentered') && !map) {
+      navigator.geolocation.getCurrentPosition(
+        (success)=>{
+          setGeoLoc([success.coords.longitude,success.coords.latitude]) 
+        },
+        (error)=>{
+          fetch('https://ipapi.co/json/')
+          .then(function(response) {
+            if (response.ok) {
+             response.json().then(function(data) {
+              setGeoLoc([data.longitude,data.latitude])  
+            })
+            }
+          })
+        },
+        {maximumAge:60000,timeout:5000,enableHighAccuracy:false});
+      }
+    }, [elementRef]);
+
   return (
     <div
       ref={elementRef}
