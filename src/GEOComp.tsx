@@ -350,15 +350,20 @@ const GEOCompWithMethodExpose = withMethodExposing(GEOComp, [
           type: "arrayNumberString",
         },
         {
+          name: "zoom",
+          type: "number",
+        },
+        {
           name: "duration",
           type: "number",
         },
+        
       ],
       description: "Animate towards point ",
     },
     execute: async (comp :any, params :any) => {
       var map = comp.exposingValues.event['map:init']
-      animateToLocation(map.getView(),params[0],params?.[1])
+      animateToLocation(map.getView(),params[0],params?.[1],params?.[2])
     },
   },
   /*
