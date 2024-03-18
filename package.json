@@ -4,7 +4,6 @@
   "type": "module",
   "license": "MIT",
   "dependencies": {
-    "@changesets/cli": "^2.27.1",
     "@fortawesome/fontawesome-free": "^6.5.1",
     "@observablehq/runtime": "^5.9.7",
     "@types/react": "18",
@@ -42,5 +41,8 @@
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
+  },
+  "devDependencies": {
+    "semantic-release": "^23.0.4"
   }
 }
