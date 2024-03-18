@@ -1,3 +1,10 @@
+# [1.3.0-dev.1](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.2.1-dev.1...v1.3.0-dev.1) (2024-03-18)
+
+
+### Features
+
+* method animate ([2c6f745](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/2c6f745465b170f4d28c940b034e17cf832d67f6))
+
 ## [1.2.1-dev.1](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.2.0...v1.2.1-dev.1) (2024-03-18)
 
 
