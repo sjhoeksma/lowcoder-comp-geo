@@ -31,7 +31,7 @@
     [
       "@semantic-release/exec",
       {
-        "publishCmd": "yarn build_publish"
+        "publishCmd": ""
       }
     ],
     "@semantic-release/github",
