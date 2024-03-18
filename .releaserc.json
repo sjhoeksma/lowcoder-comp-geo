@@ -22,7 +22,18 @@
         "changelogFile": "CHANGELOG.md"
       }
     ],
-    "@semantic-release/npm",
+    [
+      "@semantic-release/npm",
+      {
+        "npmPublish": false
+      }
+    ],
+    [
+      "@semantic-release/exec",
+      {
+        "publishCmd": "yarn build_publish"
+      }
+    ],
     "@semantic-release/github",
     [
       "@semantic-release/git",
