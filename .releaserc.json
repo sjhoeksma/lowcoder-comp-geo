@@ -28,12 +28,6 @@
         "npmPublish": false
       }
     ],
-    [
-      "@semantic-release/exec",
-      {
-        "publishCmd": ""
-      }
-    ],
     "@semantic-release/github",
     [
       "@semantic-release/git",
