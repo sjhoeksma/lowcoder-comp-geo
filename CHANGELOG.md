@@ -1,3 +1,16 @@
+# [1.3.0-dev.2](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.1...v1.3.0-dev.2) (2024-03-18)
+
+
+### Bug Fixes
+
+* bbox initalized ([0955717](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/0955717d82447b65ae1e348a033b6ad0db86c864))
+* expose onFeatureClick ([7b1d5f7](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/7b1d5f7ecdafbbe51764114043348164c37e351e))
+
+
+### Features
+
+* zoom level of the animation ([1d7c80d](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/1d7c80de06a2d554df9c570ac4be7e0ac6bc638a))
+
 # [1.3.0-dev.1](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.2.1-dev.1...v1.3.0-dev.1) (2024-03-18)
 
 
