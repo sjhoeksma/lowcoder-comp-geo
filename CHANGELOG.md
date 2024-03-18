@@ -1,3 +1,10 @@
+## [1.0.1-dev.2](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.0.1-dev.1...v1.0.1-dev.2) (2024-03-18)
+
+
+### Bug Fixes
+
+* ci publish ton npm ([99e9a07](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/99e9a0713066a541cf2a815d20410fc618f73f72))
+
 ## [1.0.1-dev.1](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.0.0...v1.0.1-dev.1) (2024-03-18)
 
 
