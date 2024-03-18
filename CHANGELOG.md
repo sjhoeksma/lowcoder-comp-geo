@@ -1,3 +1,15 @@
+# [1.2.0](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.1.0...v1.2.0) (2024-03-18)
+
+
+### Bug Fixes
+
+* Add @semantic-release/npm plugin to .releaserc.json ([1a37798](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/1a37798f6c8d7e6a9b9ef397b1e9da7cd62a84ab))
+
+
+### Features
+
+* clean changelog ([5b1837a](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/5b1837a48a2d72d21ba40959491a80d9d32c73fb))
+
 ### Minor Changes
 
 - 5886334: Try changeset with changing the basemap url to osm
