@@ -1,3 +1,10 @@
+# 1.0.0 (2024-03-18)
+
+
+### Bug Fixes
+
+* gh actions try 2 ([2c48f97](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/2c48f97afd0ce5cbbacae2f6eaaaa5b834655ecd))
+
 # Changelog
 
 ## 0.2.1
