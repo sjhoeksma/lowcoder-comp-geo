@@ -117,14 +117,14 @@ var GEOComp = (function () {
       description: "Triggers when on swipe events",
     },
     {
-      label: "onFeatureClick",
-      value: "click:feature",
-      description: "Triggers when there is a click on a feature within the viewer",
-    },
-    {
       label: "onClick",
       value: "click",
       description: "Triggers when there is a click within the viewer",
+    },
+    {
+      label: "onFeatureClick",
+      value: "click:feature",
+      description: "Triggers when there is a click on a feature within the viewer",
     },
     {
       label: "onBbox",
