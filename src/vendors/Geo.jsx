@@ -568,6 +568,9 @@ function Geo(props) {
       // Notification Control
       olMap.addControl(notification);
 
+      //Add map init event
+      fireEvent('map:init',olMap);
+
       setMap(olMap)
       }
     }, [geoRef,props.defaults, props.buttons]);  
@@ -620,7 +623,7 @@ function Geo(props) {
           .map(createLayer)
           .filter(layer => layer !== null && layer !== undefined);
         map.getLayers().clear();
-        sortedLayers.forEach(layer => map.addLayer(layer));
+        sortedLayers.forEach(layer => {if (layer) map.addLayer(layer)});
 
         //Trackerlayer
         if (featureEnabled('tracker')){

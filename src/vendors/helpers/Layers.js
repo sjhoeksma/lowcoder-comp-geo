@@ -95,9 +95,10 @@ export function createLayer (layerConfig) {
 
       case 'stylegl':
         // Example: return applyStyle(new VectorTileLayer({ declutter: true }), layerConfig.source.styleURL);
-        break;
+       // break;
       default:
+        //Error will cause issue within lowcoder. So just use log
         console.error(`Unsupported layer type: ${layerConfig.type}`);
-        return null;
+        return null
     }
   };
