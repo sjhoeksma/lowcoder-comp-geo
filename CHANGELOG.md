@@ -1,3 +1,10 @@
+## [1.2.1-dev.1](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.2.0...v1.2.1-dev.1) (2024-03-18)
+
+
+### Bug Fixes
+
+* Added OnInit and Center ([3827c78](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/3827c78e3003e9930a2a545a9e8de35d41da4762))
+
 # [1.2.0](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.1.0...v1.2.0) (2024-03-18)
 
 
