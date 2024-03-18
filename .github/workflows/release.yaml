@@ -1,14 +1,16 @@
-name: Release
+name: Release new version
 on:
-  push:
-    branches:
-      - main
-      - dev
+    workflow_dispatch:
 
 jobs:
   release:
     name: Release
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+      id-token: write
 
     steps:
       - name: Checkout
@@ -23,9 +25,12 @@ jobs:
 
       - name: Install Yarn
         run: npm install -g yarn
-
+        
       - name: Install dependencies
         run: yarn
+
+      - name: Build
+        run: yarn build
 
       - name: Release
         env:
