@@ -1,5 +1,18 @@
 {
-  "branches": ["main", "dev"],
+  "branches": [
+    {
+      "name": "main"
+    },
+    {
+      "name": "feat/*",
+      "prerelease": true,
+      "channel": "beta"
+    },
+    {
+      "name": "dev",
+      "prerelease": true,
+      "channel": "beta"}
+  ],
   "plugins": [
     "@semantic-release/commit-analyzer",
     "@semantic-release/release-notes-generator",
