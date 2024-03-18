@@ -157,7 +157,7 @@ var GEOComp = (function () {
     zoom: NumberControl,
     maxZoom: NumberControl,
     rotation: NumberControl,
-    bbox: arrayStringExposingStateControl("bbox"),
+    bbox: withDefault(arrayStringExposingStateControl("bbox"),[0,0,0,0]),
     menuTitle: stringSimpleControl(""),
     menuContent: stringSimpleControl(""),
     drawLayer : jsonObjectExposingStateControl("drawLayer",{"type":"FeatureCollection","features":[{"type":"Feature","geometry":{"type":"LineString","coordinates":[[514138.9757700867,6865494.523372142],[528910.431486197,6856739.497812072]]},"properties":null}]}),
