@@ -937,6 +937,16 @@
   resolved "https://registry.yarnpkg.com/@rollup/rollup-win32-x64-msvc/-/rollup-win32-x64-msvc-4.12.0.tgz#9ffdf9ed133a7464f4ae187eb9e1294413fab235"
   integrity sha512-ZYmr5mS2wd4Dew/JjT0Fqi2NPB/ZhZ2VvPp7SmvPZb4Y1CG/LRcS6tcRo2cYU7zLK5A7cdbhWnnWmUjoI4qapg==
 
+"@semantic-release/changelog@^6.0.3":
+  version "6.0.3"
+  resolved "https://registry.npmjs.org/@semantic-release/changelog/-/changelog-6.0.3.tgz#6195630ecbeccad174461de727d5f975abc23eeb"
+  integrity sha512-dZuR5qByyfe3Y03TpmCvAxCyTnp7r5XwtHRf/8vD9EAn4ZWbavUX8adMtXYzE86EVh0gyLA7lm5yW4IV30XUag==
+  dependencies:
+    "@semantic-release/error" "^3.0.0"
+    aggregate-error "^3.0.0"
+    fs-extra "^11.0.0"
+    lodash "^4.17.4"
+
 "@semantic-release/commit-analyzer@^11.0.0":
   version "11.1.0"
   resolved "https://registry.npmjs.org/@semantic-release/commit-analyzer/-/commit-analyzer-11.1.0.tgz#dd24663c4e1e7c218f53de73f5c639eb2d5a077e"
