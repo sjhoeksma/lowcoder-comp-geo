@@ -14,12 +14,14 @@ import {
   jsonObjectExposingStateControl,
   AutoHeightControl,
   arrayStringExposingStateControl,
+  withMethodExposing,
 } from "lowcoder-sdk";
 import styles from "./styles.module.css";
 import { trans } from "./i18n/comps";
 import { Geo } from "./vendors";
 import { useResizeDetector } from "react-resize-detector";
 import {version} from '../package.json';
+import {animateToLocation} from './vendors/helpers/Animate'
 
 
 export const CompStyles = [
@@ -155,7 +157,7 @@ var GEOComp = (function () {
     zoom: NumberControl,
     maxZoom: NumberControl,
     rotation: NumberControl,
-    bbox: arrayStringExposingStateControl([-180,-90,180,90]),
+    bbox: arrayStringExposingStateControl("bbox"),
     menuTitle: stringSimpleControl(""),
     menuContent: stringSimpleControl(""),
     drawLayer : jsonObjectExposingStateControl("drawLayer",{"type":"FeatureCollection","features":[{"type":"Feature","geometry":{"type":"LineString","coordinates":[[514138.9757700867,6865494.523372142],[528910.431486197,6856739.497812072]]},"properties":null}]}),
@@ -338,7 +340,68 @@ export const ModuleComp = withExposingRaw(
 );
 */
 
-export default withExposingConfigs(GEOComp, [
+const GEOCompWithMethodExpose = withMethodExposing(GEOComp, [
+  {
+    method: {
+      name: "animate",
+      params: [
+        {
+          name: "point",
+          type: "arrayNumberString",
+        },
+        {
+          name: "duration",
+          type: "number",
+        },
+      ],
+      description: "Animate towards point ",
+    },
+    execute: async (comp :any, params :any) => {
+      var map = comp.exposingValues.event['map:init']
+      animateToLocation(map.getView(),params[0],params?.[1])
+    },
+  },
+  /*
+  {
+    method: {
+      name: "setIn",
+      params: [
+        {
+          name: "path",
+          type: "arrayNumberString",
+        },
+        {
+          name: "value",
+          type: "JSONValue",
+        },
+      ],
+      description: "",
+    },
+    execute: async (comp, params) => {
+      const { value: prev, onChange } = comp.children.value.getView();
+      const [path, value] = params;
+      if (
+        !Array.isArray(path) ||
+        !path.every((i) => typeof i === "string" || typeof i === "number")
+      ) {
+        throw new Error(trans("temporaryState.pathTypeError"));
+      }
+      if (!_.isPlainObject(prev) && !Array.isArray(prev)) {
+        throw new Error(
+          trans("temporaryState.unStructuredError", {
+            path: JSON.stringify(path),
+            prev: JSON.stringify(prev),
+          })
+        );
+      }
+      const nextValue = _.set(_.cloneDeep(prev as JSONObject), path as (string | number)[], value);
+      onChange(nextValue);
+    },
+  },
+  */
+]);
+
+export default withExposingConfigs(GEOCompWithMethodExpose, [
   new NameConfig("drawLayer", trans("component.drawLayer")),
   new NameConfig("trackerLayer", trans("component.trackerLayer")),
   new NameConfig("event", trans("component.event")),
