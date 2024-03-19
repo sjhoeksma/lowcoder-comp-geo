@@ -22,6 +22,7 @@ import { Geo } from "./vendors";
 import { useResizeDetector } from "react-resize-detector";
 import {version} from '../package.json';
 import {animate} from './vendors/helpers/Animate'
+import Notification from 'ol-ext/control/Notification'
 
 
 export const CompStyles = [
@@ -200,7 +201,7 @@ var GEOComp = (function () {
     autoHeight: boolean;
   }) => {
   //The event handler will also sent the event value to use
-  const handleEvent = useCallback((name : string, eventObj : any,notify: any)=>{
+  const handleEvent = useCallback((name : string, eventObj : any)=>{
     props.event.onChange(Object.assign(props.event.value || {},{
       [name] : eventObj,
       current   : name
@@ -355,6 +356,30 @@ const GEOCompWithMethodExpose = withMethodExposing(GEOComp, [
     },
     execute: (comp :any) => {
       return comp.exposingValues.event['map:init']
+    },
+  },
+  {
+    method: {
+      name: "notify",
+      description: "Notify message",
+      params: [
+        {
+          name: "message",
+          type: "string",
+        },
+        {
+          name: "duration",
+          type: "number",
+        }
+      ]
+    },
+    execute: (comp :any,params: any) => {
+      var map = comp.exposingValues.event['map:init']
+      map.getControls().forEach((control:any)=>{
+        if (control instanceof Notification){
+          control.show(params[0],params[1] || 2000)
+        }
+      })
     },
   }
 ]);

@@ -71,7 +71,7 @@ function Geo(props) {
 
   const fireEvent = function(name ,eventObject ){
     if (props.onEvent) {
-      props.onEvent(name,eventObject || {},notification)
+      props.onEvent(name,eventObject || {})
     }
   }
 
