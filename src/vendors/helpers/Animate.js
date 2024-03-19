@@ -2,11 +2,10 @@ import { fromLonLat } from 'ol/proj';
 
 export function animateToLocation(view, coords, duration = 2000, props = {zoom:15}) {
   const location = fromLonLat(coords);
-  view.animate({
+  view.animate(Object.assign({},{
     center: location,
-    zoom: props.zoom,
     duration: duration,
-  });
+  },props));
 }
 
 export const animations = {
