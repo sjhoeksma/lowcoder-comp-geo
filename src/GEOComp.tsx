@@ -246,8 +246,8 @@ var GEOComp = (function () {
 
   return (
     <div className={styles.wrapper} style={{
-      height: "100%",
-      width: "100%",
+      height: dimensions.height,
+      width: dimensions.width,
       backgroundColor: `${props.styles.backgroundColor}`,
       borderColor: `${props.styles.border}`,
       borderRadius: `${props.styles.radius}`,
@@ -262,8 +262,6 @@ var GEOComp = (function () {
         zoom={props.zoom }
         maxZoom={props.maxZoom}
         rotation={props.rotation}
-        height={dimensions.height}
-        width={dimensions.width}
         buttons={props.buttons}
         menuContent={props.menuContent}
         menuTitle={props.menuTitle}
@@ -320,34 +318,11 @@ GEOComp = class extends GEOComp {
   }
 };
 
-/*
-const ModuleCompWithExposingMethods = withMethodExposing(GEOComp, (comp) => {
-  return comp.getModuleMethodConfigInfo();
-});
-
-
-export const ModuleComp = withExposingRaw(
-  ModuleCompWithExposingMethods,
-  (comp) => comp.getOutputDesc(),
-  (comp) => {
-    if (!comp.isModuleLayoutComp()) {
-      return emptyExposing;
-    }
-    // FIXME: keeps the reference unchanged
-    return fromRecord(comp.getOutputNodes());
-  }
-);
-*/
-
 const GEOCompWithMethodExpose = withMethodExposing(GEOComp, [
   {
     method: {
       name: "animate",
       params: [
-        {
-          name: "name",
-          type: "string",
-        },
         {
           name: "coords",
           type: "arrayNumberString",
@@ -360,13 +335,17 @@ const GEOCompWithMethodExpose = withMethodExposing(GEOComp, [
           name: "properties",
           type: "object",
         },
+        {
+          name: "animation",
+          type: "string",
+        },
         
       ],
-      description: "Animate towards point ",
+      description: "Perform animation",
     },
     execute: async (comp :any, params :any) => {
       var map = comp.exposingValues.event['map:init']
-      animate(params[0],map.getView(),params[1],params?.[2],params?.[3])
+      animate(params?.[3] || 'toLocation' ,map.getView(),params[0],params?.[1],params?.[2])
     },
   },
   {
@@ -377,45 +356,7 @@ const GEOCompWithMethodExpose = withMethodExposing(GEOComp, [
     execute: (comp :any) => {
       return comp.exposingValues.event['map:init']
     },
-  },
-  /*
-  {
-    method: {
-      name: "setIn",
-      params: [
-        {
-          name: "path",
-          type: "arrayNumberString",
-        },
-        {
-          name: "value",
-          type: "JSONValue",
-        },
-      ],
-      description: "",
-    },
-    execute: async (comp, params) => {
-      const { value: prev, onChange } = comp.children.value.getView();
-      const [path, value] = params;
-      if (
-        !Array.isArray(path) ||
-        !path.every((i) => typeof i === "string" || typeof i === "number")
-      ) {
-        throw new Error(trans("temporaryState.pathTypeError"));
-      }
-      if (!_.isPlainObject(prev) && !Array.isArray(prev)) {
-        throw new Error(
-          trans("temporaryState.unStructuredError", {
-            path: JSON.stringify(path),
-            prev: JSON.stringify(prev),
-          })
-        );
-      }
-      const nextValue = _.set(_.cloneDeep(prev as JSONObject), path as (string | number)[], value);
-      onChange(nextValue);
-    },
-  },
-  */
+  }
 ]);
 
 export default withExposingConfigs(GEOCompWithMethodExpose, [
