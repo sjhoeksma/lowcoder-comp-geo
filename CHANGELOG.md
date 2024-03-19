@@ -1,3 +1,18 @@
+# [1.3.0-dev.6](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.5...v1.3.0-dev.6) (2024-03-19)
+
+
+### Bug Fixes
+
+* animation name is options ([a3d5aae](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/a3d5aaec603ca45f12998a43bfdb3b1970a37ba8))
+* bbox init ([451a54d](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/451a54de8adef420fdb28c1bf3b87b0518a58b16))
+* change point to coords ([8b53312](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/8b53312cc8545718fc898a5026f50256b2b97318))
+* height ([891c756](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/891c7565e4c7310508ecf703c24e0c78f0896533))
+* ignore ts for ol-ext ([4522e3f](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/4522e3f3109ffd5bb0df586b967ffc7eeb36aae4))
+* issue with geoLocation ([8ee01be](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/8ee01bef9a21dfaf49382210cb957275140ea6ed))
+* large button support ([960c682](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/960c682c8e8d0d52216636e3931b4d73578106eb))
+* notify is exposed as method ([b30f358](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/b30f3588fcca3df47efb5bec289a943e645fe2fe))
+* version of lowcoder-sdk ([68d1979](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/68d1979389da6c134b86c269a429204bf0c2c012))
+
 # [1.3.0-dev.5](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.4...v1.3.0-dev.5) (2024-03-19)
 
 
