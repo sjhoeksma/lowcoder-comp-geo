@@ -350,7 +350,7 @@ const GEOCompWithMethodExpose = withMethodExposing(GEOComp, [
           type: "string",
         },
         {
-          name: "point",
+          name: "coords",
           type: "arrayNumberString",
         },
         {
