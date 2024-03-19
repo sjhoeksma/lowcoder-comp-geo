@@ -335,7 +335,7 @@ const GEOCompWithMethodExpose = withMethodExposing(GEOComp, [
         },
         {
           name: "properties",
-          type: "object",
+          type: "JSONValue",
         },
         {
           name: "animation",
