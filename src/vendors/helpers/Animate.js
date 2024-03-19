@@ -13,6 +13,6 @@ export const animations = {
 }
 
 export function animate(name,view, coords,duration, props){
-    var func = animations[name]
+    var func = animations[name || 'toLocation'] 
     if (func) func(view, coords, duration, props)
 }

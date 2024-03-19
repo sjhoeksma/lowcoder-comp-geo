@@ -26,7 +26,6 @@ import { useResizeDetector } from "react-resize-detector";
 // @ts-ignore
 import Notification from 'ol-ext/control/Notification'
 
-
 export const CompStyles = [
   {	
     name: "padding",	
@@ -354,7 +353,7 @@ const GEOCompWithMethodExpose = withMethodExposing(GEOComp, [
     },
     execute: async (comp :any, params :any) => {
       var map = comp.exposingValues.event['map:init']
-      animate(params?.[3] || 'toLocation' ,map.getView(),params[0],params?.[1],params?.[2])
+      animate(params?.[3],map.getView(),params[0],params?.[1],params?.[2])
     },
   },
   {
@@ -381,7 +380,7 @@ const GEOCompWithMethodExpose = withMethodExposing(GEOComp, [
         }
       ]
     },
-    execute: (comp :any,params: any) => {
+    execute: async (comp :any,params: any) => {
       var map = comp.exposingValues.event['map:init']
       map.getControls().forEach((control:any)=>{
         if (control instanceof Notification){
