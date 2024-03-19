@@ -1,3 +1,11 @@
+# [1.3.0-dev.10](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.9...v1.3.0-dev.10) (2024-03-19)
+
+
+### Bug Fixes
+
+* add layername ([323959f](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/323959f0376dc807219050271752b61c93558b7d))
+* component heigth ([802d3a5](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/802d3a5dcda9ab5e1aafc11598a2becebd0c2722))
+
 # [1.3.0-dev.9](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.8...v1.3.0-dev.9) (2024-03-19)
 
 
