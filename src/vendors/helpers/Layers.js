@@ -15,6 +15,7 @@ export function createLayer (layerConfig) {
     switch (layerConfig.type) {
       case 'mvt':
         return new VectorTileLayer({
+          name: layerConfig.name,
           minZoom: layerConfig.minZoom,
           maxZoom: layerConfig.maxZoom,
           visible: layerConfig.visible,
@@ -26,6 +27,7 @@ export function createLayer (layerConfig) {
         });
       case 'wms':
         return new TileLayer({
+          name: layerConfig.name,
           minZoom: layerConfig.minZoom,
           maxZoom: layerConfig.maxZoom,
           visible: layerConfig.visible,
@@ -38,6 +40,7 @@ export function createLayer (layerConfig) {
         });
       case 'wfs':
         return new VectorLayer({
+          name: layerConfig.name,
           minZoom: layerConfig.minZoom,
           maxZoom: layerConfig.maxZoom,
           visible: layerConfig.visible,
@@ -48,6 +51,7 @@ export function createLayer (layerConfig) {
         });
       case 'xyz':
         return new TileLayer({
+          name: layerConfig.name,
           minZoom: layerConfig.minZoom,
           maxZoom: layerConfig.maxZoom,
           visible: layerConfig.visible,
@@ -57,6 +61,7 @@ export function createLayer (layerConfig) {
         });
       case 'geojson':
         return new VectorLayer({
+          name: layerConfig.name,
           minZoom: layerConfig.minZoom,
           maxZoom: layerConfig.maxZoom,
           visible: layerConfig.visible,
@@ -73,6 +78,7 @@ export function createLayer (layerConfig) {
 
       case 'cog':
         return new TileLayer({
+          name: layerConfig.name,
           minZoom: layerConfig.minZoom,
           maxZoom: layerConfig.maxZoom,
           visible: layerConfig.visible,
