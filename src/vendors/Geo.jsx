@@ -91,7 +91,8 @@ function Geo(props) {
   //Configuration of Map component, changing watch props will rebuild map object
   useEffect(() => {
     if (geoRef) {
-      geoRef.innerHTML = "<div id='GEO_"+ geoId+ "' " + (featureEnabled('largeButtons') ? "class='ol-large'": "" ) + "  style='height:100%;width:100%;position:relative'></div>"
+      geoRef.innerHTML = "<div id='GEO_"+ geoId+ "' " + (featureEnabled('largeButtons') ? "class='ol-large'": "" ) +
+       "  style='height:100%;width:100%'></div>"
 
       //The real map object
       var olMap = new Map({
@@ -549,7 +550,14 @@ function Geo(props) {
 
       setMap(olMap)
       }
-    }, [geoRef,props.defaults, props.buttons,props.features]);  
+    }, [geoRef,props.defaults, props.buttons,props.features]); 
+    
+    useEffect(() =>{
+      if (map) {
+        geoRef.style.height=`${props.height}px`;
+        //geoRef.style.width=`${props.width}px`;
+      }
+    }, [map,props.height,props.width])
 
     //Zoom handling
     useEffect(() => {
@@ -656,7 +664,7 @@ function Geo(props) {
   return (
     <div
       ref={elementRef}
-      style={{ height: props.height, width: props.width }}
+      style={{ height: props.height, width:props.width}}
     >
     <RingLoader color="#36d7b7" 
         style={{position: 'absolute',top: '45%',left: '48%',transform: 'translate(-50%, -50%)'}} />

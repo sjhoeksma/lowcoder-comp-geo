@@ -135,7 +135,7 @@ var GEOComp = (function () {
     },
   ];
   const childrenMap = {
-    autoHeight: withDefault(AutoHeightControl, "auto"),
+    autoHeight: withDefault(AutoHeightControl, "fixed"),
     styles: styleControl(CompStyles),
     defaults: withDefault(JSONObjectControl,`{
       zoom:10,
@@ -201,7 +201,7 @@ var GEOComp = (function () {
     menuContent:string;
     autoHeight:boolean;
   }) => {
-  const [dimensions, setDimensions] = useState({ width: 680, height: 420 });
+  const [dimensions, setDimensions] = useState({ width: 650, height: 400 });
   //The event handler will also sent the event value to use
   const handleEvent = useCallback((name : string, eventObj : any)=>{
     props.event.onChange(Object.assign(props.event.value || {},{
@@ -235,29 +235,38 @@ var GEOComp = (function () {
           width,
           height: dimensions.height,
         })
+        
         return;
       }
-  
+
       setDimensions({
         width,
-        height ,
+        height : height,
       })
-   }});  
+   }});
 
  return (
-    <div className={styles.wrapper} ref={conRef}
-      style={{
-        backgroundColor: `${props.styles.backgroundColor}`,
-        borderColor: `${props.styles.border}`,
-        borderRadius: `${props.styles.radius}`,
-        borderWidth: `${props.styles.borderWidth}`,
-        margin: `${props.styles.margin}`,
-        padding: `${props.styles.padding}`,
-        fontSize: `${props.styles.textSize}`,
+    <div className={styles.wrapper} 
+    style={{
+      backgroundColor: `${props.styles.backgroundColor}`,
+      borderColor: `${props.styles.border}`,
+      borderRadius: `${props.styles.radius}`,
+      borderWidth: `${props.styles.borderWidth}`,
+      margin: `${props.styles.margin}`,
+      padding: `${props.styles.padding}`,
+      fontSize: `${props.styles.textSize}`,
+      height: '100%',
+      width: '100%',
+    }}
+   >
+    <div ref={conRef}
+       style={{
+        height: '100%',
+        width: '100%',
       }}
      >
       <Geo
-        height={dimensions.height}
+        height={dimensions.height }
         width={dimensions.width}
         center={ props.center}
         drawLayer={props.drawLayer.value}
@@ -273,6 +282,7 @@ var GEOComp = (function () {
         onEvent={handleEvent}
         ignoreUpdate={ignoreUpdate}
       />
+    </div>
     </div>
   );
 })
