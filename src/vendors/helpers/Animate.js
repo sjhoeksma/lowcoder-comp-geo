@@ -14,5 +14,5 @@ export const animations = {
 
 export function animate(name,view, coords,duration, props){
     var func = animations[name]
-    if (func) func(view, coords, props, duration)
+    if (func) func(view, coords, duration, props)
 }
