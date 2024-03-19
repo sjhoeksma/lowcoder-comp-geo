@@ -21,7 +21,7 @@ import { trans } from "./i18n/comps";
 import { Geo } from "./vendors";
 import { useResizeDetector } from "react-resize-detector";
 import {version} from '../package.json';
-import {animateToLocation} from './vendors/helpers/Animate'
+import {animate} from './vendors/helpers/Animate'
 
 
 export const CompStyles = [
@@ -112,17 +112,12 @@ var GEOComp = (function () {
       description: "Triggers when the mapobject is created",
     },
     {
-      label: "onSwipe",
-      value: "swipe",
-      description: "Triggers when on swipe events",
-    },
-    {
       label: "onClick",
       value: "click",
       description: "Triggers when there is a click within the viewer",
     },
     {
-      label: "onFeatureClick",
+      label: "onSelect",
       value: "click:feature",
       description: "Triggers when there is a click on a feature within the viewer",
     },
@@ -169,7 +164,7 @@ var GEOComp = (function () {
     trackerLayer : jsonObjectExposingStateControl("trackerLayer"),
     event : jsonObjectExposingStateControl("event"),
     buttons: withDefault(JSONObjectControl,"{menu:false}"),
-    features: withDefault(JSONObjectControl,"{draw:false,swipe:false,tracker:false,timeline:false,gpsCentered:true}"),
+    features: withDefault(JSONObjectControl,"{draw:true,swipe:false,tracker:false,timeline:false,gpsCentered:true}"),
     onEvent: eventHandlerControl(events),
   };
 
@@ -206,7 +201,7 @@ var GEOComp = (function () {
   }) => {
 
   //The event handler will also sent the event value to use
-  const handleEvent = useCallback((name : string, eventObj : object,notify: any)=>{
+  const handleEvent = useCallback((name : string, eventObj : any,notify: any)=>{
     props.event.onChange(Object.assign(props.event.value || {},{
       [name] : eventObj,
       current   : name
@@ -226,7 +221,7 @@ var GEOComp = (function () {
     }
     props.onEvent(eventName,eventObj);
     if (props.defaults && props.defaults.debug===true)
-       console.log("handleEvent",eventName,props.event.value)
+       console.log("handleEvent",eventName,eventObj)
   },[props.onEvent,props.event]);
 
   const [dimensions, setDimensions] = useState({ width: 480, height: 415 });
@@ -351,16 +346,20 @@ const GEOCompWithMethodExpose = withMethodExposing(GEOComp, [
       name: "animate",
       params: [
         {
+          name: "name",
+          type: "string",
+        },
+        {
           name: "point",
           type: "arrayNumberString",
         },
         {
-          name: "zoom",
+          name: "duration",
           type: "number",
         },
         {
-          name: "duration",
-          type: "number",
+          name: "properties",
+          type: "object",
         },
         
       ],
@@ -368,7 +367,16 @@ const GEOCompWithMethodExpose = withMethodExposing(GEOComp, [
     },
     execute: async (comp :any, params :any) => {
       var map = comp.exposingValues.event['map:init']
-      animateToLocation(map.getView(),params[0],params?.[1],params?.[2])
+      animate(params[0],map.getView(),params[1],params?.[2],params?.[3])
+    },
+  },
+  {
+    method: {
+      name: "map",
+      description: "Retuns the openlayer map",
+    },
+    execute: (comp :any) => {
+      return comp.exposingValues.event['map:init']
     },
   },
   /*

@@ -480,7 +480,10 @@ function Geo(props) {
         olMap.forEachFeatureAtPixel(evt.pixel, function (feature, layer) {
           // Vector feature click logic
           hasFeature = true; // Indicate that a vector feature was clicked
-          fireEvent('click:feature',{properties: feature.getProperties(),layer})
+          fireEvent('click:feature',{
+            coords:  feature.getProperties()?.geometry.flatCoordinates,
+            layer:   layer.values_?.name,
+            map:     olMap})
           return true; // Stop iterating through features
         });
 
