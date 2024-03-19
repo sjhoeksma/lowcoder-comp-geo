@@ -157,7 +157,7 @@ var GEOComp = (function () {
     zoom: NumberControl,
     maxZoom: NumberControl,
     rotation: NumberControl,
-    bbox: withDefault(arrayStringExposingStateControl("bbox"),[0,0,0,0]),
+    bbox: arrayStringExposingStateControl("bbox",[0,0,0,0]),
     menuTitle: stringSimpleControl(""),
     menuContent: stringSimpleControl(""),
     drawLayer : jsonObjectExposingStateControl("drawLayer",{"type":"FeatureCollection","features":[{"type":"Feature","geometry":{"type":"LineString","coordinates":[[514138.9757700867,6865494.523372142],[528910.431486197,6856739.497812072]]},"properties":null}]}),
@@ -199,7 +199,6 @@ var GEOComp = (function () {
     menuContent:string;
     autoHeight: boolean;
   }) => {
-
   //The event handler will also sent the event value to use
   const handleEvent = useCallback((name : string, eventObj : any,notify: any)=>{
     props.event.onChange(Object.assign(props.event.value || {},{
