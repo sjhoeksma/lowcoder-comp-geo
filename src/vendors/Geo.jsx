@@ -656,7 +656,7 @@ function Geo(props) {
   return (
     <div
       ref={elementRef}
-      style={{ height: '100%', width: '100%' }}
+      style={{ height: props.height, width: props.width }}
     >
     <RingLoader color="#36d7b7" 
         style={{position: 'absolute',top: '45%',left: '48%',transform: 'translate(-50%, -50%)'}} />
@@ -679,6 +679,8 @@ Geo.propTypes = {
   layers: PropTypes.array,
   defaults: PropTypes.object,
   features: PropTypes.object,
+  width: PropTypes.number,
+  height: PropTypes.number,
 }
 
 export default Geo;

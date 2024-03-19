@@ -14,12 +14,14 @@ import {
   jsonObjectExposingStateControl,
   arrayStringExposingStateControl,
   withMethodExposing,
+  AutoHeightControl,
 } from "lowcoder-sdk";
 import styles from "./styles.module.css";
 import { trans } from "./i18n/comps";
 import { Geo } from "./vendors";
 import {version} from '../package.json';
 import {animate} from './vendors/helpers/Animate'
+import { useResizeDetector } from "react-resize-detector";
 // @ts-ignore
 import Notification from 'ol-ext/control/Notification'
 
@@ -133,6 +135,7 @@ var GEOComp = (function () {
     },
   ];
   const childrenMap = {
+    autoHeight: withDefault(AutoHeightControl, "auto"),
     styles: styleControl(CompStyles),
     defaults: withDefault(JSONObjectControl,`{
       zoom:10,
@@ -196,7 +199,9 @@ var GEOComp = (function () {
     features: any;
     menuTitle:string;
     menuContent:string;
+    autoHeight:boolean;
   }) => {
+  const [dimensions, setDimensions] = useState({ width: 680, height: 420 });
   //The event handler will also sent the event value to use
   const handleEvent = useCallback((name : string, eventObj : any)=>{
     props.event.onChange(Object.assign(props.event.value || {},{
@@ -221,19 +226,39 @@ var GEOComp = (function () {
        console.log("handleEvent",eventName,eventObj)
   },[props.onEvent,props.event]);
 
+  const { width, height, ref: conRef } = useResizeDetector({onResize: () =>{
+      const container = conRef.current;
+      if(!container || !width || !height) return;
+  
+      if(props.autoHeight) {
+        setDimensions({
+          width,
+          height: dimensions.height,
+        })
+        return;
+      }
+  
+      setDimensions({
+        width,
+        height ,
+      })
+   }});  
+
  return (
-    <div className={styles.wrapper} style={{
-      height: "100%",
-      width: "100%",
-      backgroundColor: `${props.styles.backgroundColor}`,
-      borderColor: `${props.styles.border}`,
-      borderRadius: `${props.styles.radius}`,
-      borderWidth: `${props.styles.borderWidth}`,
-      margin: `${props.styles.margin}`,
-      padding: `${props.styles.padding}`,
-      fontSize: `${props.styles.textSize}`,
-    }}>
+    <div className={styles.wrapper} ref={conRef}
+      style={{
+        backgroundColor: `${props.styles.backgroundColor}`,
+        borderColor: `${props.styles.border}`,
+        borderRadius: `${props.styles.radius}`,
+        borderWidth: `${props.styles.borderWidth}`,
+        margin: `${props.styles.margin}`,
+        padding: `${props.styles.padding}`,
+        fontSize: `${props.styles.textSize}`,
+      }}
+     >
       <Geo
+        height={dimensions.height}
+        width={dimensions.width}
         center={ props.center}
         drawLayer={props.drawLayer.value}
         zoom={props.zoom }
@@ -274,6 +299,7 @@ var GEOComp = (function () {
        {children.menuContent.propertyView({ label: "Menu content" })}
       </Section>
       <Section name="Styles">
+        {children.autoHeight.getPropertyView()}
         {children.styles.getPropertyView()}
       </Section>
       <Section name="Advanced">
@@ -287,6 +313,12 @@ var GEOComp = (function () {
 })
 .build();
 })();
+
+GEOComp = class extends GEOComp {
+   autoHeight(): boolean {
+    return this.children.autoHeight.getView();
+  }
+};
 
 const GEOCompWithMethodExpose = withMethodExposing(GEOComp, [
   {
