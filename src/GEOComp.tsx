@@ -20,7 +20,8 @@ import styles from "./styles.module.css";
 import { trans } from "./i18n/comps";
 import { Geo } from "./vendors";
 import {version} from '../package.json';
-import {animate} from './vendors/helpers/Animate'
+import { animate } from './vendors/helpers/Animate'
+import { showPopup } from "./vendors/helpers/Popup";
 import { useResizeDetector } from "react-resize-detector";
 // @ts-ignore
 import Notification from 'ol-ext/control/Notification'
@@ -146,6 +147,7 @@ var GEOComp = (function () {
     layers: withDefault(ArrayControl,`[
       {
         type : 'xyz',
+        name: 'OpenStreetMap',
         source : {
           url :  'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
         }
@@ -387,7 +389,33 @@ const GEOCompWithMethodExpose = withMethodExposing(GEOComp, [
         }
       })
     },
-  }
+  },
+  {
+  method: {
+    name: "showPopup",
+    description: "Displays a popup at the specified coordinates with a given message",
+    params: [
+      {
+        name: "coordinates",
+        type: "array", // Assuming [longitude, latitude]
+        description: "Coordinates where the popup should appear",
+      },
+      {
+        name: "message",
+        type: "string",
+        description: "Message to display in the popup",
+      }
+    ]
+  },
+  execute: (comp: any, params: any) => {
+    var map = comp.exposingValues.event['map:init']
+    if (!map) {
+      console.error("MapView not initialized");
+      return;
+    }
+    showPopup(map, params[0], params[1]);
+  },
+}
 ]);
 
 export default withExposingConfigs(GEOCompWithMethodExpose, [
