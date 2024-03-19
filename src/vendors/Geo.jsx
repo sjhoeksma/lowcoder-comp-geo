@@ -18,7 +18,7 @@ import {LineString,Polygon} from 'ol/geom';
 import { fromLonLat, transformExtent } from 'ol/proj';
 import {FullScreen, Zoom } from 'ol/control';
 import {GeoJSON}  from 'ol/format';
-import {Draw,Modify,Snap,Select} from 'ol/interaction'
+import {Draw,Snap,Select} from 'ol/interaction'
 
 //Openlayer Extend imports
 import GeolocationBar from 'ol-ext/control/GeolocationBar'
@@ -32,13 +32,13 @@ import Overlay from 'ol-ext/control/Overlay'
 import Timeline from 'ol-ext/control/Timeline'
 import Swipe from 'ol-ext/control/Swipe'
 import UndoRedo from 'ol-ext/interaction/UndoRedo'
+import ModifyFeature from 'ol-ext/interaction/ModifyFeature'
+import LayerSwitcher from 'ol-ext/control/LayerSwitcher'
 
 ///Local import
 import RotateNorthControl from './RotateNorthControl'
 import {createLayer} from './helpers/Layers'
 import {lightStroke,darkStroke,geoJsonStyle} from './helpers/Styles'
-import { TRUE } from 'ol/functions';
-
 
 function Geo(props) {
   const [geoRef, setGeoRef] = useState();
@@ -91,7 +91,7 @@ function Geo(props) {
   //Configuration of Map component, changing watch props will rebuild map object
   useEffect(() => {
     if (geoRef) {
-      geoRef.innerHTML = "<div id='GEO_"+ geoId+ "' style='height:100%;width:100%;position:relative'></div>"
+      geoRef.innerHTML = "<div id='GEO_"+ geoId+ "' " + (featureEnabled('largeButtons') ? "class='ol-large'": "" ) + "  style='height:100%;width:100%;position:relative'></div>"
 
       //The real map object
       var olMap = new Map({
@@ -103,7 +103,7 @@ function Geo(props) {
            rotation: props.rotation || props.defaults.rotation
          }),
          target: 'GEO_'+ geoId,
-         layers: []
+         layers: [],
        });
 
       //Add the buttons contols
@@ -138,7 +138,7 @@ function Geo(props) {
         mainbar.addControl(editbar);
 
         //Add modify interaction
-        const modify = new Modify({source: drawVector.getSource()});
+        const modify = new ModifyFeature({source: drawVector.getSource()});
         const snap = new Snap({source: drawVector.getSource()});
         // Add move tools
         var pmove = new Toggle({
@@ -284,21 +284,19 @@ function Geo(props) {
       var fullscreen = new FullScreen()
       if (showButton('fullscreen')) olMap.addControl(fullscreen)
 
-      var secondbar = new Bar();
+      var secondbar = new Bar({className:"ol-secondbar"});
       secondbar.setPosition("top-right")
       if ((featureEnabled('swipe') && (showButton('swipeHorizontal') ||showButton('swipeVertical')))
-        || (featureEnabled('timeline') && showButton('timeline'))
-        || showButton('layers')) olMap.addControl(secondbar);
+        || (featureEnabled('timeline') && showButton('timeline')))
+         olMap.addControl(secondbar);
 
       // Add a simple push button to save features
-      var layersMenu = new Toggle({
-        html: '<i class="fa fa-layer-group"></i>',
-        title: "Layers",
-        onToggle: function(e) {
-          fireEvent("toggle:layers")
-        }
+        // Add control inside the map
+      var layerCtrl = new LayerSwitcher({
+        // collapsed: false,
+        // mouseover: true
       });
-      if (showButton('layers')) secondbar.addControl (layersMenu );
+      if (showButton('layers'))  olMap.addControl(layerCtrl);
 
        // Swipe control bar 
       if (featureEnabled('swipe')) {
@@ -357,7 +355,7 @@ function Geo(props) {
 
       // A toggle control to show/hide the menu
       var toggle = new Toggle({
-        className: 'menu',
+        className: 'ol-menu',
         html: '<i class="fa fa-bars" ></i>',
         title: "Menu",
         onToggle: function(event) { 
@@ -452,17 +450,16 @@ function Geo(props) {
         });
       }
     
-      if (featureEnabled('tracker')) {
-        //Add a GeoTracker
-        var geoTracker = new GeolocationBar({
-          source: trackerVector.getSource(),
-          delay : 5000,
-          followTrack: 'auto',
-          minZoom: 16,
-          minAccuracy:10000
-        });
-        if (showButton('tracker')) olMap.addControl(geoTracker)
-      }
+      //Add a GeoTracker
+      var geoTracker = new GeolocationBar({
+        source: trackerVector.getSource(),
+        delay : 5000,
+        followTrack: 'auto',
+        minZoom: 16,
+        minAccuracy:10000
+      });
+      if (featureEnabled('tracker') && showButton('tracker')) 
+         olMap.addControl(geoTracker)
 
       //rotateNorth control
       var rotateNorth = new RotateNorthControl();
@@ -481,7 +478,7 @@ function Geo(props) {
         olMap.forEachFeatureAtPixel(evt.pixel, function (feature, layer) {
           // Vector feature click logic
           hasFeature = true; // Indicate that a vector feature was clicked
-          if (!(pdelete.getActive() || pmove.getActive())){ //only fire event if we are not drawing
+          if (!(pdelete.getActive() || pmove.getActive()) && layer ){ //only fire event if we are not drawing
             fireEvent('click:feature',{
               coords:  feature.getProperties()?.geometry.flatCoordinates,
               layer:   layer.values_?.name,

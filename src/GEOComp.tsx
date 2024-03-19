@@ -166,7 +166,7 @@ var GEOComp = (function () {
     trackerLayer : jsonObjectExposingStateControl("trackerLayer"),
     event : jsonObjectExposingStateControl("event"),
     buttons: withDefault(JSONObjectControl,"{menu:false}"),
-    features: withDefault(JSONObjectControl,"{draw:true,swipe:false,tracker:false,timeline:false,gpsCentered:true}"),
+    features: withDefault(JSONObjectControl,"{draw:true,swipe:false,tracker:false,timeline:false,gpsCentered:true,largeButtons:false}"),
     onEvent: eventHandlerControl(events),
   };
 
