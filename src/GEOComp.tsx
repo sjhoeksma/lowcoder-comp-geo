@@ -22,6 +22,7 @@ import { Geo } from "./vendors";
 import { useResizeDetector } from "react-resize-detector";
 import {version} from '../package.json';
 import {animate} from './vendors/helpers/Animate'
+// @ts-ignore
 import Notification from 'ol-ext/control/Notification'
 
 
