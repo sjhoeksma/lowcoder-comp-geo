@@ -223,7 +223,7 @@ var GEOComp = (function () {
        console.log("handleEvent",eventName,eventObj)
   },[props.onEvent,props.event]);
 
-  const [dimensions, setDimensions] = useState({ width: 480, height: 415 });
+  const [dimensions, setDimensions] = useState({ width: 660, height: 415 });
   const { width, height, ref: conRef } = useResizeDetector({onResize: () =>{
     const container = conRef.current;
     if(!container || !width || !height) return;

@@ -37,6 +37,7 @@ import UndoRedo from 'ol-ext/interaction/UndoRedo'
 import RotateNorthControl from './RotateNorthControl'
 import {createLayer} from './helpers/Layers'
 import {lightStroke,darkStroke,geoJsonStyle} from './helpers/Styles'
+import { TRUE } from 'ol/functions';
 
 
 function Geo(props) {
@@ -90,7 +91,7 @@ function Geo(props) {
   //Configuration of Map component, changing watch props will rebuild map object
   useEffect(() => {
     if (geoRef) {
-      geoRef.innerHTML = "<div id='GEO_"+ geoId+ "' style='height:"+props.height+"px;position:relative'></div>"
+      geoRef.innerHTML = "<div id='GEO_"+ geoId+ "' style='height:100%;width:100%;position:relative'></div>"
 
       //The real map object
       var olMap = new Map({
@@ -216,7 +217,7 @@ function Geo(props) {
         });
         if (showButton('draw:polygon')) editbar.addControl ( fedit );
 
-        //Delete editing tools
+        //DELETE editing tools
         const pSelect = new Select({source : drawVector.getSource()});
         pSelect.on('select',(event)=>{
           event.selected.forEach((f)=>{drawVector.getSource().removeFeature(f)})
@@ -480,10 +481,12 @@ function Geo(props) {
         olMap.forEachFeatureAtPixel(evt.pixel, function (feature, layer) {
           // Vector feature click logic
           hasFeature = true; // Indicate that a vector feature was clicked
-          fireEvent('click:feature',{
-            coords:  feature.getProperties()?.geometry.flatCoordinates,
-            layer:   layer.values_?.name,
-            map:     olMap})
+          if (!(pdelete.getActive() || pmove.getActive())){ //only fire event if we are not drawing
+            fireEvent('click:feature',{
+              coords:  feature.getProperties()?.geometry.flatCoordinates,
+              layer:   layer.values_?.name,
+              map:     olMap})
+          }
           return true; // Stop iterating through features
         });
 
@@ -503,9 +506,7 @@ function Geo(props) {
                 fetch(url)
                   .then(response => response.text())
                   .then(html => {
-                    // Display the HTML response in an element, or process JSON as needed
                     fireEvent('click:reponse',{reponse: html})
-                    // Example: document.getElementById('info').innerHTML = html;
                   });
               }
             }
@@ -667,8 +668,6 @@ function Geo(props) {
 }
 
 Geo.propTypes = {
-  width: PropTypes.number,
-  height: PropTypes.number,
   center: PropTypes.array,
   zoom: PropTypes.number,
   maxZoom: PropTypes.number,
