@@ -66,3 +66,4 @@
 - Add properties viewers for layers, buttons, features
 - Implement kind of layers and do loading of baselayers first
 - method which will allow to load data into layer, instead of passing it by layer and can be bound to query
+- Fix height, internal should 100%
