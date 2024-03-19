@@ -1,3 +1,10 @@
+# [1.3.0-dev.8](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.7...v1.3.0-dev.8) (2024-03-19)
+
+
+### Bug Fixes
+
+* height fill screen 100% ([85e804e](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/85e804e8786dae46761ab2f2bc28fcb405292b06))
+
 # [1.3.0-dev.7](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.6...v1.3.0-dev.7) (2024-03-19)
 
 
