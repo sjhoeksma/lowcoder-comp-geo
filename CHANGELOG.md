@@ -1,3 +1,10 @@
+# [1.3.0-dev.9](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.8...v1.3.0-dev.9) (2024-03-19)
+
+
+### Bug Fixes
+
+* autoheight ([022ce44](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/022ce441aa99c3fc45cf21830091f615761ccb51))
+
 # [1.3.0-dev.8](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.7...v1.3.0-dev.8) (2024-03-19)
 
 
