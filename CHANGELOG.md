@@ -1,3 +1,10 @@
+# [1.3.0-dev.7](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.6...v1.3.0-dev.7) (2024-03-19)
+
+
+### Bug Fixes
+
+* properties type ([121086e](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/121086ef4138842bf56ca269d77d9e5af79bd8c8))
+
 # [1.3.0-dev.6](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.5...v1.3.0-dev.6) (2024-03-19)
 
 
