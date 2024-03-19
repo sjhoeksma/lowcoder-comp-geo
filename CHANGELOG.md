@@ -1,3 +1,10 @@
+# [1.3.0-dev.4](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.3...v1.3.0-dev.4) (2024-03-19)
+
+
+### Bug Fixes
+
+* onSelect and Animate ([82a3436](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/82a3436537249d80c709d9346a3fb8843f9e63d7))
+
 # [1.3.0-dev.3](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.2...v1.3.0-dev.3) (2024-03-18)
 
 
