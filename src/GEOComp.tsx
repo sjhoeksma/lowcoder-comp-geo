@@ -28,11 +28,6 @@ import Notification from 'ol-ext/control/Notification'
 
 export const CompStyles = [
   {	
-    name: "margin",	
-    label: trans("style.margin"),
-    margin: "margin",	
-  },
-  {	
     name: "padding",	
     label: trans("style.padding"),
     padding: "padding",	
@@ -184,7 +179,7 @@ var GEOComp = (function () {
   return new UICompBuilder(childrenMap, (props: {
     onEvent: any;
     styles: { backgroundColor: any; border: any; radius: any; borderWidth: any; 
-              margin: any; padding: any; textSize: any; };
+               padding: any; textSize: any; };
     center : any;
     zoom : number;
     maxZoom: number;
@@ -252,7 +247,7 @@ var GEOComp = (function () {
       borderColor: `${props.styles.border}`,
       borderRadius: `${props.styles.radius}`,
       borderWidth: `${props.styles.borderWidth}`,
-      margin: `${props.styles.margin}`,
+      margin: 0,
       padding: `${props.styles.padding}`,
       fontSize: `${props.styles.textSize}`,
       height: '100%',
