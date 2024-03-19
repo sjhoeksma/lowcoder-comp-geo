@@ -1,3 +1,11 @@
+# [1.3.0-dev.5](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.4...v1.3.0-dev.5) (2024-03-19)
+
+
+### Bug Fixes
+
+* Flexible assignment of properties animate ([a7472b0](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/a7472b0f38a926350c0422c35c37aa7dd4c603f9))
+* property mix-up ([dafd4d9](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/dafd4d96305246c6bdd840d4b607e1456ea15e8a))
+
 # [1.3.0-dev.4](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.3...v1.3.0-dev.4) (2024-03-19)
 
 
