@@ -12,14 +12,12 @@ import {
   eventHandlerControl,
   styleControl,
   jsonObjectExposingStateControl,
-  AutoHeightControl,
   arrayStringExposingStateControl,
   withMethodExposing,
 } from "lowcoder-sdk";
 import styles from "./styles.module.css";
 import { trans } from "./i18n/comps";
 import { Geo } from "./vendors";
-import { useResizeDetector } from "react-resize-detector";
 import {version} from '../package.json';
 import {animate} from './vendors/helpers/Animate'
 // @ts-ignore
@@ -135,7 +133,6 @@ var GEOComp = (function () {
     },
   ];
   const childrenMap = {
-    autoHeight: withDefault(AutoHeightControl, "auto"),
     styles: styleControl(CompStyles),
     defaults: withDefault(JSONObjectControl,`{
       zoom:10,
@@ -199,7 +196,6 @@ var GEOComp = (function () {
     features: any;
     menuTitle:string;
     menuContent:string;
-    autoHeight: boolean;
   }) => {
   //The event handler will also sent the event value to use
   const handleEvent = useCallback((name : string, eventObj : any)=>{
@@ -225,31 +221,10 @@ var GEOComp = (function () {
        console.log("handleEvent",eventName,eventObj)
   },[props.onEvent,props.event]);
 
-  const [dimensions, setDimensions] = useState({ width: 660, height: 415 });
-  const { width, height, ref: conRef } = useResizeDetector({onResize: () =>{
-    const container = conRef.current;
-    if(!container || !width || !height) return;
-
-    if(props.autoHeight) {
-      setDimensions({
-        width,
-        height: dimensions.height,
-      })
-      return;
-    }
-
-    setDimensions({
-      width,
-      height,
-    })
-  }});
-
-
-
-  return (
+ return (
     <div className={styles.wrapper} style={{
-      height: dimensions.height,
-      width: dimensions.width,
+      height: "100%",
+      width: "100%",
       backgroundColor: `${props.styles.backgroundColor}`,
       borderColor: `${props.styles.border}`,
       borderRadius: `${props.styles.radius}`,
@@ -299,7 +274,6 @@ var GEOComp = (function () {
        {children.menuContent.propertyView({ label: "Menu content" })}
       </Section>
       <Section name="Styles">
-      {children.autoHeight.getPropertyView()}
         {children.styles.getPropertyView()}
       </Section>
       <Section name="Advanced">
@@ -313,12 +287,6 @@ var GEOComp = (function () {
 })
 .build();
 })();
-
-GEOComp = class extends GEOComp {
-  autoHeight(): boolean {
-    return this.children.autoHeight.getView();
-  }
-};
 
 const GEOCompWithMethodExpose = withMethodExposing(GEOComp, [
   {
