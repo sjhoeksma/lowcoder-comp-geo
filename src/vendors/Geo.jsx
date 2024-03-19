@@ -60,7 +60,7 @@ function Geo(props) {
 
   //Function to check if updating of a variable is allowed
   const allowUpdate = function(name){
-    return !(props.ignoreUpdate && props.ignoreUpdate(name))
+    return !( props.ignoreUpdate && props.ignoreUpdate(name))
   }
 
   //Function to check if updating of a variable is allowed
@@ -413,7 +413,7 @@ function Geo(props) {
         title : "Focus my GeoLocation",
         delay : 5000
       });
-      if (showButton('location')) olMap.addControl(geoloc);
+      if (showButton('location')) olMap.addControl(geoLocation);
       geoLocation.on("change:active",(event)=>{
         if (event.active) {
           notification.show("Searching GPS",3000)
