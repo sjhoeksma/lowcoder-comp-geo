@@ -1,3 +1,18 @@
+# [1.3.0-dev.11](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.10...v1.3.0-dev.11) (2024-03-20)
+
+
+### Bug Fixes
+
+* animate default change ([513edd6](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/513edd61e80e38c658c2a5473bfde20fb9642028))
+* exposure issue of map ([c8bf419](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/c8bf419f8ff35ed2acaa82b8f3a0cf98fc98ec40))
+* moved map to property added doc ([1dcf6a8](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/1dcf6a81f6ef9898eb8f92218c89731c22c78c80))
+* removed margin option ([b17423c](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/b17423c4442482bb6809ddbf28657de8cfed430b))
+
+
+### Features
+
+* showPopup in methods ([129a9a2](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/129a9a24ab68f79a9488a862634b43d472f465a1))
+
 # [1.3.0-dev.10](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.9...v1.3.0-dev.10) (2024-03-19)
 
 
