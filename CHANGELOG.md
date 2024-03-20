@@ -164,3 +164,10 @@
 - Add properties viewers for layers, buttons, features
 - Implement kind of layers and do loading of baselayers first
 - method which will allow to load data into layer, instead of passing it by layer and can be bound to quer
+- highlite the flyto feature
+- add more data/layer sources likes mapbox stylegl and esri json
+- how can we make layer styling more flexible and dynamic with or without legend in the map or outside the map component
+- popup
+- ability to select layer>feature from outside the component
+- ability to filter the layer>data from outside the component
+- fixed center point (mobile friendly) for a data collection (eg. https://pbdemo.mapseed.org/)
