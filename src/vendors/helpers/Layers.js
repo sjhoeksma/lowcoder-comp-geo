@@ -1,3 +1,12 @@
+/**
+ * Creates a map layer instance for the given layer configuration.
+ * 
+ * Supports various layer types like MVT, WMS, WFS, XYZ, GeoJSON.
+ * Handles creating the appropriate ol layer class and source 
+ * based on the provided layerConfig.
+ * 
+ * Returns null if layer type is not supported.
+ */
 import { Vector as VectorLayer, VectorTile as VectorTileLayer } from 'ol/layer';
 import { OSM, XYZ, TileWMS, Vector as VectorSource, VectorTile as VectorTileSource } from 'ol/source';
 import GeoTIFF from 'ol/source/GeoTIFF.js';

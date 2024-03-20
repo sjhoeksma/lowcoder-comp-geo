@@ -1,3 +1,8 @@
+/**
+ * Shows a popup overlay on the provided map at the given coordinates 
+ * with the specified content message. Creates the popup if it does not 
+ * already exist.
+ */
 import Overlay from 'ol/Overlay';
 
 // Adjusted to accept a map instance directly
