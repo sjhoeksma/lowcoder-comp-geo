@@ -60,6 +60,10 @@ export const CompStyles = [
 ] as const;
 
 
+/**
+ * GEOComp Component configuration. 
+ * Defines the styling options exposed in the component properties panel.
+ */
 var GEOComp = (function () {
   /* By setting the following items within default you can control behavior
      center:[] will disable automatich centering
@@ -196,6 +200,9 @@ var GEOComp = (function () {
     menuTitle:string;
     menuContent:string;
     autoHeight:boolean;
+
+    //Exposing map internally
+    map :any;
   }) => {
   const [dimensions, setDimensions] = useState({ width: 650, height: 400 });
   //The event handler will also sent the event value to use
@@ -215,6 +222,10 @@ var GEOComp = (function () {
       case 'bbox': 
          props.bbox.onChange(eventObj)
          break;
+      case 'map:create': 
+         props.map = eventObj.map
+         return //Internal event only, user should use map:init
+          
       //case 'tracker': props.trackerLayer.onChange(eventObj); break; //Set the drawLayer object
     }
     props.onEvent(eventName,eventObj);
@@ -326,6 +337,22 @@ GEOComp = class extends GEOComp {
   }
 };
 
+/**
+ * Exposes methods on GEOComp component to allow calling from parent component.
+ * Includes:
+ * - animate: Perform animation on map
+ * - map: Get OpenLayers map instance 
+ * - notify: Display notification message
+ * - showPopup: Show popup at coordinates with message
+*/
+/**
+ * Exposes methods on GEOComp component to allow calling from parent component.
+ * Includes:
+ * - animate: Perform animation on map 
+ * - map: Get OpenLayers map instance  
+ * - notify: Display notification message
+ * - showPopup: Show popup at coordinates with message
+*/
 const GEOCompWithMethodExpose = withMethodExposing(GEOComp, [
   {
     method: {
@@ -333,7 +360,7 @@ const GEOCompWithMethodExpose = withMethodExposing(GEOComp, [
       params: [
         {
           name: "coords",
-          type: "arrayNumberString",
+          type: "array",
         },
         {
           name: "duration",
@@ -347,13 +374,12 @@ const GEOCompWithMethodExpose = withMethodExposing(GEOComp, [
           name: "animation",
           type: "string",
         },
-        
+
       ],
       description: "Perform animation",
     },
-    execute: async (comp :any, params :any) => {
-      var map = comp.exposingValues.event['map:init']
-      animate(params?.[3],map.getView(),params[0],params?.[1],params?.[2])
+    execute: async (comp: any, params: any) => {
+      animate(params?.[3], comp.map.getView(), params[0], params?.[1], params?.[2])
     },
   },
   {
@@ -361,8 +387,8 @@ const GEOCompWithMethodExpose = withMethodExposing(GEOComp, [
       name: "map",
       description: "Retuns the openlayer map",
     },
-    execute: (comp :any) => {
-      return comp.exposingValues.event['map:init']
+    execute: (comp: any) => {
+      return comp.map
     },
   },
   {
@@ -380,41 +406,35 @@ const GEOCompWithMethodExpose = withMethodExposing(GEOComp, [
         }
       ]
     },
-    execute: async (comp :any,params: any) => {
-      var map = comp.exposingValues.event['map:init']
-      map.getControls().forEach((control:any)=>{
-        if (control instanceof Notification){
-          control.show(params[0],params[1] || 2000)
+    execute: async (comp: any, params: any) => {
+      comp.map.getControls().forEach((control: any) => {
+        if (control instanceof Notification) {
+          control.show(params[0], params[1] || 2000)
         }
       })
     },
   },
   {
-  method: {
-    name: "showPopup",
-    description: "Displays a popup at the specified coordinates with a given message",
-    params: [
-      {
-        name: "coordinates",
-        type: "array", // Assuming [longitude, latitude]
-        description: "Coordinates where the popup should appear",
-      },
-      {
-        name: "message",
-        type: "string",
-        description: "Message to display in the popup",
-      }
-    ]
-  },
-  execute: (comp: any, params: any) => {
-    var map = comp.exposingValues.event['map:init']
-    if (!map) {
-      console.error("MapView not initialized");
-      return;
-    }
-    showPopup(map, params[0], params[1]);
-  },
-}
+    method: {
+      name: "showPopup",
+      description: "Displays a popup at the specified coordinates with a given message",
+      params: [
+        {
+          name: "coordinates",
+          type: "array", // Assuming [longitude, latitude]
+          description: "Coordinates where the popup should appear",
+        },
+        {
+          name: "message",
+          type: "string",
+          description: "Message to display in the popup",
+        }
+      ]
+    },
+    execute: (comp: any, params: any) => {
+      showPopup(comp.map, params[0], params[1]);
+    },
+  }
 ]);
 
 export default withExposingConfigs(GEOCompWithMethodExpose, [

@@ -1,5 +1,8 @@
 import { Control } from 'ol/control';
 
+/**
+ * Creates a new control to rotate the map to north.
+ */
 export default class RotateNorthControl extends Control {
     constructor(options = {}) {
       const button = document.createElement('button');

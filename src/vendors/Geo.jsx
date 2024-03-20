@@ -106,6 +106,7 @@ function Geo(props) {
          target: 'GEO_'+ geoId,
          layers: [],
        });
+       fireEvent('map:create',olMap);
 
       //Add the buttons contols
       var zoom =  new Zoom({
