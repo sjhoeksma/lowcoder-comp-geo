@@ -1,4 +1,4 @@
-import { useState,useEffect,useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import {
   UICompBuilder,
   NameConfig,
@@ -19,7 +19,7 @@ import {
 import styles from "./styles.module.css";
 import { trans } from "./i18n/comps";
 import { Geo } from "./vendors";
-import {version} from '../package.json';
+import { version } from '../package.json';
 import { animate } from './vendors/helpers/Animate'
 import { showPopup } from "./vendors/helpers/Popup";
 import { useResizeDetector } from "react-resize-detector";
@@ -27,35 +27,35 @@ import { useResizeDetector } from "react-resize-detector";
 import Notification from 'ol-ext/control/Notification'
 
 export const CompStyles = [
-  {	
-    name: "padding",	
+  {
+    name: "padding",
     label: trans("style.padding"),
-    padding: "padding",	
+    padding: "padding",
   },
-  {	
+  {
     name: "textSize",
     label: trans("style.textSize"),
-    textSize: "textSize",	
+    textSize: "textSize",
   },
-  {	
+  {
     name: "backgroundColor",
     label: trans("style.backgroundColor"),
-    backgroundColor: "backgroundColor",	
+    backgroundColor: "backgroundColor",
   },
-  {	
+  {
     name: "border",
     label: trans("style.border"),
-    border: "border",	
+    border: "border",
   },
   {
-    name : "radius",
-    label : trans("style.borderRadius"),
-    radius : "radius",
+    name: "radius",
+    label: trans("style.borderRadius"),
+    radius: "radius",
   },
   {
-    name : "borderWidth",
-    label : trans("style.borderWidth"),
-    borderWidth : "borderWidth",
+    name: "borderWidth",
+    label: trans("style.borderWidth"),
+    borderWidth: "borderWidth",
   }
 ] as const;
 
@@ -136,7 +136,7 @@ var GEOComp = (function () {
   const childrenMap = {
     autoHeight: withDefault(AutoHeightControl, "fixed"),
     styles: styleControl(CompStyles),
-    defaults: withDefault(JSONObjectControl,`{
+    defaults: withDefault(JSONObjectControl, `{
       zoom:10,
       maxZoom:30,
       menuTitle: "Menu",
@@ -147,7 +147,7 @@ var GEOComp = (function () {
       debug:true
     }`),
     center: ArrayControl,
-    layers: withDefault(ArrayControl,`[
+    layers: withDefault(ArrayControl, `[
       {
         type : 'xyz',
         name: 'OpenStreetMap',
@@ -159,180 +159,185 @@ var GEOComp = (function () {
     zoom: NumberControl,
     maxZoom: NumberControl,
     rotation: NumberControl,
-    bbox: arrayStringExposingStateControl("bbox",[0,0,0,0]),
+    bbox: arrayStringExposingStateControl("bbox", [0, 0, 0, 0]),
     menuTitle: stringSimpleControl(""),
     menuContent: stringSimpleControl(""),
-    drawLayer : jsonObjectExposingStateControl("drawLayer",{"type":"FeatureCollection","features":[{"type":"Feature","geometry":{"type":"LineString","coordinates":[[514138.9757700867,6865494.523372142],[528910.431486197,6856739.497812072]]},"properties":null}]}),
-    trackerLayer : jsonObjectExposingStateControl("trackerLayer"),
-    event : jsonObjectExposingStateControl("event"),
-    buttons: withDefault(JSONObjectControl,"{menu:false}"),
-    features: withDefault(JSONObjectControl,"{draw:true,swipe:false,tracker:false,timeline:false,gpsCentered:true,largeButtons:false}"),
+    drawLayer: jsonObjectExposingStateControl("drawLayer", { "type": "FeatureCollection", "features": [{ "type": "Feature", "geometry": { "type": "LineString", "coordinates": [[514138.9757700867, 6865494.523372142], [528910.431486197, 6856739.497812072]] }, "properties": null }] }),
+    trackerLayer: jsonObjectExposingStateControl("trackerLayer"),
+    event: jsonObjectExposingStateControl("event"),
+    map: jsonObjectExposingStateControl("map"),
+    buttons: withDefault(JSONObjectControl, "{menu:false}"),
+    features: withDefault(JSONObjectControl, "{draw:true,swipe:false,tracker:false,timeline:false,gpsCentered:true,largeButtons:false}"),
     onEvent: eventHandlerControl(events),
   };
 
   //ignoreUpdate function
-  const _ignoreUpdate : any = {}
-  const setIgnoreUpdate = function(name : string){
-    _ignoreUpdate[name]=true
+  const _ignoreUpdate: any = {}
+  const setIgnoreUpdate = function (name: string) {
+    _ignoreUpdate[name] = true
   }
-  const ignoreUpdate = function(name : string){
+  const ignoreUpdate = function (name: string) {
     var ret = _ignoreUpdate[name] || false
     _ignoreUpdate[name] = false
     return ret
   }
-   
+
   return new UICompBuilder(childrenMap, (props: {
     onEvent: any;
-    styles: { backgroundColor: any; border: any; radius: any; borderWidth: any; 
-               padding: any; textSize: any; };
-    center : any;
-    zoom : number;
+    styles: {
+      backgroundColor: any; border: any; radius: any; borderWidth: any;
+      padding: any; textSize: any;
+    };
+    center: any;
+    zoom: number;
     maxZoom: number;
     rotation: number;
     drawLayer: any;
     layers: any;
     bbox: any;
-    trackerLayer:any;
-    event : any;
+    trackerLayer: any;
     defaults: any;
     buttons: any;
     features: any;
-    menuTitle:string;
-    menuContent:string;
-    autoHeight:boolean;
-
-    //Exposing map internally
-    map :any;
+    menuTitle: string;
+    menuContent: string;
+    autoHeight: boolean;
+    event: any;
+    map: any;
   }) => {
-  const [dimensions, setDimensions] = useState({ width: 650, height: 400 });
-  //The event handler will also sent the event value to use
-  const handleEvent = useCallback((name : string, eventObj : any)=>{
-    props.event.onChange(Object.assign(props.event.value || {},{
-      [name] : eventObj,
-      current   : name
-    }))
-    var n = name.split(":")[0]
-    var eventName = "event"
-    events.forEach((k)=>{if (k.value==n || k.value==name) {eventName=k.value}})
-    switch (eventName){
-      case 'draw': 
-         setIgnoreUpdate('drawLayer')
-         props.drawLayer.onChange(eventObj); 
-         break; //Set the drawLayer object
-      case 'bbox': 
-         props.bbox.onChange(eventObj)
-         break;
-      case 'map:create': 
-         props.map = eventObj.map
-         return //Internal event only, user should use map:init
-          
-      //case 'tracker': props.trackerLayer.onChange(eventObj); break; //Set the drawLayer object
-    }
-    props.onEvent(eventName,eventObj);
-    if (props.defaults && props.defaults.debug===true)
-       console.log("handleEvent",eventName,eventObj)
-  },[props.onEvent,props.event]);
+    const [dimensions, setDimensions] = useState({ width: 650, height: 400 });
+    //The event handler will also sent the event value to use
+    const handleEvent = useCallback((name: string, eventObj: any) => {
+      props.event.onChange(Object.assign(props.event.value || {}, {
+        [name]: eventObj,
+        current: name
+      }))
+      var n = name.split(":")[0]
+      var eventName = "event"
+      events.forEach((k) => { if (k.value == n || k.value == name) { eventName = k.value } })
+      switch (name) { //Catch first on name
+        case 'map:create':
+          props.map.onChange(eventObj)
+          return //Internal event only, user should use map:init
+        default:
+          switch (eventName) {
+            case 'draw':
+              setIgnoreUpdate('drawLayer')
+              props.drawLayer.onChange(eventObj);
+              break; //Set the drawLayer object
+            case 'bbox':
+              props.bbox.onChange(eventObj)
+              break;
+          }
+        //case 'tracker': props.trackerLayer.onChange(eventObj); break; //Set the drawLayer object
+      }
+      props.onEvent(eventName, eventObj);
+      if (props.defaults && props.defaults.debug === true)
+        console.log("handleEvent", eventName, eventObj)
+    }, [props.onEvent]);
 
-  const { width, height, ref: conRef } = useResizeDetector({onResize: () =>{
-      const container = conRef.current;
-      if(!container || !width || !height) return;
-  
-      if(props.autoHeight) {
+    const { width, height, ref: conRef } = useResizeDetector({
+      onResize: () => {
+        const container = conRef.current;
+        if (!container || !width || !height) return;
+
+        if (props.autoHeight) {
+          setDimensions({
+            width,
+            height: dimensions.height,
+          })
+
+          return;
+        }
+
         setDimensions({
           width,
-          height: dimensions.height,
+          height: height,
         })
-        
-        return;
       }
+    });
 
-      setDimensions({
-        width,
-        height : height,
-      })
-   }});
-
- return (
-    <div className={styles.wrapper} 
-    style={{
-      backgroundColor: `${props.styles.backgroundColor}`,
-      borderColor: `${props.styles.border}`,
-      borderRadius: `${props.styles.radius}`,
-      borderWidth: `${props.styles.borderWidth}`,
-      margin: 0,
-      padding: `${props.styles.padding}`,
-      fontSize: `${props.styles.textSize}`,
-      height: '100%',
-      width: '100%',
-    }}
-   >
-    <div ref={conRef}
-       style={{
-        height: '100%',
-        width: '100%',
-      }}
-     >
-      <Geo
-        height={dimensions.height }
-        width={dimensions.width}
-        center={ props.center}
-        drawLayer={props.drawLayer.value}
-        zoom={props.zoom }
-        maxZoom={props.maxZoom}
-        rotation={props.rotation}
-        buttons={props.buttons}
-        menuContent={props.menuContent}
-        menuTitle={props.menuTitle}
-        defaults={props.defaults}
-        features={props.features}
-        layers={props.layers}
-        onEvent={handleEvent}
-        ignoreUpdate={ignoreUpdate}
-      />
-    </div>
-    </div>
-  );
-})
-.setPropertyViewFn((children: any) => {
-  return (
-    <>
-      <Section name="Map">
-      {children.layers.propertyView({ label: "layers" })}
-      {children.drawLayer.propertyView({ label: "drawing" })}
-      </Section>
-      <Section name="View">
-        {children.center.propertyView({ label: "center" })}
-        {children.zoom.propertyView({ label: "zoom" })}
-        {children.maxZoom.propertyView({ label: "maxZoom" })}
-        {children.rotation.propertyView({ label: "rotation" })}
-      </Section>
-      <Section name="Interaction">
-        {children.onEvent.propertyView()}
-      </Section>
-      <Section name="Behavior">
-       {children.features.propertyView({ label: "Enabled features" })}
-       {children.buttons.propertyView({ label: "Visible buttons" })}
-       {children.menuTitle.propertyView({ label: "Menu title" })}
-       {children.menuContent.propertyView({ label: "Menu content" })}
-      </Section>
-      <Section name="Styles">
-        {children.autoHeight.getPropertyView()}
-        {children.styles.getPropertyView()}
-      </Section>
-      <Section name="Advanced">
-        {children.defaults.propertyView({ label: "defaults" })}
-      </Section>
-      <div >
-        <div style={{"float":"right","marginRight": "15px"}}>Version :  {version}</div>
-      </div>  
-    </>
-  );
-})
-.build();
+    return (
+      <div className={styles.wrapper}
+        style={{
+          backgroundColor: `${props.styles.backgroundColor}`,
+          borderColor: `${props.styles.border}`,
+          borderRadius: `${props.styles.radius}`,
+          borderWidth: `${props.styles.borderWidth}`,
+          margin: 0,
+          padding: `${props.styles.padding}`,
+          fontSize: `${props.styles.textSize}`,
+          height: '100%',
+          width: '100%',
+        }}
+      >
+        <div ref={conRef}
+          style={{
+            height: '100%',
+            width: '100%',
+          }}
+        >
+          <Geo
+            height={dimensions.height}
+            width={dimensions.width}
+            center={props.center}
+            drawLayer={props.drawLayer.value}
+            zoom={props.zoom}
+            maxZoom={props.maxZoom}
+            rotation={props.rotation}
+            buttons={props.buttons}
+            menuContent={props.menuContent}
+            menuTitle={props.menuTitle}
+            defaults={props.defaults}
+            features={props.features}
+            layers={props.layers}
+            onEvent={handleEvent}
+            ignoreUpdate={ignoreUpdate}
+          />
+        </div>
+      </div>
+    );
+  })
+    .setPropertyViewFn((children: any) => {
+      return (
+        <>
+          <Section name="Map">
+            {children.layers.propertyView({ label: "layers" })}
+            {children.drawLayer.propertyView({ label: "drawing" })}
+          </Section>
+          <Section name="View">
+            {children.center.propertyView({ label: "center" })}
+            {children.zoom.propertyView({ label: "zoom" })}
+            {children.maxZoom.propertyView({ label: "maxZoom" })}
+            {children.rotation.propertyView({ label: "rotation" })}
+          </Section>
+          <Section name="Interaction">
+            {children.onEvent.propertyView()}
+          </Section>
+          <Section name="Behavior">
+            {children.features.propertyView({ label: "Enabled features" })}
+            {children.buttons.propertyView({ label: "Visible buttons" })}
+            {children.menuTitle.propertyView({ label: "Menu title" })}
+            {children.menuContent.propertyView({ label: "Menu content" })}
+          </Section>
+          <Section name="Styles">
+            {children.autoHeight.getPropertyView()}
+            {children.styles.getPropertyView()}
+          </Section>
+          <Section name="Advanced">
+            {children.defaults.propertyView({ label: "defaults" })}
+          </Section>
+          <div >
+            <div style={{ "float": "right", "marginRight": "15px" }}>Version :  {version}</div>
+          </div>
+        </>
+      );
+    })
+    .build();
 })();
 
 GEOComp = class extends GEOComp {
-   autoHeight(): boolean {
+  autoHeight(): boolean {
     return this.children.autoHeight.getView();
   }
 };
@@ -374,21 +379,11 @@ const GEOCompWithMethodExpose = withMethodExposing(GEOComp, [
           name: "animation",
           type: "string",
         },
-
       ],
       description: "Perform animation",
     },
     execute: async (comp: any, params: any) => {
-      animate(params?.[3], comp.map.getView(), params[0], params?.[1], params?.[2])
-    },
-  },
-  {
-    method: {
-      name: "map",
-      description: "Retuns the openlayer map",
-    },
-    execute: (comp: any) => {
-      return comp.map
+      animate(params?.[3], comp.exposingValues.map.getView(), params[0], params?.[1], params?.[2])
     },
   },
   {
@@ -407,7 +402,7 @@ const GEOCompWithMethodExpose = withMethodExposing(GEOComp, [
       ]
     },
     execute: async (comp: any, params: any) => {
-      comp.map.getControls().forEach((control: any) => {
+      comp.exposingValues.map.getControls().forEach((control: any) => {
         if (control instanceof Notification) {
           control.show(params[0], params[1] || 2000)
         }
@@ -431,8 +426,8 @@ const GEOCompWithMethodExpose = withMethodExposing(GEOComp, [
         }
       ]
     },
-    execute: (comp: any, params: any) => {
-      showPopup(comp.map, params[0], params[1]);
+    execute: async (comp: any, params: any) => {
+      showPopup(comp.exposingValues.map, params[0], params[1]);
     },
   }
 ]);
@@ -442,4 +437,5 @@ export default withExposingConfigs(GEOCompWithMethodExpose, [
   new NameConfig("trackerLayer", trans("component.trackerLayer")),
   new NameConfig("event", trans("component.event")),
   new NameConfig("bbox", trans("component.bbox")),
+  new NameConfig("map", "map"),
 ]);
