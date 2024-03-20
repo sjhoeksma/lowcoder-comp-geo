@@ -35,8 +35,8 @@ export function showPopup(map, coordinates, message) {
     }
 
     // Convert coordinates and set popup content
-    const coords = fromLonLat(coordinates);
+    // const coords = fromLonLat(coordinates);
     let content = popup.getElement().querySelector('.ol-popup-content');
     content.innerHTML = message;
-    popup.setPosition(coords);
+    popup.setPosition(coordinates);
 }

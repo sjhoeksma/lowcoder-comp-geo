@@ -178,7 +178,6 @@ var GEOComp = (function () {
     }),
     trackerLayer: jsonObjectExposingStateControl("trackerLayer"),
     event: jsonObjectExposingStateControl("event"),
-    map: jsonObjectExposingStateControl("map"),
     buttons: withDefault(JSONObjectControl, "{menu:false}"),
     features: withDefault(
       JSONObjectControl,
@@ -226,7 +225,7 @@ var GEOComp = (function () {
     //The event handler will also sent the event value to use
     const handleEvent = useCallback((name: string, eventObj: any) => {
       props.event.onChange(Object.assign(props.event.value || {}, {
-        [name]: Object.assign({}, eventObj),
+        [name]: eventObj,
         current: name
       }))
       var n = name.split(":")[0]
@@ -234,7 +233,6 @@ var GEOComp = (function () {
       events.forEach((k) => { if (k.value == n || k.value == name) { eventName = k.value } })
       switch (name) { //Catch first on name
         case 'map:create':
-          props.map.onChange(eventObj)
           return //Internal event only, user should use map:init
         default:
           switch (eventName) {
@@ -400,7 +398,8 @@ const GEOCompWithMethodExpose = withMethodExposing(GEOComp, [
       description: "Perform animation",
     },
     execute: async (comp: any, params: any) => {
-      animate(params?.[3], comp.exposingValues.map.getView(), params[0], params?.[1], params?.[2])
+      var map = comp.exposingValues.event['map:create']
+      animate(params?.[3], map.getView(), params[0], params?.[1], params?.[2])
     },
   },
   {
@@ -419,7 +418,8 @@ const GEOCompWithMethodExpose = withMethodExposing(GEOComp, [
       ]
     },
     execute: async (comp: any, params: any) => {
-      comp.exposingValues.map.getControls().forEach((control: any) => {
+      var map = comp.exposingValues.event['map:create']
+      map.getControls().forEach((control: any) => {
         if (control instanceof Notification) {
           control.show(params[0], params[1] || 2000)
         }
@@ -455,5 +455,4 @@ export default withExposingConfigs(GEOCompWithMethodExpose, [
   new NameConfig("trackerLayer", trans("component.trackerLayer")),
   new NameConfig("event", trans("component.event")),
   new NameConfig("bbox", trans("component.bbox")),
-  new NameConfig("map", "map"),
 ]);
