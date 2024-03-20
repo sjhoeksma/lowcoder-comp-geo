@@ -1,3 +1,10 @@
+# [1.3.0-dev.12](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.11...v1.3.0-dev.12) (2024-03-20)
+
+
+### Bug Fixes
+
+* added checking op draw ([55ba171](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/55ba1715497c2a6ab1b587811619fa587e22df62))
+
 # [1.3.0-dev.11](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.10...v1.3.0-dev.11) (2024-03-20)
 
 
