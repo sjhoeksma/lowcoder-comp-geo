@@ -17,7 +17,7 @@ import {
   AutoHeightControl,
 } from "lowcoder-sdk";
 import styles from "./styles.module.css";
-import { i18nObjs ,trans } from "./i18n/comps";
+import { i18nObjs, trans } from "./i18n/comps";
 import { Geo } from "./vendors";
 import { version } from '../package.json';
 import { animate } from './vendors/helpers/Animate'
@@ -63,9 +63,7 @@ export const CompStyles = [
 /**
  * GEOComp Component configuration. 
  * Defines the styling options exposed in the component properties panel.
- */
-var GEOComp = (function () {
-  /* By setting the following items within default you can control behavior
+ * By setting the following items within default you can control behavior
      center:[] will disable automatich centering
      debug: true will show eventlog to console
      buttons: { //All buttons are shown by default
@@ -90,7 +88,9 @@ var GEOComp = (function () {
         tracker :false,
         rotateNorth: false,
       }
-  */
+ */
+var GEOComp = (function () {
+  //The events supported
   const events = [
     {
       label: "onDraw",
@@ -133,6 +133,8 @@ var GEOComp = (function () {
       description: "Triggers when there is no special event handler is triggered",
     },
   ];
+
+  //All properties avaiable in component
   const childrenMap = {
     autoHeight: withDefault(AutoHeightControl, "fixed"),
     styles: styleControl(CompStyles),
@@ -186,7 +188,7 @@ var GEOComp = (function () {
     onEvent: eventHandlerControl(events),
   };
   console.log(i18nObjs.defaultData);
-  
+
   //ignoreUpdate function
   const _ignoreUpdate: any = {}
   const setIgnoreUpdate = function (name: string) {
@@ -198,6 +200,7 @@ var GEOComp = (function () {
     return ret
   }
 
+  //The Builder function creating the real component
   return new UICompBuilder(childrenMap, (props: {
     onEvent: any;
     styles: {
@@ -221,6 +224,7 @@ var GEOComp = (function () {
     event: any;
     map: any;
   }) => {
+    //Default size of component
     const [dimensions, setDimensions] = useState({ width: 650, height: 400 });
     //The event handler will also sent the event value to use
     const handleEvent = useCallback((name: string, eventObj: any) => {
@@ -231,6 +235,7 @@ var GEOComp = (function () {
       var n = name.split(":")[0]
       var eventName = "event"
       events.forEach((k) => { if (k.value == n || k.value == name) { eventName = k.value } })
+      //Double switch will allow fine grained event catching
       switch (name) { //Catch first on name
         case 'map:create':
           return //Internal event only, user should use map:init
@@ -244,13 +249,15 @@ var GEOComp = (function () {
               props.bbox.onChange(eventObj)
               break;
           }
-        //case 'tracker': props.trackerLayer.onChange(eventObj); break; //Set the drawLayer object
       }
+      //Fire the event to lowcoder
       props.onEvent(eventName, eventObj);
+      //Send debug information to console
       if (props.defaults && props.defaults.debug === true)
-        console.log("handleEvent", eventName, eventObj)
+        console.debug("handleEvent", eventName, eventObj)
     }, [props.onEvent]);
 
+    //Catch the resizing of component
     const { width, height, ref: conRef } = useResizeDetector({
       onResize: () => {
         const container = conRef.current;
@@ -272,6 +279,7 @@ var GEOComp = (function () {
       }
     });
 
+    //Create the container for the component
     return (
       <div className={styles.wrapper}
         style={{
@@ -313,6 +321,7 @@ var GEOComp = (function () {
       </div>
     );
   })
+    //The properties that will be visible inside lowcoder
     .setPropertyViewFn((children: any) => {
       return (
         <>
@@ -351,20 +360,14 @@ var GEOComp = (function () {
     .build();
 })();
 
+//Add autoheight to component
 GEOComp = class extends GEOComp {
   autoHeight(): boolean {
     return this.children.autoHeight.getView();
   }
 };
 
-/**
- * Exposes methods on GEOComp component to allow calling from parent component.
- * Includes:
- * - animate: Perform animation on map
- * - map: Get OpenLayers map instance 
- * - notify: Display notification message
- * - showPopup: Show popup at coordinates with message
-*/
+
 /**
  * Exposes methods on GEOComp component to allow calling from parent component.
  * Includes:
@@ -450,6 +453,7 @@ const GEOCompWithMethodExpose = withMethodExposing(GEOComp, [
   }
 ]);
 
+//Expose all methods
 export default withExposingConfigs(GEOCompWithMethodExpose, [
   new NameConfig("drawLayer", trans("component.drawLayer")),
   new NameConfig("trackerLayer", trans("component.trackerLayer")),
