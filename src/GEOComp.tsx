@@ -17,7 +17,7 @@ import {
   AutoHeightControl,
 } from "lowcoder-sdk";
 import styles from "./styles.module.css";
-import { trans } from "./i18n/comps";
+import { i18nObjs ,trans } from "./i18n/comps";
 import { Geo } from "./vendors";
 import { version } from '../package.json';
 import { animate } from './vendors/helpers/Animate'
@@ -136,7 +136,9 @@ var GEOComp = (function () {
   const childrenMap = {
     autoHeight: withDefault(AutoHeightControl, "fixed"),
     styles: styleControl(CompStyles),
-    defaults: withDefault(JSONObjectControl, `{
+    defaults: withDefault(
+      JSONObjectControl,
+      `{
       zoom:10,
       maxZoom:30,
       menuTitle: "Menu",
@@ -145,32 +147,47 @@ var GEOComp = (function () {
         draw: true
       },
       debug:true
-    }`),
+    }`
+    ),
     center: ArrayControl,
-    layers: withDefault(ArrayControl, `[
-      {
-        type : 'xyz',
-        name: 'OpenStreetMap',
-        source : {
-          url :  'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-        }
-      }
-    ]`),
+    layers: withDefault(
+      ArrayControl,
+      `${JSON.stringify(i18nObjs.defaultData, null, 2)}`
+    ),
     zoom: NumberControl,
     maxZoom: NumberControl,
     rotation: NumberControl,
     bbox: arrayStringExposingStateControl("bbox", [0, 0, 0, 0]),
     menuTitle: stringSimpleControl(""),
     menuContent: stringSimpleControl(""),
-    drawLayer: jsonObjectExposingStateControl("drawLayer", { "type": "FeatureCollection", "features": [{ "type": "Feature", "geometry": { "type": "LineString", "coordinates": [[514138.9757700867, 6865494.523372142], [528910.431486197, 6856739.497812072]] }, "properties": null }] }),
+    drawLayer: jsonObjectExposingStateControl("drawLayer", {
+      type: "FeatureCollection",
+      features: [
+        {
+          type: "Feature",
+          geometry: {
+            type: "LineString",
+            coordinates: [
+              [514138.9757700867, 6865494.523372142],
+              [528910.431486197, 6856739.497812072],
+            ],
+          },
+          properties: null,
+        },
+      ],
+    }),
     trackerLayer: jsonObjectExposingStateControl("trackerLayer"),
     event: jsonObjectExposingStateControl("event"),
     map: jsonObjectExposingStateControl("map"),
     buttons: withDefault(JSONObjectControl, "{menu:false}"),
-    features: withDefault(JSONObjectControl, "{draw:true,swipe:false,tracker:false,timeline:false,gpsCentered:true,largeButtons:false}"),
+    features: withDefault(
+      JSONObjectControl,
+      "{draw:true,swipe:false,tracker:false,timeline:false,gpsCentered:true,largeButtons:false}"
+    ),
     onEvent: eventHandlerControl(events),
   };
-
+  console.log(i18nObjs.defaultData);
+  
   //ignoreUpdate function
   const _ignoreUpdate: any = {}
   const setIgnoreUpdate = function (name: string) {
