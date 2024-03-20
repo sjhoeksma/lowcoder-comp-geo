@@ -1,5 +1,4 @@
 import Overlay from 'ol/Overlay';
-import { fromLonLat } from 'ol/proj';
 
 // Adjusted to accept a map instance directly
 export function showPopup(map, coordinates, message) {
@@ -33,10 +32,10 @@ export function showPopup(map, coordinates, message) {
 
         map.addOverlay(popup);
     }
-
-    // Convert coordinates and set popup content
-    // const coords = fromLonLat(coordinates);
-    let content = popup.getElement().querySelector('.ol-popup-content');
-    content.innerHTML = message;
-    popup.setPosition([coordinates[0], coordinates[1]]);
+    //Show popup on the first coordinates as work arround
+    if (Array.isArray(coordinates) && coordinates.length >= 2) {
+        let content = popup.getElement().querySelector('.ol-popup-content');
+        content.innerHTML = message;
+        popup.setPosition([coordinates[0], coordinates[1]]);
+    }
 }
