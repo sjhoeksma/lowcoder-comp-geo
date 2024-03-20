@@ -480,8 +480,7 @@ function Geo(props) {
         olMap.forEachFeatureAtPixel(evt.pixel, function (feature, layer) {
           // Vector feature click logic
           hasFeature = true; // Indicate that a vector feature was clicked
-          if (!(featureEnabled('draw') && (pdelete.getActive() || pmove && pmove.getActive())) && layer) { //only fire event if we are not drawing
-            console.log('click:feature', feature)
+          if (!(featureEnabled('draw') && (pdelete.getActive() || pmove.getActive())) && layer) { //only fire event if we are not drawing
             fireEvent('click:feature', {
               coords: feature.getProperties()?.geometry.flatCoordinates,
               layer: layer.values_?.name
