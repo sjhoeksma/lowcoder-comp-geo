@@ -180,3 +180,11 @@
 - ability to select layer>feature from outside the component
 - ability to filter the layer>data from outside the component
 - fixed center point (mobile friendly) for a data collection (eg. https://pbdemo.mapseed.org/)
+- Add support for more addFeature types
+  WKT (Well-Known Text)
+  WKB (Well-Known Binary)
+  GeoJSON
+  GML (Geography Markup Language)
+  KML (Keyhole Markup Language)
+  GPX (GPS Exchange Format)
+  Shapefile

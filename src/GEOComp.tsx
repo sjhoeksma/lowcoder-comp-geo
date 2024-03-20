@@ -25,6 +25,7 @@ import { showPopup } from "./vendors/helpers/Popup";
 import { useResizeDetector } from "react-resize-detector";
 // @ts-ignore
 import Notification from 'ol-ext/control/Notification'
+import { GeoJSON } from 'ol/format';
 
 export const CompStyles = [
   {
@@ -450,7 +451,52 @@ const GEOCompWithMethodExpose = withMethodExposing(GEOComp, [
       var map = comp.exposingValues.event['map:create']
       showPopup(map, params[0], params[1]);
     },
-  }
+  },
+  {
+    method: {
+      name: "addFeatures",
+      description: "Add feature to layer",
+      params: [
+        {
+          name: "data",
+          type: "any",
+        },
+        {
+          name: "layer",
+          type: "string",
+        },
+        {
+          name: "clear (optional)",
+          type: "boolean",
+        }
+      ]
+    },
+    execute: async (comp: any, params: any) => {
+      //TODO: We should check if params[0] is promise => query
+      var map = comp.exposingValues.event['map:create']
+      const layers = map.getLayers().getArray();
+      for (var i = 0; i < layers.length; i++) {
+        const layer = layers[i]
+        if (layer.get('name') == params[1]) {
+          const source = layer.getSource()
+          //Check if we should clear te source
+          if (params[2] == true) source.clear()
+          const reader = layer.getFormat || new GeoJSON()
+          if (reader && params[0]) {
+            //Now add the features based on types
+            if (Array.isArray(params[0])) {
+              params[0].forEach((rec) => {
+                source.addFeature(reader.readFeature(rec))
+              })
+            } else {
+              source.addFeature(reader.readFeature(params[0]))
+            }
+          }
+          return //Exit, work is done
+        }
+      }
+    },
+  },
 ]);
 
 //Expose all methods
