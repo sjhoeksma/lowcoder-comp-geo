@@ -1,22 +1,22 @@
 import { I18nObjects } from "./types";
 
-
 export const enObj: I18nObjects = {
   defaultData: [
     {
-      name: "US States - WMS",
+      name: "NASA | BlueMarble NextGeneration - WMS",
       type: "wms",
       order: 1,
       minZoom: 0,
-      maxZoom: 22,
+      maxZoom: 8,
       visible: true,
       source: {
-        url: "https://ahocevar.com/geoserver/wms",
-        layers: "baseLayer",
-        version: "1.3.0",
-        params: { LAYERS: "topp:states", TILED: true },
+        url: "https://ideas-digitaltwin.jpl.nasa.gov/wms/epsg4326/best/wms.cgi",
+        params: {
+          LAYERS: "BlueMarble_NextGeneration",
+          TILED: true,
+          version: "1.3.0",
+        },
         serverType: "geoserver",
-        // crossOrigin: "anonymous",
         transition: 0,
       },
       opacity: 1,
@@ -184,7 +184,6 @@ export const enObj: I18nObjects = {
       maxZoom: 22,
       visible: false,
       source: {
-        // url: "https://basemaps.arcgis.com/v1/arcgis/rest/services/World_Basemap/VectorTileServer/tile/{z}/{y}/{x}.pbf",
         url: "https://wms.wheregroup.com/tileserver/tile/world-0-14/{z}/{x}/{y}.pbf",
       },
       style: {
