@@ -209,7 +209,7 @@ var GEOComp = (function () {
     //The event handler will also sent the event value to use
     const handleEvent = useCallback((name: string, eventObj: any) => {
       props.event.onChange(Object.assign(props.event.value || {}, {
-        [name]: eventObj,
+        [name]: Object.assign({}, eventObj),
         current: name
       }))
       var n = name.split(":")[0]
