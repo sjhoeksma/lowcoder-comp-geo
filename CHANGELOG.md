@@ -1,3 +1,10 @@
+# [1.3.0-dev.13](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.12...v1.3.0-dev.13) (2024-03-20)
+
+
+### Bug Fixes
+
+* use cloned event ([6673137](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/66731378cee87f16abc340997e6fbd9a513f7378))
+
 # [1.3.0-dev.12](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.11...v1.3.0-dev.12) (2024-03-20)
 
 
