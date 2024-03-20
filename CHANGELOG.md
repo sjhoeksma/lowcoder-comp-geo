@@ -1,3 +1,12 @@
+# [1.3.0-dev.16](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.15...v1.3.0-dev.16) (2024-03-20)
+
+
+### Bug Fixes
+
+* Default Layers Config from i18n ([43e6013](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/43e60135ac71ccab907ff1703b129f62cacd1c3b))
+* poupLoc ([c89b141](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/c89b141acae9d78e41a2b5aeb4a5065c4e5d0ca4))
+* toCheckout popup ([841d556](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/841d5568f4cc115a12197d8ebbcfd07bdfbcf843))
+
 # [1.3.0-dev.15](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.14...v1.3.0-dev.15) (2024-03-20)
 
 
