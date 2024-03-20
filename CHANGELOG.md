@@ -1,3 +1,18 @@
+# [1.3.0-dev.17](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.16...v1.3.0-dev.17) (2024-03-20)
+
+
+### Bug Fixes
+
+* added cody automated doc ([f0fdfe1](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/f0fdfe16cf43fd78373e4a1ad4afbd39e30c6a22))
+* array size checking coordinates ([19a53f0](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/19a53f030e62f3707b7269552611306b82883b5c))
+* doc add ([8f648b3](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/8f648b3ea8d5382fcccff165b0db733cd182de55))
+* First addFeatures method ([370aa07](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/370aa07599d1839d0f8ccc05471ff53a68b09e1a))
+
+
+### Features
+
+* geoJsonStyleFunction to follow the geojson styling standards ([161d9c5](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/161d9c5d220e008261371ca26c583944939a52d7))
+
 # [1.3.0-dev.16](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.15...v1.3.0-dev.16) (2024-03-20)
 
 
