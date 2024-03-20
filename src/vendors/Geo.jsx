@@ -481,10 +481,10 @@ function Geo(props) {
           // Vector feature click logic
           hasFeature = true; // Indicate that a vector feature was clicked
           if (!(featureEnabled('draw') && (pdelete.getActive() || pmove && pmove.getActive())) && layer) { //only fire event if we are not drawing
+            console.log('click:feature', feature)
             fireEvent('click:feature', {
               coords: feature.getProperties()?.geometry.flatCoordinates,
-              layer: layer.values_?.name,
-              map: olMap
+              layer: layer.values_?.name
             })
           }
           return true; // Stop iterating through features
