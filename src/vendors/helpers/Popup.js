@@ -38,5 +38,5 @@ export function showPopup(map, coordinates, message) {
     // const coords = fromLonLat(coordinates);
     let content = popup.getElement().querySelector('.ol-popup-content');
     content.innerHTML = message;
-    popup.setPosition(coordinates);
+    popup.setPosition([coordinates[0], coordinates[1]]);
 }
