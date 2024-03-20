@@ -13,7 +13,7 @@ import GeoTIFF from 'ol/source/GeoTIFF.js';
 import TileLayer from 'ol/layer/WebGLTile.js';
 import MVT from 'ol/format/MVT';
 import GeoJSON from 'ol/format/GeoJSON';
-import { geoJsonStyle } from './Styles'
+import { geoJsonStyleFunction } from './Styles'
 
 export function createLayer(layerConfig) {
   if (!layerConfig || !layerConfig.type) {
@@ -87,7 +87,7 @@ export function createLayer(layerConfig) {
           }),
         }),
         // Add this line to apply a generic style to the layer
-        style: geoJsonStyle
+        style: geoJsonStyleFunction
       });
 
     case 'cog':

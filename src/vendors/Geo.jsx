@@ -38,7 +38,7 @@ import LayerSwitcher from 'ol-ext/control/LayerSwitcher'
 ///Local import
 import RotateNorthControl from './RotateNorthControl'
 import { createLayer } from './helpers/Layers'
-import { lightStroke, darkStroke, geoJsonStyle } from './helpers/Styles'
+import { lightStroke, darkStroke, geoJsonStyleFunction } from './helpers/Styles'
 
 function Geo(props) {
   const [geoRef, setGeoRef] = useState();
@@ -51,7 +51,7 @@ function Geo(props) {
   const [drawVector] = useState(new VectorLayer({
     name: 'draw',
     source: new VectorSource(),
-    style: geoJsonStyle
+    style: geoJsonStyleFunction
   }))
   // Vector layer for the tracker
   const [trackerVector] = useState(new VectorLayer({
