@@ -427,7 +427,8 @@ const GEOCompWithMethodExpose = withMethodExposing(GEOComp, [
       ]
     },
     execute: async (comp: any, params: any) => {
-      showPopup(comp.exposingValues.map, params[0], params[1]);
+      var map = comp.exposingValues.event['map:create']
+      showPopup(map, params[0], params[1]);
     },
   }
 ]);
