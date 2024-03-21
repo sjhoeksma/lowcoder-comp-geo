@@ -1,3 +1,10 @@
+# [1.3.0-dev.28](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.27...v1.3.0-dev.28) (2024-03-21)
+
+
+### Bug Fixes
+
+* Only use JSONValue or JSON ([c7f9d4e](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/c7f9d4eb3628ec74001feda3daff87c141df4c57))
+
 # [1.3.0-dev.27](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.26...v1.3.0-dev.27) (2024-03-21)
 
 
