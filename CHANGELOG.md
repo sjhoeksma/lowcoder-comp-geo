@@ -1,3 +1,15 @@
+# [1.3.0-dev.24](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.23...v1.3.0-dev.24) (2024-03-21)
+
+
+### Bug Fixes
+
+* move drawLayer to methods ([dd710e1](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/dd710e1c6416dcd050c657c680c56e4f538a5410))
+
+
+### Features
+
+* Layer type Mapbox StyleGL Json ([73401d7](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/73401d72c08a45548e1a540e5a54ba8f759886a8))
+
 # [1.3.0-dev.23](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.22...v1.3.0-dev.23) (2024-03-21)
 
 
