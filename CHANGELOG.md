@@ -1,3 +1,10 @@
+# [1.3.0-dev.19](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.18...v1.3.0-dev.19) (2024-03-21)
+
+
+### Bug Fixes
+
+* Revert back the pointer and remove WMS on click for debugging ([35e72f3](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/35e72f3d6df3381bba5f18bac2f1775f12520e96))
+
 # [1.3.0-dev.18](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.17...v1.3.0-dev.18) (2024-03-21)
 
 
