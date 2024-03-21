@@ -1,3 +1,11 @@
+# [1.3.0-dev.20](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.19...v1.3.0-dev.20) (2024-03-21)
+
+
+### Bug Fixes
+
+* added helpers index ([addc232](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/addc2326314e35df0f394ff59bab017e617d69a8))
+* event object ([dff2448](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/dff2448fcdc34c5a8058d1028555f1b594fca2b3))
+
 # [1.3.0-dev.19](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.18...v1.3.0-dev.19) (2024-03-21)
 
 
