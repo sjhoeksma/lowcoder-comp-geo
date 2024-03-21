@@ -365,7 +365,7 @@ const GEOCompWithMethodExpose = withMethodExposing(GEOComp, [
       params: [
         {
           name: "coords",
-          type: "JSONArray",
+          type: "JSON",
         },
         {
           name: "duration",
@@ -373,7 +373,7 @@ const GEOCompWithMethodExpose = withMethodExposing(GEOComp, [
         },
         {
           name: "properties",
-          type: "JSONValue",
+          type: "JSON",
         },
         {
           name: "animation",
@@ -418,7 +418,7 @@ const GEOCompWithMethodExpose = withMethodExposing(GEOComp, [
       params: [
         {
           name: "coordinates",
-          type: "JSONArray", // Assuming [longitude, latitude]
+          type: "JSON", // Assuming [longitude, latitude]
           description: "Coordinates where the popup should appear",
         },
         {
@@ -440,7 +440,7 @@ const GEOCompWithMethodExpose = withMethodExposing(GEOComp, [
       params: [
         {
           name: "data",
-          type: "JSONObject",
+          type: "JSON",
         },
         {
           name: "layer",
