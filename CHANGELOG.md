@@ -1,3 +1,11 @@
+# [1.3.0-dev.18](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.17...v1.3.0-dev.18) (2024-03-21)
+
+
+### Bug Fixes
+
+* Replace WMS url with NASA BlueMarble NextGeneration layer ([2ecb421](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/2ecb421b1c42dceeec378ac2101241379b59c0c4))
+* Trying to fix click:single is read-only ([4c63c61](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/4c63c61c0668d4c027225f69428305275f9ee6c9))
+
 # [1.3.0-dev.17](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.16...v1.3.0-dev.17) (2024-03-20)
 
 
