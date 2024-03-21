@@ -1,3 +1,16 @@
+# [1.3.0-dev.23](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.22...v1.3.0-dev.23) (2024-03-21)
+
+
+### Bug Fixes
+
+* test event ([d25d6af](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/d25d6afbd60b0f5486a969d7673a612d4fb288b1))
+
+
+### Features
+
+* animation toExtent ([dbdb152](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/dbdb152efbaf7aeb339df0da161fc8b7dd2cbfe2))
+* return on click:feature extent in 4326 and full feature properties ([6fd4d7b](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/6fd4d7b3b2888bfb5c0012933324ee2a876eb1d7))
+
 # [1.3.0-dev.22](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.21...v1.3.0-dev.22) (2024-03-21)
 
 
