@@ -407,7 +407,7 @@ const GEOCompWithMethodExpose = withMethodExposing(GEOComp, [
     },
     execute: async (comp: any, params: any) => {
       var map = comp.exposingValues.event['map:create']
-      animate(params?.[3], map.getView(), params[0], params?.[1], params?.[2])
+      animate(map.getView(), params[0], params?.[1], params?.[2], params?.[3])
     },
   },
   {
