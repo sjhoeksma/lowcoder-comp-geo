@@ -49,7 +49,7 @@ function Geo(props) {
   const [notification] = useState(new Notification({}))
   // Vector layer for drawing
   const [drawVector] = useState(new VectorLayer({
-    name: 'draw',
+    name: 'drawing',
     source: new VectorSource(),
     style: geoJsonStyleFunction
   }))
@@ -208,7 +208,7 @@ function Geo(props) {
           },
           interaction: new Draw({
             type: 'Polygon',
-            style: [lightStroke, darkStroke],
+            //style: [lightStroke, darkStroke],
             source: drawVector.getSource(),
             // Count inserted points
             geometryFunction: function (coordinates, geometry) {
@@ -222,7 +222,7 @@ function Geo(props) {
         if (showButton('draw:polygon')) editbar.addControl(fedit);
 
         //DELETE editing tools
-        const pSelect = new Select({ source: drawVector.getSource() });
+        var pSelect = new Select({ source: drawVector.getSource() });
         pSelect.on('select', (event) => {
           event.selected.forEach((f) => { drawVector.getSource().removeFeature(f) })
         })
@@ -243,10 +243,10 @@ function Geo(props) {
         // Undo redo interaction
         var undoInteraction = new UndoRedo({ layers: [drawVector] });
         undoInteraction.on('stack:add', function (e) {
-          fireEvent("draw:add") //, new GeoJSON().writeFeaturesObject(drawVector.getSource().getFeatures()))
+          fireEvent("draw:add")
         })
         undoInteraction.on('stack:remove', function (e) {
-          fireEvent("draw:remove") //, new GeoJSON().writeFeaturesObject(drawVector.getSource().getFeatures()))
+          fireEvent("draw:remove")
         })
         olMap.addInteraction(undoInteraction);
 
@@ -475,20 +475,25 @@ function Geo(props) {
 
       //Handling Events
       const singleClick = function (evt) {
+        var _feature = false;
         olMap.forEachFeatureAtPixel(evt.pixel, function (feature, layer) {
           // Vector feature click logic
-          if (!(featureEnabled('draw') && (pdelete.getActive() || pmove.getActive())) && layer) { //only fire event if we are not drawing
+          if (!(featureEnabled('draw') &&
+            (pdelete.getActive() || pmove.getActive() ||
+              pedit.getActive() || ledit.getActive() || fedit.getActive()))
+            && layer && feature) { //only fire event if we are not drawing
             fireEvent('click:feature', {
-              extent: transformExtent(feature?.getProperties()?.geometry.extent_, 'EPSG:3857', 'EPSG:4326') || [],
-              properties: feature?.getProperties() || {},
-              layer: layer?.values_?.name
+              extent: transformExtent(feature.getGeometry()?.extent_, 'EPSG:3857', 'EPSG:4326') || [],
+              properties: feature.getProperties() || {},
+              layer: layer.get("name")
             })
           }
+          _feature = true;
           return true; // Stop iterating through features
         });
 
-        //Fire the click event
-        fireEvent('click:single', evt)
+        //Fire the click event only if not feature
+        if (!_feature) fireEvent('click:single', evt)
       }
       // Click event listener for vector features and WMS GetFeatureInfo
       olMap.on('singleclick', singleClick);
@@ -581,7 +586,7 @@ function Geo(props) {
 
   // Dynamic layer updating
   useEffect(() => {
-    if (map && allowUpdate('drawLayer')) {
+    if (map) {
       // Validate and create new layers
       const layers = Array.isArray(props.layers) ? props.layers :
         props.defaults && Array.isArray(props.defaults.layers) ? props.defaults.layers : [];
@@ -593,30 +598,18 @@ function Geo(props) {
       map.getLayers().clear();
       sortedLayers.forEach(layer => { if (layer) map.addLayer(layer) });
 
-      //Trackerlayer
+      //TrackerVector
       if (featureEnabled('tracker')) {
         map.addLayer(trackerVector)
       }
-
       //Add drawLayer and values if set
       if (featureEnabled('draw')) {
-        drawVector.getSource().clear()
-        if (props.drawLayer) {
-          try {
-            var geojsonFormat = new GeoJSON();
-            // reads and converts GeoJSon to Feature Object
-            var features = geojsonFormat.readFeatures(props.drawLayer);
-            drawVector.getSource().addFeatures(features)
-          } catch (e) {
-            if (doDebug()) console.log("drawLayer invalid json")
-          }
-        }
         map.addLayer(drawVector)
       }
 
       fireEvent("map:layers", layers)
     }
-  }, [map, props.layers, props.drawLayer]); // Re-evaluate when layers change
+  }, [map, props.layers]); // Re-evaluate when layers change
 
   //GPS location
   useEffect(() => {
@@ -656,7 +649,6 @@ Geo.propTypes = {
   zoom: PropTypes.number,
   maxZoom: PropTypes.number,
   rotation: PropTypes.number,
-  drawLayer: PropTypes.object,
   onEvent: PropTypes.func,
   skipRedraw: PropTypes.func,
   buttons: PropTypes.object,

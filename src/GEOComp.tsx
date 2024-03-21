@@ -20,7 +20,7 @@ import styles from "./styles.module.css";
 import { i18nObjs, trans } from "./i18n/comps";
 import { Geo } from "./vendors";
 import { version } from '../package.json';
-import { animate, showPopup, addFeatures } from './vendors/helpers'
+import { animate, showPopup, addFeatures, readFeatures, clearFeatures } from './vendors/helpers'
 import { useResizeDetector } from "react-resize-detector";
 // @ts-ignore
 import Notification from 'ol-ext/control/Notification'
@@ -99,11 +99,6 @@ var GEOComp = (function () {
       description: "Triggers when drawLayer data changes",
     },
     {
-      label: "onTracker",
-      value: "tracker",
-      description: "Triggers when trackerLayer data changes",
-    },
-    {
       label: "onLoad",
       value: "map:loaded",
       description: "Triggers when GEO data is loaded",
@@ -163,23 +158,6 @@ var GEOComp = (function () {
     bbox: arrayStringExposingStateControl("bbox", [0, 0, 0, 0]),
     menuTitle: stringSimpleControl(""),
     menuContent: stringSimpleControl(""),
-    drawLayer: jsonObjectExposingStateControl("drawLayer", {
-      type: "FeatureCollection",
-      features: [
-        {
-          type: "Feature",
-          geometry: {
-            type: "LineString",
-            coordinates: [
-              [514138.9757700867, 6865494.523372142],
-              [528910.431486197, 6856739.497812072],
-            ],
-          },
-          properties: null,
-        },
-      ],
-    }),
-    trackerLayer: jsonObjectExposingStateControl("trackerLayer"),
     event: jsonObjectExposingStateControl("event"),
     buttons: withDefault(JSONObjectControl, "{menu:false}"),
     features: withDefault(
@@ -212,10 +190,8 @@ var GEOComp = (function () {
     zoom: number;
     maxZoom: number;
     rotation: number;
-    drawLayer: any;
     layers: any;
     bbox: any;
-    trackerLayer: any;
     defaults: any;
     buttons: any;
     features: any;
@@ -249,10 +225,6 @@ var GEOComp = (function () {
             return //Internal event only, user should use map:init
           default:
             switch (eventName) {
-              case 'draw':
-                setIgnoreUpdate('drawLayer')
-                props.drawLayer.onChange(eventObj);
-                break; //Set the drawLayer object
               case 'bbox':
                 props.bbox.onChange(eventObj)
                 break;
@@ -314,7 +286,6 @@ var GEOComp = (function () {
             height={dimensions.height}
             width={dimensions.width}
             center={props.center}
-            drawLayer={props.drawLayer.value}
             zoom={props.zoom}
             maxZoom={props.maxZoom}
             rotation={props.rotation}
@@ -337,7 +308,6 @@ var GEOComp = (function () {
         <>
           <Section name="Map">
             {children.layers.propertyView({ label: "layers" })}
-            {children.drawLayer.propertyView({ label: "drawing" })}
           </Section>
           <Section name="View">
             {children.center.propertyView({ label: "center" })}
@@ -380,12 +350,14 @@ GEOComp = class extends GEOComp {
 
 /**
  * Exposes methods on GEOComp component to allow calling from parent component.
- * Includes:
- * - animate: Perform animation on map 
- * - map: Get OpenLayers map instance  
- * - notify: Display notification message
- * - showPopup: Show popup at coordinates with message
-*/
+ * Includes animate, notify, showPopup, addFeatures, and readFeatures methods.
+ * 
+ * animate: Perform animation on map.
+ * notify: Display notification message. 
+ * showPopup: Show popup at coordinates with message.
+ * addFeatures: Add feature to layer.
+ * readFeatures: Read feature from layer.
+ */
 const GEOCompWithMethodExpose = withMethodExposing(GEOComp, [
   {
     method: {
@@ -413,7 +385,7 @@ const GEOCompWithMethodExpose = withMethodExposing(GEOComp, [
     execute: async (comp: any, params: any) => {
       var map = comp.exposingValues.event['map:create']
       animate(map.getView(), params[0], params?.[1], params?.[2], params?.[3])
-    },
+    }
   },
   {
     method: {
@@ -437,7 +409,7 @@ const GEOCompWithMethodExpose = withMethodExposing(GEOComp, [
           control.show(params[0], params[1] || 2000)
         }
       })
-    },
+    }
   },
   {
     method: {
@@ -459,7 +431,7 @@ const GEOCompWithMethodExpose = withMethodExposing(GEOComp, [
     execute: async (comp: any, params: any) => {
       var map = comp.exposingValues.event['map:create']
       showPopup(map, params[0], params[1]);
-    },
+    }
   },
   {
     method: {
@@ -483,14 +455,44 @@ const GEOCompWithMethodExpose = withMethodExposing(GEOComp, [
     execute: async (comp: any, params: any) => {
       var map = comp.exposingValues.event['map:create']
       return addFeatures(map, params[0], params[1], params[2])
+    }
+  },
+  {
+    method: {
+      name: "readFeatures",
+      description: "Read features from layer",
+      params: [
+        {
+          name: "layer",
+          type: "string",
+        }
+      ]
     },
+    execute: async (comp: any, params: any) => {
+      var map = comp.exposingValues.event['map:create']
+      return readFeatures(map, params[0])
+    }
+  },
+  {
+    method: {
+      name: "clearFeatures",
+      description: "Clear features from layer",
+      params: [
+        {
+          name: "layer",
+          type: "string",
+        }
+      ]
+    },
+    execute: async (comp: any, params: any) => {
+      var map = comp.exposingValues.event['map:create']
+      return clearFeatures(map, params[0])
+    }
   },
 ]);
 
 //Expose all methods
 export default withExposingConfigs(GEOCompWithMethodExpose, [
-  new NameConfig("drawLayer", trans("component.drawLayer")),
-  new NameConfig("trackerLayer", trans("component.trackerLayer")),
   new NameConfig("event", trans("component.event")),
   new NameConfig("bbox", trans("component.bbox")),
 ]);
