@@ -474,8 +474,8 @@ function Geo(props) {
       //Handling Events
       const singleClick = function (evt) {
 
-        // var hasFeature = false;
-        fireEvent('click:single', evt)
+        var hasFeature = false;
+        fireEvent('click:single', Object.assign({}, evt))
 
         olMap.forEachFeatureAtPixel(evt.pixel, function (feature, layer) {
           // Vector feature click logic

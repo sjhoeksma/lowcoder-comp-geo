@@ -123,3 +123,31 @@ export function createLayer(layerConfig) {
       return null
   }
 };
+
+export function addFeatures(map, data, name, clear) {
+  const layers = map.getLayers().getArray();
+  for (var i = 0; i < layers.length; i++) {
+    const layer = layers[i]
+    if (layer.get('name') == name) {
+      const source = layer.getSource()
+      //Check if there is a undo stack connected to this source, if so clear and disable
+
+      //Check if we should clear te source
+      if (params[2] == true) source.clear()
+      const reader = layer.getFormat || new GeoJSON()
+      if (reader && data) {
+        //Now add the features based on types
+        if (Array.isArray(params[0])) {
+          data.forEach((rec) => {
+            source.addFeature(reader.readFeature(rec))
+          })
+        } else {
+          source.addFeature(reader.readFeature(data))
+        }
+      }
+      //Enable the connected undo check
+      return true//Exit, work is done
+    }
+  }
+  return false
+}
