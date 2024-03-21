@@ -1,3 +1,10 @@
+# [1.3.0-dev.21](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.20...v1.3.0-dev.21) (2024-03-21)
+
+
+### Bug Fixes
+
+* event object ([72f6ba0](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/72f6ba00dd4ed061124d4d4da2de7997b57f7a9a))
+
 # [1.3.0-dev.20](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.19...v1.3.0-dev.20) (2024-03-21)
 
 
