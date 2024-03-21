@@ -483,6 +483,7 @@ function Geo(props) {
           if (!(featureEnabled('draw') && (pdelete.getActive() || pmove.getActive())) && layer) { //only fire event if we are not drawing
             fireEvent('click:feature', {
               coords: feature.getProperties()?.geometry.flatCoordinates,
+              properties: feature.getProperties(),
               layer: layer.values_?.name
             })
           }
@@ -513,15 +514,15 @@ function Geo(props) {
         }
       }
       // Click event listener for vector features and WMS GetFeatureInfo
-      olMap.on('singleclick', singleClick);
+      // olMap.on('singleclick', singleClick);
 
       // Optional: pointer move logic for changing cursor over WMS layers
-      olMap.on('pointermove', function (evt) {
-        if (evt.dragging) return;
-        const pixel = olMap.getEventPixel(evt.originalEvent);
-        const hit = olMap.hasFeatureAtPixel(pixel);
-        olMap.getTargetElement().style.cursor = hit ? 'pointer' : '';
-      });
+      // olMap.on('pointermove', function (evt) {
+      //   if (evt.dragging) return;
+      //   const pixel = olMap.getEventPixel(evt.originalEvent);
+      //   const hit = olMap.hasFeatureAtPixel(pixel);
+      //   olMap.getTargetElement().style.cursor = hit ? 'pointer' : '';
+      // });
 
       //Handle the loaded event
       olMap.on('loadend', function (event) {
