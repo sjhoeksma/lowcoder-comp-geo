@@ -200,6 +200,9 @@ var GEOComp = (function () {
     return ret
   }
 
+  //Cache for all events
+  var _event = {}
+
   //The Builder function creating the real component
   return new UICompBuilder(childrenMap, (props: {
     onEvent: any;
@@ -228,10 +231,12 @@ var GEOComp = (function () {
     const [dimensions, setDimensions] = useState({ width: 650, height: 400 });
     //The event handler will also sent the event value to use
     const handleEvent = useCallback((name: string, eventObj: any) => {
-      props.event.onChange(Object.assign(props.event.value || {}, {
+      //Always create new Event object
+      _event = Object.assign(_event, props.event.value, {
         [name]: eventObj,
         current: name
-      }))
+      })
+      props.event.onChange(_event)
       var n = name.split(":")[0]
       var eventName = "event"
       events.forEach((k) => { if (k.value == n || k.value == name) { eventName = k.value } })

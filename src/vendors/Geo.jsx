@@ -473,13 +473,8 @@ function Geo(props) {
 
       //Handling Events
       const singleClick = function (evt) {
-
-        var hasFeature = false;
-        fireEvent('click:single', Object.assign({}, evt))
-
         olMap.forEachFeatureAtPixel(evt.pixel, function (feature, layer) {
           // Vector feature click logic
-          // hasFeature = true; // Indicate that a vector feature was clicked
           if (!(featureEnabled('draw') && (pdelete.getActive() || pmove.getActive())) && layer) { //only fire event if we are not drawing
             fireEvent('click:feature', {
               coords: feature?.getProperties()?.geometry.flatCoordinates || [],
@@ -490,28 +485,8 @@ function Geo(props) {
           return true; // Stop iterating through features
         });
 
-        // WMS GetFeatureInfo logic
-        // if (!hasFeature) { // Only proceed if no vector feature was clicked
-        //   olMap.getLayers().forEach(layer => {
-        //     if (layer instanceof TileLayer && layer.getSource() instanceof TileWMS) {
-        //       const view = olMap.getView();
-        //       const viewResolution = view.getResolution();
-        //       const url = layer.getSource().getFeatureInfoUrl(
-        //         evt.coordinate,
-        //         viewResolution,
-        //         'EPSG:3857',
-        //         { 'INFO_FORMAT': 'text/html' }, // or application/json ?
-        //       );
-        //       if (url) {
-        //         fetch(url)
-        //           .then(response => response.text())
-        //           .then(html => {
-        //             fireEvent('click:reponse', { reponse: html })
-        //           });
-        //       }
-        //     }
-        //   });
-        // }
+        //Fire the click event
+        fireEvent('click:single', evt)
       }
       // Click event listener for vector features and WMS GetFeatureInfo
       olMap.on('singleclick', singleClick);
@@ -631,7 +606,7 @@ function Geo(props) {
             var features = geojsonFormat.readFeatures(props.drawLayer);
             drawVector.getSource().addFeatures(features)
           } catch (e) {
-            if (props.debug) console.log("drawLayer invalid json")
+            if (props.defaults && props.defaults.debug === true) console.log("drawLayer invalid json")
           }
         }
         map.addLayer(drawVector)
