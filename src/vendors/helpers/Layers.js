@@ -14,6 +14,8 @@ import TileLayer from 'ol/layer/WebGLTile.js';
 import MVT from 'ol/format/MVT';
 import GeoJSON from 'ol/format/GeoJSON';
 import { geoJsonStyleFunction } from './Styles'
+import { applyBackground, applyStyle } from 'ol-mapbox-style';
+import { createXYZ } from 'ol/tilegrid.js';
 
 export function createLayer(layerConfig) {
   if (!layerConfig || !layerConfig.type) {
@@ -82,7 +84,7 @@ export function createLayer(layerConfig) {
         source: new VectorSource({
           features: new GeoJSON().readFeatures(layerConfig.source.data, {
             // Ensure the features are read with the correct projection
-            dataProjection: 'EPSG:4326', // Assuming the GeoJSON is in WGS 84
+            dataProjection: layerConfig.source.projection || 'EPSG:4326', // Assuming the GeoJSON is in WGS 84
             featureProjection: 'EPSG:3857' // Assuming the map projection
           }),
         }),
@@ -110,13 +112,28 @@ export function createLayer(layerConfig) {
           normalize: true,
           opaque: true,
           wrapX: false,
-          projection: 'EPSG:4326',
+          projection: layerConfig.source.projection || 'EPSG:4326',
         }),
       });
 
     case 'stylegl':
-    // Example: return applyStyle(new VectorTileLayer({ declutter: true }), layerConfig.source.styleURL);
-    // break;
+      const layer = new VectorTileLayer({
+        declutter: true,
+        name: layerConfig.name,
+        minZoom: layerConfig.minZoom,
+        maxZoom: layerConfig.maxZoom,
+        visible: layerConfig.visible,
+        opacity: layerConfig.opacity,
+        source: new VectorTileSource({
+          projection: layerConfig.source?.projection,
+        }),
+        style: layerConfig.source.style,
+      });
+      applyStyle(layer, layerConfig.source.url, '');
+      applyBackground(layer, layerConfig.source.url);
+
+      return layer;
+
     default:
       //Error will cause issue within lowcoder. So just use log
       console.error(`Unsupported layer type: ${layerConfig.type}`);
