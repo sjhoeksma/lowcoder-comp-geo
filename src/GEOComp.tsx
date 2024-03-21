@@ -232,7 +232,7 @@ var GEOComp = (function () {
     //The event handler will also sent the event value to use
     const handleEvent = useCallback((name: string, eventObj: any) => {
       //Always create new Event object
-      _event = Object.assign(_event, props.event.value, {
+      _event = Object.assign({}, _event, props.event.value, {
         [name]: eventObj,
         current: name
       })
