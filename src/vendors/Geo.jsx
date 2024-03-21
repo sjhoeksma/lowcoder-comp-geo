@@ -64,6 +64,8 @@ function Geo(props) {
     return !(props.ignoreUpdate && props.ignoreUpdate(name))
   }
 
+  const doDebug = function () { return props.defaults && props.defaults.debug === true }
+
   //Function to check if updating of a variable is allowed
   const featureEnabled = function (name) {
     return !((props.features && props.features[name] === false))
@@ -239,12 +241,12 @@ function Geo(props) {
         if (showButton('draw:delete')) editbar.addControl(pdelete);
 
         // Undo redo interaction
-        var undoInteraction = new UndoRedo();
+        var undoInteraction = new UndoRedo({ layers: [drawVector] });
         undoInteraction.on('stack:add', function (e) {
-          fireEvent("draw:add", new GeoJSON().writeFeaturesObject(drawVector.getSource().getFeatures()))
+          fireEvent("draw:add") //, new GeoJSON().writeFeaturesObject(drawVector.getSource().getFeatures()))
         })
         undoInteraction.on('stack:remove', function (e) {
-          fireEvent("draw:remove", new GeoJSON().writeFeaturesObject(drawVector.getSource().getFeatures()))
+          fireEvent("draw:remove") //, new GeoJSON().writeFeaturesObject(drawVector.getSource().getFeatures()))
         })
         olMap.addInteraction(undoInteraction);
 
@@ -606,7 +608,7 @@ function Geo(props) {
             var features = geojsonFormat.readFeatures(props.drawLayer);
             drawVector.getSource().addFeatures(features)
           } catch (e) {
-            if (props.defaults && props.defaults.debug === true) console.log("drawLayer invalid json")
+            if (doDebug()) console.log("drawLayer invalid json")
           }
         }
         map.addLayer(drawVector)

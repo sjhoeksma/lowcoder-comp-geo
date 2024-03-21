@@ -90,6 +90,7 @@ export const CompStyles = [
       }
  */
 var GEOComp = (function () {
+
   //The events supported
   const events = [
     {
@@ -187,7 +188,6 @@ var GEOComp = (function () {
     ),
     onEvent: eventHandlerControl(events),
   };
-  console.log(i18nObjs.defaultData);
 
   //ignoreUpdate function
   const _ignoreUpdate: any = {}
@@ -200,8 +200,6 @@ var GEOComp = (function () {
     return ret
   }
 
-  //Cache for all events
-  var _event = {}
 
   //The Builder function creating the real component
   return new UICompBuilder(childrenMap, (props: {
@@ -227,40 +225,47 @@ var GEOComp = (function () {
     event: any;
     map: any;
   }) => {
+    const doDebug = function () { return props.defaults && props.defaults.debug === true }
+    //Cache for all events
+    var _event = {}
     //Default size of component
     const [dimensions, setDimensions] = useState({ width: 650, height: 400 });
     //The event handler will also sent the event value to use
-    const handleEvent = useCallback((name: string, eventObj: any) => {
-      //Always create new Event object
-      _event = Object.assign({}, _event, props.event.value, {
-        [name]: eventObj,
-        current: name
+    const handleEvent = function (name: string, eventObj: any) {
+      return new Promise((resolve) => {
+        //Always create new Event object
+        _event = Object.assign({}, _event, props.event.value, {
+          [name]: eventObj,
+          current: name
+        })
+
+        props.event.onChange(_event)
+        var n = name.split(":")[0]
+        var eventName = "event"
+        events.forEach((k) => { if (k.value == n || k.value == name) { eventName = k.value } })
+        //Double switch will allow fine grained event catching
+        switch (name) { //Catch first on name
+          case 'map:create':
+            return //Internal event only, user should use map:init
+          default:
+            switch (eventName) {
+              case 'draw':
+                setIgnoreUpdate('drawLayer')
+                props.drawLayer.onChange(eventObj);
+                break; //Set the drawLayer object
+              case 'bbox':
+                props.bbox.onChange(eventObj)
+                break;
+            }
+        }
+        //Fire the event to lowcoder
+        props.onEvent(eventName, eventObj);
+        //Send debug information to console
+        if (doDebug())
+          console.debug("handleEvent", name, eventObj)
+        resolve(_event)
       })
-      props.event.onChange(_event)
-      var n = name.split(":")[0]
-      var eventName = "event"
-      events.forEach((k) => { if (k.value == n || k.value == name) { eventName = k.value } })
-      //Double switch will allow fine grained event catching
-      switch (name) { //Catch first on name
-        case 'map:create':
-          return //Internal event only, user should use map:init
-        default:
-          switch (eventName) {
-            case 'draw':
-              setIgnoreUpdate('drawLayer')
-              props.drawLayer.onChange(eventObj);
-              break; //Set the drawLayer object
-            case 'bbox':
-              props.bbox.onChange(eventObj)
-              break;
-          }
-      }
-      //Fire the event to lowcoder
-      props.onEvent(eventName, eventObj);
-      //Send debug information to console
-      if (props.defaults && props.defaults.debug === true)
-        console.debug("handleEvent", eventName, eventObj)
-    }, [props.onEvent]);
+    }
 
     //Catch the resizing of component
     const { width, height, ref: conRef } = useResizeDetector({
