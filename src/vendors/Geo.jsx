@@ -479,7 +479,7 @@ function Geo(props) {
           // Vector feature click logic
           if (!(featureEnabled('draw') && (pdelete.getActive() || pmove.getActive())) && layer) { //only fire event if we are not drawing
             fireEvent('click:feature', {
-              coords: feature?.getProperties()?.geometry.flatCoordinates || [],
+              extent: transformExtent(feature?.getProperties()?.geometry.extent_, 'EPSG:3857', 'EPSG:4326') || [],
               properties: feature?.getProperties() || {},
               layer: layer?.values_?.name
             })
