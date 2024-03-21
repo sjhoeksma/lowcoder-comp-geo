@@ -185,6 +185,7 @@ export function readFeatures(map, name) {
     //Check if there is a undo stack connected to this source, if so clear and disable
     return new GeoJSON().writeFeaturesObject(source.getFeatures())
   }
+  return false
 }
 
 //Clear feature of map
@@ -192,5 +193,7 @@ export function clearFeatures(map, name) {
   const layer = findLayer(map, name);
   if (layer) {
     layer.getSource().clear()
+    return true
   }
+  return false
 }
