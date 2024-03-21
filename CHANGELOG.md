@@ -1,3 +1,10 @@
+# [1.3.0-dev.22](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.21...v1.3.0-dev.22) (2024-03-21)
+
+
+### Bug Fixes
+
+* object assign now using empty ([8d2c453](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/8d2c453c0d3a3e2214351204eb4dc048972e14de))
+
 # [1.3.0-dev.21](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.20...v1.3.0-dev.21) (2024-03-21)
 
 
