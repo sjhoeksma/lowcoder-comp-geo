@@ -1,3 +1,10 @@
+# [1.3.0-dev.25](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.24...v1.3.0-dev.25) (2024-03-21)
+
+
+### Bug Fixes
+
+* method types ([d85bdbe](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/d85bdbed3ed5e05282792e9b27466f9a78af218d))
+
 # [1.3.0-dev.24](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.23...v1.3.0-dev.24) (2024-03-21)
 
 
