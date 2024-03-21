@@ -1,3 +1,10 @@
+# [1.3.0-dev.26](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.25...v1.3.0-dev.26) (2024-03-21)
+
+
+### Bug Fixes
+
+* type change to JSON ([c1f3fa2](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/c1f3fa260112c5af5e4bd24db819d0392f09eaa2))
+
 # [1.3.0-dev.25](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.24...v1.3.0-dev.25) (2024-03-21)
 
 
