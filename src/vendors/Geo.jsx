@@ -474,55 +474,55 @@ function Geo(props) {
       //Handling Events
       const singleClick = function (evt) {
 
-        var hasFeature = false;
+        // var hasFeature = false;
         fireEvent('click:single', evt)
 
         olMap.forEachFeatureAtPixel(evt.pixel, function (feature, layer) {
           // Vector feature click logic
-          hasFeature = true; // Indicate that a vector feature was clicked
+          // hasFeature = true; // Indicate that a vector feature was clicked
           if (!(featureEnabled('draw') && (pdelete.getActive() || pmove.getActive())) && layer) { //only fire event if we are not drawing
             fireEvent('click:feature', {
-              coords: feature.getProperties()?.geometry.flatCoordinates,
-              properties: feature.getProperties(),
-              layer: layer.values_?.name
+              coords: feature?.getProperties()?.geometry.flatCoordinates || [],
+              properties: feature?.getProperties() || {},
+              layer: layer?.values_?.name
             })
           }
           return true; // Stop iterating through features
         });
 
         // WMS GetFeatureInfo logic
-        if (!hasFeature) { // Only proceed if no vector feature was clicked
-          olMap.getLayers().forEach(layer => {
-            if (layer instanceof TileLayer && layer.getSource() instanceof TileWMS) {
-              const view = olMap.getView();
-              const viewResolution = view.getResolution();
-              const url = layer.getSource().getFeatureInfoUrl(
-                evt.coordinate,
-                viewResolution,
-                'EPSG:3857',
-                { 'INFO_FORMAT': 'text/html' }, // or application/json ?
-              );
-              if (url) {
-                fetch(url)
-                  .then(response => response.text())
-                  .then(html => {
-                    fireEvent('click:reponse', { reponse: html })
-                  });
-              }
-            }
-          });
-        }
+        // if (!hasFeature) { // Only proceed if no vector feature was clicked
+        //   olMap.getLayers().forEach(layer => {
+        //     if (layer instanceof TileLayer && layer.getSource() instanceof TileWMS) {
+        //       const view = olMap.getView();
+        //       const viewResolution = view.getResolution();
+        //       const url = layer.getSource().getFeatureInfoUrl(
+        //         evt.coordinate,
+        //         viewResolution,
+        //         'EPSG:3857',
+        //         { 'INFO_FORMAT': 'text/html' }, // or application/json ?
+        //       );
+        //       if (url) {
+        //         fetch(url)
+        //           .then(response => response.text())
+        //           .then(html => {
+        //             fireEvent('click:reponse', { reponse: html })
+        //           });
+        //       }
+        //     }
+        //   });
+        // }
       }
       // Click event listener for vector features and WMS GetFeatureInfo
-      // olMap.on('singleclick', singleClick);
+      olMap.on('singleclick', singleClick);
 
       // Optional: pointer move logic for changing cursor over WMS layers
-      // olMap.on('pointermove', function (evt) {
-      //   if (evt.dragging) return;
-      //   const pixel = olMap.getEventPixel(evt.originalEvent);
-      //   const hit = olMap.hasFeatureAtPixel(pixel);
-      //   olMap.getTargetElement().style.cursor = hit ? 'pointer' : '';
-      // });
+      olMap.on('pointermove', function (evt) {
+        if (evt.dragging) return;
+        const pixel = olMap.getEventPixel(evt.originalEvent);
+        const hit = olMap.hasFeatureAtPixel(pixel);
+        olMap.getTargetElement().style.cursor = hit ? 'pointer' : '';
+      });
 
       //Handle the loaded event
       olMap.on('loadend', function (event) {
