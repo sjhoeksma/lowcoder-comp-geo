@@ -1,3 +1,10 @@
+# [1.3.0-dev.50](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.49...v1.3.0-dev.50) (2024-03-22)
+
+
+### Bug Fixes
+
+* add missing import getCenter ([20e4f79](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/20e4f7941d0528cae618bf35e2bef8bfe97baea1))
+
 # [1.3.0-dev.49](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.48...v1.3.0-dev.49) (2024-03-22)
 
 
