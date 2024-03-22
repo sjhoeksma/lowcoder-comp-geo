@@ -120,6 +120,32 @@ function Geo(props) {
     })
   }
 
+  const loadLayers = function (map) {
+    if (map) {
+      console.log("LoadLayer")
+      // Validate and create new layers
+      const layers = Array.isArray(props.layers) ? props.layers :
+        props.defaults && Array.isArray(props.defaults.layers) ? props.defaults.layers : [];
+      const validatedLayers = layers.filter(layer => layer !== null && layer !== undefined);
+      const sortedLayers = validatedLayers
+        .sort((a, b) => (a.order || 0) - (b.order || 0))
+        .map(createLayer)
+        .filter(layer => layer !== null && layer !== undefined);
+      map.getLayers().clear();
+      sortedLayers.forEach(layer => { if (layer) map.addLayer(layer) });
+
+      //TrackerVector
+      if (featureEnabled('tracker')) {
+        map.addLayer(trackerVector)
+      }
+      //Add drawLayer and values if set
+      if (featureEnabled('draw')) {
+        map.addLayer(drawVector)
+      }
+      fireEvent("map:layers", layers)
+    }
+  }
+
   //Configuration of Map component, changing watch props will rebuild map object
   useEffect(() => {
     if (geoRef) {
@@ -557,6 +583,8 @@ function Geo(props) {
       // Notification Control
       olMap.addControl(notification);
 
+      loadLayers(olMap)
+
       //Add map init event
       fireEvent('map:init', olMap);
 
@@ -614,29 +642,7 @@ function Geo(props) {
 
   // Dynamic layer updating
   useEffect(() => {
-    if (map) {
-      // Validate and create new layers
-      const layers = Array.isArray(props.layers) ? props.layers :
-        props.defaults && Array.isArray(props.defaults.layers) ? props.defaults.layers : [];
-      const validatedLayers = layers.filter(layer => layer !== null && layer !== undefined);
-      const sortedLayers = validatedLayers
-        .sort((a, b) => (a.order || 0) - (b.order || 0))
-        .map(createLayer)
-        .filter(layer => layer !== null && layer !== undefined);
-      map.getLayers().clear();
-      sortedLayers.forEach(layer => { if (layer) map.addLayer(layer) });
-
-      //TrackerVector
-      if (featureEnabled('tracker')) {
-        map.addLayer(trackerVector)
-      }
-      //Add drawLayer and values if set
-      if (featureEnabled('draw')) {
-        map.addLayer(drawVector)
-      }
-
-      fireEvent("map:layers", layers)
-    }
+    loadLayers(map)
   }, [map, props.layers]); // Re-evaluate when layers change
 
   //GPS location
