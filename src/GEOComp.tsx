@@ -372,7 +372,7 @@ GEOComp = withMethodExposing(GEOComp, [
       description: "Perform animation",
     },
     execute: async (comp: any, params: any) => {
-      var map = comp.exposingValues.event['map:create']
+      var map = comp.exposingValues.events['map:create']
       animate(map, params[0], params?.[1], params?.[2], params?.[3])
     }
   },
@@ -384,6 +384,16 @@ GEOComp = withMethodExposing(GEOComp, [
     },
     execute: async (comp: any, params: any) => {
       return comp.exposingValues.events['click:feature'] || {}
+    }
+  },
+  {
+    method: {
+      name: "map",
+      params: [],
+      description: "Return the last map object",
+    },
+    execute: async (comp: any, params: any) => {
+      return comp.exposingValues.events['map:create'] || {}
     }
   },
   {
@@ -402,7 +412,7 @@ GEOComp = withMethodExposing(GEOComp, [
       ]
     },
     execute: async (comp: any, params: any) => {
-      var map = comp.exposingValues.event['map:create']
+      var map = comp.exposingValues.events['map:create']
       map.getControls().forEach((control: any) => {
         if (control instanceof Notification) {
           control.show(params[0], params[1] || 2000)
@@ -428,7 +438,7 @@ GEOComp = withMethodExposing(GEOComp, [
       ]
     },
     execute: async (comp: any, params: any) => {
-      var map = comp.exposingValues.event['map:create']
+      var map = comp.exposingValues.events['map:create']
       showPopup(map, params[0], params[1]);
     }
   },
@@ -452,7 +462,7 @@ GEOComp = withMethodExposing(GEOComp, [
       ]
     },
     execute: async (comp: any, params: any) => {
-      var map = comp.exposingValues.event['map:create']
+      var map = comp.exposingValues.events['map:create']
       return addFeatures(map, params[0], params[1], params[2])
     }
   },
@@ -468,7 +478,7 @@ GEOComp = withMethodExposing(GEOComp, [
       ]
     },
     execute: async (comp: any, params: any) => {
-      var map = comp.exposingValues.event['map:create']
+      var map = comp.exposingValues.events['map:create']
       return readFeatures(map, params[0])
     }
   },
@@ -484,7 +494,7 @@ GEOComp = withMethodExposing(GEOComp, [
       ]
     },
     execute: async (comp: any, params: any) => {
-      var map = comp.exposingValues.event['map:create']
+      var map = comp.exposingValues.events['map:create']
       return clearFeatures(map, params[0])
     }
   },
