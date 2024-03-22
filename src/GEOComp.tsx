@@ -349,11 +349,7 @@ GEOComp = class extends GEOComp {
   }
 };
 
-GEOComp = withExposingRaw(
-  GEOComp,
-  {
-    feature: "feature",
-  },
+GEOComp = withExposingRaw(GEOComp, {},
   (comp: any) => {
     return fromRecord({
       feature: comp.exposingValues.event['click:feature'] || {},
