@@ -9,7 +9,7 @@ import Overlay from 'ol/Overlay';
 export function showPopup(map, coordinates, message) {
     let popup = map.getOverlayById('infoPopup');
     if (!popup) {
-        // Create popup overlay logic remains the same
+        // Create popup overlay logic
         let popupElement = document.createElement('div');
         popupElement.className = 'ol-popup';
 
@@ -37,8 +37,13 @@ export function showPopup(map, coordinates, message) {
 
         map.addOverlay(popup);
     }
-    //Show popup on the first coordinates as work arround
-    if (Array.isArray(coordinates) && coordinates.length >= 2) {
+
+    if (Array.isArray(coordinates)) {
+        // If coordinates have more than two values, assume it's an extent and calculate its center.
+        if (coordinates.length > 2) {
+            coordinates = getCenter(coordinates);
+        }
+        // Now coordinates will always be a pair here, suitable for setPosition.
         let content = popup.getElement().querySelector('.ol-popup-content');
         content.innerHTML = message;
         popup.setPosition([coordinates[0], coordinates[1]]);
