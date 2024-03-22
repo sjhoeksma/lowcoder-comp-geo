@@ -1,3 +1,10 @@
+# [1.3.0-dev.44](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.43...v1.3.0-dev.44) (2024-03-22)
+
+
+### Bug Fixes
+
+* border margin ([32322f9](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/32322f95f141c41982be4e2c514e1a46911c95c7))
+
 # [1.3.0-dev.43](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.42...v1.3.0-dev.43) (2024-03-22)
 
 
