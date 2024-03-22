@@ -15,8 +15,7 @@ import {
   arrayStringExposingStateControl,
   withMethodExposing,
   AutoHeightControl,
-  withExposingRaw,
-  fromRecord
+  withSimpleExposing,
 } from "lowcoder-sdk";
 import styles from "./styles.module.css";
 import { i18nObjs, trans } from "./i18n/comps";
@@ -349,15 +348,11 @@ GEOComp = class extends GEOComp {
   }
 };
 
-/*
-GEOComp = withExposingRaw(GEOComp, {},
-  (comp: any) => {
-    return fromRecord({
-      feature: comp.exposingValues.event['click:feature'] || {},
-    });
-  }
-);
-*/
+
+//Expose object
+GEOComp = withSimpleExposing(GEOComp, (comp: any) => ({
+  feature: comp.exposingValues.event['click:feature'] || {},
+}));
 
 /**
  * Exposes methods on GEOComp component to allow calling from parent component.
