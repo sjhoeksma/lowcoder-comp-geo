@@ -404,7 +404,7 @@ GEOComp = withMethodExposing(GEOComp, [
       description: "Return the last event",
     },
     execute: async (comp: any, params: any) => {
-      return comp.exposingValues.events['current'] || {}
+      return comp.exposingValues.events?.current ? comp.exposingValues.events[comp.exposingValues.events.current] : {}
     }
   },
   {
