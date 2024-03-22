@@ -160,6 +160,7 @@ var GEOComp = (function () {
     menuContent: stringSimpleControl(""),
     events: jsonObjectExposingStateControl("events"),
     event: jsonObjectExposingStateControl("event"),
+    feature: jsonObjectExposingStateControl("feature"),
     buttons: withDefault(JSONObjectControl, "{menu:false,north:false,save:false}"),
     features: withDefault(
       JSONObjectControl,
@@ -189,7 +190,7 @@ var GEOComp = (function () {
     autoHeight: boolean;
     events: any;
     event: any;
-    map: any;
+    feature: any
   }) => {
     const doDebug = function () { return props.defaults && props.defaults.debug === true }
     //Cache for all events
@@ -214,6 +215,9 @@ var GEOComp = (function () {
         switch (name) { //Catch first on name
           case 'map:create':
             return //Internal event only, user should use map:init
+          case 'click:feature':
+            props.feature.onChange(eventObj)
+            break;
           default:
             switch (eventName) {
               case 'bbox':
@@ -378,16 +382,6 @@ GEOComp = withMethodExposing(GEOComp, [
   },
   {
     method: {
-      name: "feature",
-      params: [],
-      description: "Return the last feature clicked",
-    },
-    execute: async (comp: any, params: any) => {
-      return comp.exposingValues.events['click:feature'] || {}
-    }
-  },
-  {
-    method: {
       name: "map",
       params: [],
       description: "Return the last map object",
@@ -506,4 +500,5 @@ export default withExposingConfigs(GEOComp, [
   new NameConfig("events", trans("component.events")),
   new NameConfig("event", trans("component.event")),
   new NameConfig("bbox", trans("component.bbox")),
+  new NameConfig("feature", trans("component.feature")),
 ]);
