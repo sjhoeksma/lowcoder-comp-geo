@@ -1,3 +1,10 @@
+# [1.3.0-dev.45](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.44...v1.3.0-dev.45) (2024-03-22)
+
+
+### Bug Fixes
+
+* height reset is needed ([2d68f31](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/2d68f310f561f7d0b5114954135357f18ccd28d6))
+
 # [1.3.0-dev.44](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.43...v1.3.0-dev.44) (2024-03-22)
 
 
