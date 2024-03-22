@@ -1,3 +1,11 @@
+# [1.3.0-dev.37](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.36...v1.3.0-dev.37) (2024-03-22)
+
+
+### Bug Fixes
+
+* add default to annimation ([c854ed0](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/c854ed081b5a67ce4427f93f78a6c162af4402a7))
+* parameter name ([ae799c0](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/ae799c06b0d508c12e14d4b706123685354e00a2))
+
 # [1.3.0-dev.36](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.35...v1.3.0-dev.36) (2024-03-22)
 
 
