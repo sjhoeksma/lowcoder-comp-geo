@@ -540,9 +540,10 @@ function Geo(props) {
               properties: feature.getProperties() || {},
               layer: layer.get("name")
             })
+            _feature = true;
+            return true; // Stop iterating through features
           }
-          _feature = true;
-          return true; // Stop iterating through features
+
         });
 
         //Fire the click event only if not feature
