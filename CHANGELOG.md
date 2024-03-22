@@ -1,3 +1,16 @@
+# [1.3.0-dev.46](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.45...v1.3.0-dev.46) (2024-03-22)
+
+
+### Bug Fixes
+
+* height ([e6d678f](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/e6d678f45bedd6c6adc33bc3f83b6d4a9b896866))
+* resize ([486da7e](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/486da7e917c13096d9301095f7d277b4bd20a190))
+
+
+### Features
+
+* arcgis-mapserver-tile and arcgis-mapserver-image ([503f76e](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/503f76ef31a2aceca9c54cc1f9a852b56e62692d))
+
 # [1.3.0-dev.45](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.44...v1.3.0-dev.45) (2024-03-22)
 
 
