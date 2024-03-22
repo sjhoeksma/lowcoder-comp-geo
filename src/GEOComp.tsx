@@ -246,7 +246,7 @@ var GEOComp = (function () {
           case 'window:resize':
             if (props.features && props.features.scaleToBottom == true) {
               var div = eventObj.window.height - eventObj.size.bottom - 1
-              eventObj.element.style.height = dimensions.height + div
+              eventObj.element.style.height = `${dimensions.height + div}px`
               //setDimensions({ width: dimensions.width, height: dimensions.height + div })
             }
             break
