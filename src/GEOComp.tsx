@@ -93,7 +93,7 @@ export const CompStyles = [
 var GEOComp = (function () {
 
   //The events supported
-  const events = [
+  const eventDefintions = [
     {
       label: "onDraw",
       value: "draw",
@@ -159,13 +159,13 @@ var GEOComp = (function () {
     bbox: arrayStringExposingStateControl("bbox", [0, 0, 0, 0]),
     menuTitle: stringSimpleControl(""),
     menuContent: stringSimpleControl(""),
-    event: jsonObjectExposingStateControl("event"),
-    buttons: withDefault(JSONObjectControl, "{menu:false}"),
+    events: jsonObjectExposingStateControl("events"),
+    buttons: withDefault(JSONObjectControl, "{menu:false,north:false,save:false}"),
     features: withDefault(
       JSONObjectControl,
       "{draw:true,swipe:false,tracker:false,timeline:false,gpsCentered:true,largeButtons:false}"
     ),
-    onEvent: eventHandlerControl(events),
+    onEvent: eventHandlerControl(eventDefintions),
   };
 
   //ignoreUpdate function
@@ -199,27 +199,27 @@ var GEOComp = (function () {
     menuTitle: string;
     menuContent: string;
     autoHeight: boolean;
-    event: any;
+    events: any;
     map: any;
   }) => {
     const doDebug = function () { return props.defaults && props.defaults.debug === true }
     //Cache for all events
-    var _event = {}
+    var _events = {}
     //Default size of component
     const [dimensions, setDimensions] = useState({ width: 650, height: 400 });
     //The event handler will also sent the event value to use
     const handleEvent = function (name: string, eventObj: any) {
       return new Promise((resolve) => {
         //Always create new Event object
-        _event = Object.assign({}, _event, props.event.value, {
+        _events = Object.assign({}, _events, props.events.value, {
           [name]: eventObj,
           current: name
         })
 
-        props.event.onChange(_event)
+        props.events.onChange(_events)
         var n = name.split(":")[0]
         var eventName = "event"
-        events.forEach((k) => { if (k.value == n || k.value == name) { eventName = k.value } })
+        eventDefintions.forEach((k) => { if (k.value == n || k.value == name) { eventName = k.value } })
         //Double switch will allow fine grained event catching
         switch (name) { //Catch first on name
           case 'map:create':
@@ -236,7 +236,7 @@ var GEOComp = (function () {
         //Send debug information to console
         if (doDebug())
           console.debug("handleEvent", name, eventObj)
-        resolve(_event)
+        resolve(_events)
       })
     }
 
@@ -348,12 +348,6 @@ GEOComp = class extends GEOComp {
   }
 };
 
-
-//Expose object
-GEOComp = withSimpleExposing(GEOComp, (comp: any) => ({
-  feature: comp.exposingValues.event['click:feature'] || {},
-}));
-
 /**
  * Exposes methods on GEOComp component to allow calling from parent component.
  * Includes animate, notify, showPopup, addFeatures, and readFeatures methods.
@@ -391,6 +385,26 @@ GEOComp = withMethodExposing(GEOComp, [
     execute: async (comp: any, params: any) => {
       var map = comp.exposingValues.event['map:create']
       animate(map, params[0], params?.[1], params?.[2], params?.[3])
+    }
+  },
+  {
+    method: {
+      name: "feature",
+      params: [],
+      description: "Return the last feature clicked",
+    },
+    execute: async (comp: any, params: any) => {
+      return comp.exposingValues.events['click:feature'] || {}
+    }
+  },
+  {
+    method: {
+      name: "event",
+      params: [],
+      description: "Return the last event",
+    },
+    execute: async (comp: any, params: any) => {
+      return comp.exposingValues.events['current'] || {}
     }
   },
   {
@@ -500,6 +514,6 @@ GEOComp = withMethodExposing(GEOComp, [
 
 //Expose all methods
 export default withExposingConfigs(GEOComp, [
-  new NameConfig("event", trans("component.event")),
+  new NameConfig("events", trans("component.events")),
   new NameConfig("bbox", trans("component.bbox")),
 ]);

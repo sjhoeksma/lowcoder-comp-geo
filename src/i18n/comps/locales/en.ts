@@ -25,19 +25,19 @@ export const en = {
     "textSize": "Text Size"
   },
   "component": {
-    "defaults" : "defaults",
+    "defaults": "defaults",
     "drawLayer": "draw",
     "trackerLayer": "tracker",
-    "event" : "event",
+    "events": "events",
     "zoom": "zoom",
     "maxZoom": "Max Zoom",
     "rotation": "rotation",
     "bbox": "bbox",
     "layers": "layers",
-    "center" : "center",
+    "center": "center",
     "designer": "Designer mode",
     "buttons": "Buttons",
-    "showLogo" : "Show logo"
+    "showLogo": "Show logo"
   },
   "methods": {
     "xml": "Get XML",
