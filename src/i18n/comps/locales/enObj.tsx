@@ -5,7 +5,7 @@ export const enObj: I18nObjects = {
     {
       "name": "GeoJson with Style and Image src",
       "type": "geojson",
-      "order": 5,
+      "order": 7,
       "minZoom": 0,
       "maxZoom": 22,
       "visible": true,
@@ -216,7 +216,7 @@ export const enObj: I18nObjects = {
     {
       name: "Egypt DSM - COG",
       type: "cog",
-      order: 7,
+      order: 6,
       minZoom: 0,
       maxZoom: 22,
       visible: true,
@@ -228,7 +228,7 @@ export const enObj: I18nObjects = {
     {
       name: "Contours - WFS",
       type: "wfs",
-      order: 4,
+      order: 5,
       minZoom: 0,
       maxZoom: 22,
       visible: true,
@@ -245,7 +245,7 @@ export const enObj: I18nObjects = {
     {
       name: "World Basemap - MVT/pbf",
       type: "mvt",
-      order: 3,
+      order: 4,
       minZoom: 0,
       maxZoom: 22,
       visible: false,
@@ -257,9 +257,34 @@ export const enObj: I18nObjects = {
       },
     },
     {
+      name: "USA MapServer ImageLayer - ArcGIS MapServer",
+      type: "arcgis-mapserver-image",
+      order: 3,
+      minZoom: 0,
+      maxZoom: 22,
+      visible: false,
+      selectable: false,
+      source: {
+        url: "https://sampleserver6.arcgisonline.com/ArcGIS/rest/services/USA/MapServer",
+        ratio: 1,
+      },
+    },
+    {
+      name: "USA MapServer TileLayer - ArcGIS MapServer",
+      type: "arcgis-mapserver-tile",
+      order: 2,
+      minZoom: 0,
+      maxZoom: 22,
+      visible: true,
+      selectable: true,
+      source: {
+        url: "https://sampleserver6.arcgisonline.com/ArcGIS/rest/services/USA/MapServer",
+      },
+    },
+    {
       name: "NASA | BlueMarble NextGeneration - WMS",
       type: "wms",
-      order: 2,
+      order: 1,
       minZoom: 0,
       maxZoom: 8,
       visible: true,
@@ -278,7 +303,7 @@ export const enObj: I18nObjects = {
     {
       name: "Mapbox Style GL - JSON",
       type: "stylegl",
-      order: 1,
+      order: 0,
       minZoom: 0,
       maxZoom: 22,
       visible: true,
@@ -292,7 +317,7 @@ export const enObj: I18nObjects = {
     {
       name: "Open Street Map - XYZ",
       type: "xyz",
-      order: 0,
+      order: -1,
       minZoom: 0,
       maxZoom: 19,
       visible: true,

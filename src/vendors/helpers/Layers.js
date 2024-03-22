@@ -7,8 +7,8 @@
  * 
  * Returns null if layer type is not supported.
  */
-import { Vector as VectorLayer, VectorTile as VectorTileLayer } from 'ol/layer';
-import { OSM, XYZ, TileWMS, Vector as VectorSource, VectorTile as VectorTileSource } from 'ol/source';
+import { Vector as VectorLayer, VectorTile as VectorTileLayer, Image as ImageLayer } from 'ol/layer';
+import { OSM, XYZ, TileWMS, Vector as VectorSource, VectorTile as VectorTileSource, TileArcGISRest, ImageArcGISRest } from 'ol/source';
 import GeoTIFF from 'ol/source/GeoTIFF.js';
 import TileLayer from 'ol/layer/WebGLTile.js';
 import MVT from 'ol/format/MVT';
@@ -136,10 +136,39 @@ export function createLayer(layerConfig) {
         }),
         style: layerConfig.source.style,
       });
-      applyStyle(layer, layerConfig.source.url, '');
-      applyBackground(layer, layerConfig.source.url);
+      applyStyle(layer, layerConfig.source?.url, '');
+      applyBackground(layer, layerConfig.source?.url);
 
       return layer;
+    case 'arcgis-mapserver-tile':
+      return new TileLayer({
+        name: layerConfig.name,
+        minZoom: layerConfig.minZoom,
+        maxZoom: layerConfig.maxZoom,
+        visible: layerConfig.visible,
+        opacity: layerConfig.opacity,
+        selectable: layerConfig.selectable,
+        source: new TileArcGISRest({
+          url: layerConfig.source?.url,
+          params: layerConfig.source.params || {},
+          crossOrigin: layerConfig.source.crossOrigin,
+        }),
+      });
+    case 'arcgis-mapserver-image':
+      return new ImageLayer({
+        name: layerConfig.name,
+        minZoom: layerConfig.minZoom,
+        maxZoom: layerConfig.maxZoom,
+        visible: layerConfig.visible,
+        opacity: layerConfig.opacity,
+        selectable: layerConfig.selectable,
+        source: new ImageArcGISRest({
+          url: layerConfig.source?.url,
+          ratio: layerConfig.source.ratio || 1,
+          params: layerConfig.source.params || {},
+          crossOrigin: layerConfig.source.crossOrigin,
+        }),
+      });
 
     default:
       //Error will cause issue within lowcoder. So just use log
