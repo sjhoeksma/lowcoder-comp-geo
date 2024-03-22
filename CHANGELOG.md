@@ -1,3 +1,10 @@
+# [1.3.0-dev.36](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.35...v1.3.0-dev.36) (2024-03-22)
+
+
+### Bug Fixes
+
+* animation ([b67bb1a](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/b67bb1a12e869ec22f24c1ba87b36687e895c803))
+
 # [1.3.0-dev.35](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.34...v1.3.0-dev.35) (2024-03-22)
 
 
