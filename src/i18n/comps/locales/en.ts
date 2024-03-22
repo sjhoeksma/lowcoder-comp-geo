@@ -29,6 +29,7 @@ export const en = {
     "drawLayer": "draw",
     "trackerLayer": "tracker",
     "events": "events",
+    "event": "event",
     "zoom": "zoom",
     "maxZoom": "Max Zoom",
     "rotation": "rotation",

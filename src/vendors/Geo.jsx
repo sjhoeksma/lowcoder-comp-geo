@@ -667,7 +667,6 @@ Geo.propTypes = {
   buttons: PropTypes.object,
   menuTitle: PropTypes.string,
   menuContent: PropTypes.string,
-  ignoreUpdate: PropTypes.func,
   layers: PropTypes.array,
   defaults: PropTypes.object,
   features: PropTypes.object,

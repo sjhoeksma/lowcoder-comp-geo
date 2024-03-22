@@ -15,7 +15,6 @@ import {
   arrayStringExposingStateControl,
   withMethodExposing,
   AutoHeightControl,
-  withSimpleExposing,
 } from "lowcoder-sdk";
 import styles from "./styles.module.css";
 import { i18nObjs, trans } from "./i18n/comps";
@@ -160,6 +159,7 @@ var GEOComp = (function () {
     menuTitle: stringSimpleControl(""),
     menuContent: stringSimpleControl(""),
     events: jsonObjectExposingStateControl("events"),
+    event: jsonObjectExposingStateControl("event"),
     buttons: withDefault(JSONObjectControl, "{menu:false,north:false,save:false}"),
     features: withDefault(
       JSONObjectControl,
@@ -167,18 +167,6 @@ var GEOComp = (function () {
     ),
     onEvent: eventHandlerControl(eventDefintions),
   };
-
-  //ignoreUpdate function
-  const _ignoreUpdate: any = {}
-  const setIgnoreUpdate = function (name: string) {
-    _ignoreUpdate[name] = true
-  }
-  const ignoreUpdate = function (name: string) {
-    var ret = _ignoreUpdate[name] || false
-    _ignoreUpdate[name] = false
-    return ret
-  }
-
 
   //The Builder function creating the real component
   return new UICompBuilder(childrenMap, (props: {
@@ -200,6 +188,7 @@ var GEOComp = (function () {
     menuContent: string;
     autoHeight: boolean;
     events: any;
+    event: any;
     map: any;
   }) => {
     const doDebug = function () { return props.defaults && props.defaults.debug === true }
@@ -210,13 +199,14 @@ var GEOComp = (function () {
     //The event handler will also sent the event value to use
     const handleEvent = function (name: string, eventObj: any) {
       return new Promise((resolve) => {
-        //Always create new Event object
+        //Always create new Event object 
         _events = Object.assign({}, _events, props.events.value, {
           [name]: eventObj,
           current: name
         })
 
         props.events.onChange(_events)
+        props.event.onChange(eventObj || {})
         var n = name.split(":")[0]
         var eventName = "event"
         eventDefintions.forEach((k) => { if (k.value == n || k.value == name) { eventName = k.value } })
@@ -297,7 +287,6 @@ var GEOComp = (function () {
             features={props.features}
             layers={props.layers}
             onEvent={handleEvent}
-            ignoreUpdate={ignoreUpdate}
           />
         </div>
       </div>
@@ -395,16 +384,6 @@ GEOComp = withMethodExposing(GEOComp, [
     },
     execute: async (comp: any, params: any) => {
       return comp.exposingValues.events['click:feature'] || {}
-    }
-  },
-  {
-    method: {
-      name: "event",
-      params: [],
-      description: "Return the last event",
-    },
-    execute: async (comp: any, params: any) => {
-      return comp.exposingValues.events?.current ? comp.exposingValues.events[comp.exposingValues.events.current] : {}
     }
   },
   {
@@ -515,5 +494,6 @@ GEOComp = withMethodExposing(GEOComp, [
 //Expose all methods
 export default withExposingConfigs(GEOComp, [
   new NameConfig("events", trans("component.events")),
+  new NameConfig("event", trans("component.event")),
   new NameConfig("bbox", trans("component.bbox")),
 ]);
