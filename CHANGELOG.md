@@ -1,3 +1,12 @@
+# [1.3.0-dev.29](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.28...v1.3.0-dev.29) (2024-03-22)
+
+
+### Bug Fixes
+
+* change raw ([20a7d95](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/20a7d9530ddc35e6c325387ebb64165908921c48))
+* experimatent with feature ([c96ff83](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/c96ff83391aa653a0999825ce46ca0a3f7fcead4))
+* method return state ([75a1686](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/75a16860da1ad4605c2076e51b278fe5405e9476))
+
 # [1.3.0-dev.28](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.27...v1.3.0-dev.28) (2024-03-21)
 
 
