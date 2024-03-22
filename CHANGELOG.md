@@ -1,3 +1,13 @@
+# [1.3.0-dev.32](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.31...v1.3.0-dev.32) (2024-03-22)
+
+
+### Bug Fixes
+
+* added events breaking event ([f916205](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/f916205d132367d1df2f8040b9e3def6fa67d184))
+* buttons north and save ([cf01a72](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/cf01a72e8d526b4531b452416005f4a8740f6772))
+* method feature and event ([508e7ed](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/508e7ed9ac7b7d3a81cd40fea212d0f84b4e9809))
+* select correct current ([5615591](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/5615591aafd65a15c6050c16a6f338908d1830ea))
+
 # [1.3.0-dev.31](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.30...v1.3.0-dev.31) (2024-03-22)
 
 
