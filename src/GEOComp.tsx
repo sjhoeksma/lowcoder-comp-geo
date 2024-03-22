@@ -86,7 +86,7 @@ export const CompStyles = [
         swipeVertical: false,
         swipeHorizontal: false,
         timeline: false,
-        location:false,
+        center:false,
         tracker :false,
         rotateNorth: false,
       }
@@ -349,6 +349,7 @@ GEOComp = class extends GEOComp {
   }
 };
 
+/*
 GEOComp = withExposingRaw(GEOComp, {},
   (comp: any) => {
     return fromRecord({
@@ -356,7 +357,7 @@ GEOComp = withExposingRaw(GEOComp, {},
     });
   }
 );
-
+*/
 
 /**
  * Exposes methods on GEOComp component to allow calling from parent component.
@@ -394,7 +395,7 @@ GEOComp = withMethodExposing(GEOComp, [
     },
     execute: async (comp: any, params: any) => {
       var map = comp.exposingValues.event['map:create']
-      animate(map.getView(), params[0], params?.[1], params?.[2], params?.[3])
+      animate(map, params[0], params?.[1], params?.[2], params?.[3])
     }
   },
   {

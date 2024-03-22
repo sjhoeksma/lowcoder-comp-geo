@@ -1,120 +1,147 @@
-.ol-menu {
- left : 0.5em !important;
- top: 0.5em !important;
+.ol-overlay.menu {
+  width: 30%;
+  background: #fff;
+  color: #333;
+  box-shadow: 0px 0px 5px #000;
+  padding: 0.5em;
+  -webkit-transition: all 0.25s;
+  transition: all 0.25s;
 }
 
-.ol-overlay.menu {
-    width: 30%;
-    background: #fff;
-    color: #333;
-    box-shadow: 0px 0px 5px #000;
-    padding: 0.5em;
-    -webkit-transition: all 0.25s;
-    transition: all 0.25s;
-  }
-  /* style the close box */
-  .ol-overlay.menu .ol-closebox {
-    left: 1em;
-    top: 0.5em;
-  }
-  .ol-overlay.menu .ol-closebox:before {
-    content:"\f0c9";
-    font-family:FontAwesome;
-  }
-  /* menu button */
-  .ol-control.menu {
-    top: 0.5em;
-    left: 0.5em;
-  }
-  .mainbar.ol-top {
-    top: 8em !important;
-    left: 0.8em !important;
-  }
-  .mainbar.ol-top.nomenu {
-    top: 7em !important;
-  }
-  #menuTitle{
-    margin-top: -0.5em;
-    padding-left: 2.5em;
-    font-size: 0.7em;
-  }
-  #menuContent {
-    margin-top: -0.5em;
-    font-size: 0.9em;
-  }
-  .ol-timeline .ol-scroll {
-    height: 3em;
-  }
-  .ol-timeline .ol-feature {
-    transform: translateX(-50%);
-  }
-  .ol-timeline.ol-zoomhover .ol-scroll .ol-feature:hover, 
-  .ol-timeline.ol-zoomhover .ol-scroll .ol-feature.ol-select {
-    transform: translateX(-50%) scale(2);
-  }
-  .ol-bar.timeline {
-    bottom : 3.5em !important;
-  }
-  .ol-geobt.timeline {
-    bottom : 5.5em ;
-  }
-  .ol-scale-line.timeline {
-    bottom : 3.5em;
-  }
-/* Small Font */
-  .ol-layerswitcher.ol-control {
-    font-size: 0.6em;
-    top: 9em;
-    right: 0.85em;
-  }
-  .ol-layerswitcher.ol-control .panel-container{
-    font-size: 1.5em;
-  }
-  .ol-secondbar.ol-top {
-    top: 7.5em !important;
-  }
-  .ol-zoom {
-    left : 0.7em ;
-    top: 2.0em ;
-  }
-  .ol-zoom.nomenu {
-      left : 0.7em ;
-      top: 0.5em ;
-  }
-/* Large Font*/
-  .ol-large .ol-layerswitcher.ol-control {
-    font-size: 0.91em;
-    top: 8em;
-    right: 0.5em;
-  }
-  .ol-large .ol-full-screen.ol-control{
-    right: 0.3em;
-  }
-  .ol-large .ol-control.ol-bar .ol-control button,
-  .ol-large .ol-full-screen.ol-control,
-  .ol-large .ol-geobt.ol-control,
-  .ol-large .ol-zoom.ol-control,
-  .ol-large .ol-menu.ol-control{
-    font-size: 1.5em;
-  }
-  .ol-large .ol-secondbar.ol-top {
-    top: 9.5em !important;
-  }
-  .ol-large .ol-control.ol-bar.ol-bottom.ol-right{
-    right: 0.8em;
-  }
-  .ol-large .ol-zoom {
-    left : 0.5em ;
-  }
-  .ol-large .ol-zoom.nomenu {
-      left : 0.5em ;
-  }
+/* style the close box */
+.ol-overlay.menu .ol-closebox {
+  left: 1em;
+  top: 0.5em;
+}
 
-  /* Popup */
+.ol-overlay.menu .ol-closebox:before {
+  content: "\f0c9";
+  font-family: FontAwesome;
+}
+
+/* menu button */
+.ol-control.menu {
+  top: 0.5em;
+  left: 0.5em;
+}
+
+.mainbar.ol-top {
+  top: 8em !important;
+  left: 0.8em !important;
+}
+
+.mainbar.ol-top.nomenu {
+  top: 7em !important;
+}
+
+#menuTitle {
+  margin-top: -0.5em;
+  padding-left: 2.5em;
+  font-size: 0.7em;
+}
+
+#menuContent {
+  margin-top: -0.5em;
+  font-size: 0.9em;
+}
+
+.ol-timeline .ol-scroll {
+  height: 3em;
+}
+
+.ol-timeline .ol-feature {
+  transform: translateX(-50%);
+}
+
+.ol-timeline.ol-zoomhover .ol-scroll .ol-feature:hover,
+.ol-timeline.ol-zoomhover .ol-scroll .ol-feature.ol-select {
+  transform: translateX(-50%) scale(2);
+}
+
+.ol-bar.timeline {
+  bottom: 3.5em !important;
+}
+
+.ol-geobt.timeline {
+  bottom: 5.5em;
+}
+
+.ol-scale-line.timeline {
+  bottom: 3.5em;
+}
+
+/* Small Font */
+.ol-layerswitcher.ol-control {
+  font-size: 0.6em;
+  top: 9em;
+  right: 0.85em;
+}
+
+.ol-layerswitcher.ol-control .panel-container {
+  font-size: 1.5em;
+}
+
+.ol-secondbar.ol-top {
+  top: 7.5em !important;
+}
+
+.ol-menu.ol-control {
+  left: 0.7em;
+  top: 0.5 em;
+}
+
+.ol-zoom {
+  left: 0.7em;
+  top: 2.0em;
+}
+
+.ol-zoom.nomenu {
+  left: 0.7em;
+  top: 0.5em;
+}
+
+/* Large Font*/
+.ol-large .ol-layerswitcher.ol-control {
+  font-size: 0.91em;
+  top: 8em;
+  right: 0.5em;
+}
+
+.ol-large .ol-full-screen.ol-control {
+  right: 0.3em;
+}
+
+.ol-large .ol-control.ol-bar .ol-control button,
+.ol-large .ol-full-screen.ol-control,
+.ol-large .ol-geobt.ol-control,
+.ol-large .ol-zoom.ol-control,
+.ol-large .ol-menu.ol-control {
+  font-size: 1.5em;
+}
+
+.ol-large .ol-secondbar.ol-top {
+  top: 9.5em !important;
+}
+
+.ol-large .ol-control.ol-bar.ol-bottom.ol-right {
+  right: 0.8em;
+}
+
+.ol-large .ol-menu.ol-control {
+  left: 0.5em;
+  top: 0.5em;
+}
+
+.ol-large .ol-zoom {
+  left: 0.5em;
+}
+
+
+/* Popup */
 .ol-popup {
   position: absolute;
   background-color: white;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
   padding: 15px;
   border-radius: 10px;
   border: 1px solid #cccccc;
@@ -123,7 +150,8 @@
   min-width: 280px;
 }
 
-.ol-popup:after, .ol-popup:before {
+.ol-popup:after,
+.ol-popup:before {
   top: 100%;
   border: solid transparent;
   content: " ";

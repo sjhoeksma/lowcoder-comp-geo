@@ -38,7 +38,7 @@ import LayerSwitcher from 'ol-ext/control/LayerSwitcher'
 ///Local import
 import RotateNorthControl from './RotateNorthControl'
 import { createLayer } from './helpers/Layers'
-import { lightStroke, darkStroke, geoJsonStyleFunction } from './helpers/Styles'
+import { animate, geoJsonStyleFunction } from './helpers'
 
 function Geo(props) {
   const [geoRef, setGeoRef] = useState();
@@ -64,8 +64,6 @@ function Geo(props) {
     return !(props.ignoreUpdate && props.ignoreUpdate(name))
   }
 
-  const doDebug = function () { return props.defaults && props.defaults.debug === true }
-
   //Function to check if updating of a variable is allowed
   const featureEnabled = function (name) {
     return !((props.features && props.features[name] === false))
@@ -89,6 +87,38 @@ function Geo(props) {
   const elementRef = useCallback(ref => {
     setGeoRef(ref);
   }, []);
+
+  const centerMe = function (noSet = false) {
+    return new Promise((resolve, reject) => {
+      fireEvent("geoloc:search")
+      navigator.geolocation.getCurrentPosition(
+        (success) => {
+          const coords = [success.coords.longitude, success.coords.latitude]
+          if (!noSet) setGeoLoc(coords)
+          fireEvent("geoloc:navigator", coords)
+          resolve(coords)
+        },
+        (error) => {
+          fetch('https://ipapi.co/json/')
+            .then(function (response) {
+              if (response.ok) {
+                response.json().then(function (data) {
+                  const coords = [data.longitude, data.latitude]
+                  if (!noSet) setGeoLoc(coords)
+                  fireEvent("geoloc:ip", coords)
+                })
+              } else {
+                reject(response)
+              }
+
+            }).catch((e) => {
+              fireEvent("geoloc:failure", e)
+              reject(e)
+            })
+        },
+        { maximumAge: 60000 * 5, timeout: 5000, enableHighAccuracy: true });
+    })
+  }
 
   //Configuration of Map component, changing watch props will rebuild map object
   useEffect(() => {
@@ -127,8 +157,23 @@ function Geo(props) {
         && (showButton('draw:move') || showButton('draw:point') || showButton('draw:line')
           || showButton('draw:polygon') || showButton('draw:undo') || showButton('draw:redo')
           || showButton('draw:delete')))
-        || (featureEnabled('tracker') && showButton('tracker:save')))
+        || (featureEnabled('tracker') && showButton('tracker:save')
+          || showButton('center')))
         olMap.addControl(mainbar);
+
+      //GeoLocation
+      var geoLocation = new Button({
+        html: '<i class="fa fa-crosshairs"></i>',
+        title: "Center",
+        handleClick: function (e) {
+          centerMe(true).then((coords) => {
+            animate(olMap, coords, 3000, { zoom: 16, _locDuration: 2000, _pulseCount: 6, _easing: 'bounce' }, "home")
+          })
+          notification.show("Searching GPS", 3000)
+        }
+      })
+      if (showButton('center')) mainbar.addControl(geoLocation)
+
 
       if (featureEnabled('draw')) {
         // Edit control bar 
@@ -411,20 +456,6 @@ function Geo(props) {
         });
 
 
-        //GeoLocation
-        var geoLocation = new GeolocationButton({
-          title: "Focus my GeoLocation",
-          delay: 5000
-        });
-        if (showButton('location')) olMap.addControl(geoLocation);
-        geoLocation.on("change:active", (event) => {
-          if (event.active) {
-            notification.show("Searching GPS", 3000)
-            fireEvent("geoloc:search")
-          }
-        });
-        //change:active
-
         var timeline = new Toggle({
           html: '<i class="fa fa-clock"></i>',
           title: "Timeline",
@@ -613,23 +644,8 @@ function Geo(props) {
 
   //GPS location
   useEffect(() => {
-
     if (featureEnabled('gpsCentered') && !map) {
-      navigator.geolocation.getCurrentPosition(
-        (success) => {
-          setGeoLoc([success.coords.longitude, success.coords.latitude])
-        },
-        (error) => {
-          fetch('https://ipapi.co/json/')
-            .then(function (response) {
-              if (response.ok) {
-                response.json().then(function (data) {
-                  setGeoLoc([data.longitude, data.latitude])
-                })
-              }
-            })
-        },
-        { maximumAge: 60000, timeout: 5000, enableHighAccuracy: false });
+      centerMe()
     }
   }, [elementRef]);
 
