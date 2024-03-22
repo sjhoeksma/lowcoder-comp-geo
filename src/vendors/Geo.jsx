@@ -12,17 +12,14 @@ import { RingLoader } from 'react-spinners'
 //The real GEO OpenLayers packages
 import { Map, View } from 'ol/index';
 import { Vector as VectorLayer } from 'ol/layer';
-import { TileWMS, Vector as VectorSource } from 'ol/source';
-import TileLayer from 'ol/layer/WebGLTile.js';
+import { Vector as VectorSource } from 'ol/source';
 import { LineString, Polygon } from 'ol/geom';
 import { fromLonLat, transformExtent } from 'ol/proj';
 import { FullScreen, Zoom } from 'ol/control';
-import { GeoJSON } from 'ol/format';
 import { Draw, Snap, Select } from 'ol/interaction'
 
 //Openlayer Extend imports
 import GeolocationBar from 'ol-ext/control/GeolocationBar'
-import GeolocationButton from 'ol-ext/control/GeolocationButton'
 import CanvasScaleLine from 'ol-ext/control/CanvasScaleLine'
 import Notification from 'ol-ext/control/Notification'
 import Bar from 'ol-ext/control/Bar'
@@ -38,13 +35,14 @@ import LayerSwitcher from 'ol-ext/control/LayerSwitcher'
 ///Local import
 import RotateNorthControl from './RotateNorthControl'
 import { createLayer } from './helpers/Layers'
-import { animate, geoJsonStyleFunction } from './helpers'
+import { animate, geoJsonStyleFunction, useScreenSize } from './helpers'
 
 function Geo(props) {
   const [geoRef, setGeoRef] = useState();
   const [geoLoc, setGeoLoc] = useState();
   const [map, setMap] = useState();
   const [geoId] = useState(Math.random().toString(16).slice(2));
+
   //Global notification item
   const [notification] = useState(new Notification({}))
   // Vector layer for drawing
@@ -60,15 +58,11 @@ function Geo(props) {
   }))
 
   //Function to check if updating of a variable is allowed
-  const allowUpdate = function (name) {
-    return !(props.ignoreUpdate && props.ignoreUpdate(name))
-  }
-
-  //Function to check if updating of a variable is allowed
   const featureEnabled = function (name) {
     return !((props.features && props.features[name] === false))
   }
 
+  //Fire and event to controling ReactComponent
   const fireEvent = function (name, eventObject) {
     if (props.onEvent) {
       props.onEvent(name, eventObject || {})
@@ -664,6 +658,14 @@ function Geo(props) {
       centerMe()
     }
   }, [elementRef]);
+
+
+  var windowSize = useScreenSize()
+  useEffect(() => {
+    var el = document.getElementById('GEO_' + geoId)
+    fireEvent('window:resize', { window: windowSize, element: el ? el.getBoundingClientRect() : null })
+  }, [windowSize])
+
 
   return (
     <div

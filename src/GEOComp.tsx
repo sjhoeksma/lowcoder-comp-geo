@@ -164,10 +164,11 @@ var GEOComp = (function () {
     buttons: withDefault(JSONObjectControl, "{menu:false,north:false,save:false}"),
     features: withDefault(
       JSONObjectControl,
-      "{draw:true,swipe:false,tracker:false,timeline:false,gpsCentered:true,largeButtons:false}"
+      "{draw:true,swipe:false,tracker:false,timeline:false,gpsCentered:true,largeButtons:false,scaleToBottom:false}"
     ),
     onEvent: eventHandlerControl(eventDefintions),
   };
+
 
   //The Builder function creating the real component
   return new UICompBuilder(childrenMap, (props: {
@@ -192,48 +193,11 @@ var GEOComp = (function () {
     event: any;
     feature: any
   }) => {
-    const doDebug = function () { return props.defaults && props.defaults.debug === true }
-    //Cache for all events
-    var _events = {}
+    const doDebug = function () {
+      return props.defaults && props.defaults.debug === true
+    }
     //Default size of component
     const [dimensions, setDimensions] = useState({ width: 650, height: 400 });
-    //The event handler will also sent the event value to use
-    const handleEvent = function (name: string, eventObj: any) {
-      return new Promise((resolve) => {
-        //Always create new Event object 
-        _events = Object.assign({}, _events, props.events.value, {
-          [name]: eventObj,
-          current: name
-        })
-
-        props.events.onChange(_events)
-        props.event.onChange(eventObj || {})
-        var n = name.split(":")[0]
-        var eventName = "event"
-        eventDefintions.forEach((k) => { if (k.value == n || k.value == name) { eventName = k.value } })
-        //Double switch will allow fine grained event catching
-        switch (name) { //Catch first on name
-          case 'map:create':
-            return //Internal event only, user should use map:init
-          case 'click:feature':
-            props.feature.onChange(eventObj)
-            break;
-          default:
-            switch (eventName) {
-              case 'bbox':
-                props.bbox.onChange(eventObj)
-                break;
-            }
-        }
-        //Fire the event to lowcoder
-        props.onEvent(eventName, eventObj);
-        //Send debug information to console
-        if (doDebug())
-          console.debug("handleEvent", name, eventObj)
-        resolve(_events)
-      })
-    }
-
     //Catch the resizing of component
     const { width, height, ref: conRef } = useResizeDetector({
       onResize: () => {
@@ -255,6 +219,51 @@ var GEOComp = (function () {
         })
       }
     });
+
+    //Cache for all events
+    var _events = {}
+    //The event handler will also sent the event value to use
+    const handleEvent = function (name: string, eventObj: any) {
+      return new Promise((resolve) => {
+        //Always create new Event object 
+        _events = Object.assign({}, _events, props.events.value, {
+          [name]: eventObj,
+          current: name
+        })
+
+        props.events.onChange(_events)
+        props.event.onChange(eventObj || {})
+        var n = name.split(":")[0]
+        var eventName = "event"
+        eventDefintions.forEach((k) => { if (k.value == n || k.value == name) { eventName = k.value } })
+        //Double switch will allow fine grained event catching
+        switch (name) { //Catch first on name
+          case 'map:create':
+            return //Internal event only, user should use map:init
+          case 'click:feature':
+            props.feature.onChange(eventObj)
+            break;
+          case 'window:resize':
+            if (props.features && props.features.scaleToBottom == true) {
+              var div = eventObj.window.height - eventObj.element.bottom - 1
+              setDimensions({ width: dimensions.width, height: dimensions.height + div })
+            }
+            break
+          default:
+            switch (eventName) {
+              case 'bbox':
+                props.bbox.onChange(eventObj)
+                break;
+            }
+        }
+        //Fire the event to lowcoder
+        props.onEvent(eventName, eventObj);
+        //Send debug information to console
+        if (doDebug())
+          console.debug("handleEvent", name, eventObj)
+        resolve(_events)
+      })
+    }
 
     //Create the container for the component
     return (
