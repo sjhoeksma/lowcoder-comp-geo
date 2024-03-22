@@ -23,8 +23,8 @@ export function animateToLocation(map, coords, duration, props = {}) {
   }, props), props.callback);
 }
 
-export function animateToExtent(map, extent, duration, props = {}) {
-  const geographicCenter = getCenter(extent);
+export function animateToExtent(map, coords, duration, props = {}) {
+  const geographicCenter = getCenter(coords);
   const location = fromLonLat(geographicCenter);
   map.getView().animate(Object.assign({ zoom: 15 }, {
     center: location,
