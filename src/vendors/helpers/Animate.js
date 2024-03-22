@@ -15,6 +15,7 @@ import Zoom from 'ol-ext/featureanimation/Zoom'
 import { Point } from 'ol/geom'
 import * as easing from 'ol/easing';
 
+const emptyCallback = function () { }
 export function parseCoords(coords) {
   if (!coords) return []
   try {
@@ -33,7 +34,7 @@ export function animateToLocation(map, coords, duration, props = {}) {
   return map.getView().animate(Object.assign({ zoom: 15 }, {
     center: location,
     duration: duration,
-  }, props), props.callback);
+  }, props), props.callback || emptyCallback);
 }
 
 export function animateToExtent(map, coords, duration, props = {}) {
@@ -42,7 +43,7 @@ export function animateToExtent(map, coords, duration, props = {}) {
   map.getView().animate(Object.assign({ zoom: 15 }, {
     center: location || fromLonLat(coords),
     duration: duration,
-  }, props), props.callback);
+  }, props));
 }
 
 
