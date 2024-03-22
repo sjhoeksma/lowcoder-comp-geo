@@ -4,6 +4,7 @@
  * already exist.
  */
 import Overlay from 'ol/Overlay';
+import { getCenter } from 'ol/extent';
 
 // Adjusted to accept a map instance directly
 export function showPopup(map, coordinates, message) {
