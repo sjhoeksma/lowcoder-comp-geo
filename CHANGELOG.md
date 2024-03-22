@@ -1,3 +1,10 @@
+# [1.3.0-dev.43](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.42...v1.3.0-dev.43) (2024-03-22)
+
+
+### Bug Fixes
+
+* resize ([3a20c9d](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/3a20c9def756ce444155d4c6c74e7591f60172c1))
+
 # [1.3.0-dev.42](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.41...v1.3.0-dev.42) (2024-03-22)
 
 
