@@ -1,3 +1,10 @@
+# [1.3.0-dev.48](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.47...v1.3.0-dev.48) (2024-03-22)
+
+
+### Bug Fixes
+
+* stript padding ([4654c87](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/4654c873bcbf69237be55adc62c85a647eb7d0f4))
+
 # [1.3.0-dev.47](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.46...v1.3.0-dev.47) (2024-03-22)
 
 
