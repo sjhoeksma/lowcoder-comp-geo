@@ -1,3 +1,11 @@
+# [1.3.0-dev.41](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.40...v1.3.0-dev.41) (2024-03-22)
+
+
+### Bug Fixes
+
+* added scaleToBottom feature ([75101a6](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/75101a6de2821793675ddb7097732b3e15866403))
+* selectable layer assigned and cursor Style ([e442566](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/e44256693ff53498b1a29a079068c030c614ff9c))
+
 # [1.3.0-dev.40](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.39...v1.3.0-dev.40) (2024-03-22)
 
 
