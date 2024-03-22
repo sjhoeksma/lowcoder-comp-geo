@@ -246,7 +246,7 @@ var GEOComp = (function () {
           case 'window:resize':
             console.log("P", props.autoHeight)
             if (props.features && props.features.scaleToBottom == true && props.autoHeight) {
-              var newHeight = (eventObj.window.height - eventObj.size.bottom - (props.styles.padding * 2) - 2)
+              var newHeight = dimensions.height + (eventObj.window.height - eventObj.size.bottom - (props.styles.padding * 2) - 2)
               setDimensions({ width: dimensions.width, height: newHeight })
               eventObj.element.style.height = `${newHeight}px`
             }
