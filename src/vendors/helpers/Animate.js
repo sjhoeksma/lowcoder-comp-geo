@@ -27,7 +27,7 @@ export function animateToExtent(map, coords, duration, props = {}) {
   const geographicCenter = getCenter(coords);
   const location = fromLonLat(geographicCenter);
   map.getView().animate(Object.assign({ zoom: 15 }, {
-    center: location,
+    center: location || fromLonLat(coords),
     duration: duration,
   }, props), props.callback);
 }
