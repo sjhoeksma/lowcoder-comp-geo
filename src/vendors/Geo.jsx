@@ -662,14 +662,15 @@ function Geo(props) {
 
   var windowSize = useScreenSize()
   useEffect(() => {
-    var el = document.getElementById('GEO_' + geoId)
-    fireEvent('window:resize', { window: windowSize, element: el ? el.getBoundingClientRect() : null })
+    var el = document.getElementById('GEO.' + geoId)
+    fireEvent('window:resize', { window: windowSize, element: el, size: el ? el.getBoundingClientRect() : null })
   }, [windowSize])
 
 
   return (
     <div
       ref={elementRef}
+      id={"GEO." + geoId}
       style={{ height: props.height, width: props.width }}
     >
       <RingLoader color="#36d7b7"
