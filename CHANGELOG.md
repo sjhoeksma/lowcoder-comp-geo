@@ -1,3 +1,11 @@
+# [1.3.0-dev.31](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.30...v1.3.0-dev.31) (2024-03-22)
+
+
+### Bug Fixes
+
+* added annimates ([1fb3466](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/1fb346654ec8515c0b80e69007f53921cd5c6e42))
+* feature exposure ([5951e02](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/5951e02e290d088867a437d1be2156dcb91c40b3))
+
 ## [ToDo]
 - Make view mobile friendly, lager fonts for buttons
 - Add left mouse menu
