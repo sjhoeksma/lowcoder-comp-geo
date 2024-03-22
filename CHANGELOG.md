@@ -1,3 +1,16 @@
+# [1.3.0-dev.42](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.41...v1.3.0-dev.42) (2024-03-22)
+
+
+### Bug Fixes
+
+* change the gh docs action trigger name and trigger to be from gh ui ([8729737](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/8729737276dc865fb094f2be268074d7cee851f1))
+* publish_dir to ./documentation/build ([1ae3b5b](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/1ae3b5b5d32736a2e4d7235c2e7ce962844a7d41))
+
+
+### Features
+
+* docs with docusaurus ([6af8082](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/6af808224e622c7ca0a5342c9550d81d7559d363))
+
 # [1.3.0-dev.41](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.40...v1.3.0-dev.41) (2024-03-22)
 
 
