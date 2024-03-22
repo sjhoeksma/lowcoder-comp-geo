@@ -122,7 +122,6 @@ function Geo(props) {
 
   const loadLayers = function (map) {
     if (map) {
-      console.log("LoadLayer")
       // Validate and create new layers
       const layers = Array.isArray(props.layers) ? props.layers :
         props.defaults && Array.isArray(props.defaults.layers) ? props.defaults.layers : [];
@@ -583,7 +582,7 @@ function Geo(props) {
       // Notification Control
       olMap.addControl(notification);
 
-      loadLayers(olMap)
+      //loadLayers(olMap)
 
       //Add map init event
       fireEvent('map:init', olMap);
