@@ -1,3 +1,10 @@
+# [1.3.0-dev.38](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.37...v1.3.0-dev.38) (2024-03-22)
+
+
+### Bug Fixes
+
+* parse coords ([6cd87dd](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/6cd87ddd8cd97e842bce7c2789bec987cfe69677))
+
 # [1.3.0-dev.37](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.36...v1.3.0-dev.37) (2024-03-22)
 
 
