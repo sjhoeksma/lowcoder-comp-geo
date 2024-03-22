@@ -1,3 +1,10 @@
+# [1.3.0-dev.39](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.38...v1.3.0-dev.39) (2024-03-22)
+
+
+### Bug Fixes
+
+* moved into loop ([13806b1](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/13806b1058bd81b197b27d8ff66a165009e3fa1e))
+
 # [1.3.0-dev.38](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.37...v1.3.0-dev.38) (2024-03-22)
 
 
