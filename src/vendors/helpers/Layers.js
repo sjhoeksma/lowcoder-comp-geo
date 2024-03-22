@@ -31,6 +31,7 @@ export function createLayer(layerConfig) {
         maxZoom: layerConfig.maxZoom,
         visible: layerConfig.visible,
         opacity: layerConfig.opacity,
+        selectable: layerConfig.selectable,
         source: new VectorTileSource({
           attributions: layerConfig.attributions,
           format: new MVT(),
@@ -44,6 +45,7 @@ export function createLayer(layerConfig) {
         maxZoom: layerConfig.maxZoom,
         visible: layerConfig.visible,
         opacity: layerConfig.opacity,
+        selectable: layerConfig.selectable,
         source: new TileWMS({
           url: layerConfig.source.url,
           params: layerConfig.source.params,
@@ -58,6 +60,7 @@ export function createLayer(layerConfig) {
         maxZoom: layerConfig.maxZoom,
         visible: layerConfig.visible,
         opacity: layerConfig.opacity,
+        selectable: layerConfig.selectable,
         source: new VectorSource({
           format: new GeoJSON(),
           url: layerConfig.source.url,
@@ -70,6 +73,7 @@ export function createLayer(layerConfig) {
         maxZoom: layerConfig.maxZoom,
         visible: layerConfig.visible,
         opacity: layerConfig.opacity,
+        selectable: layerConfig.selectable,
         source: new XYZ({
           url: layerConfig.source.url,
         }),
@@ -81,6 +85,7 @@ export function createLayer(layerConfig) {
         maxZoom: layerConfig.maxZoom,
         visible: layerConfig.visible,
         opacity: layerConfig.opacity,
+        selectable: layerConfig.selectable,
         source: new VectorSource({
           features: new GeoJSON().readFeatures(layerConfig.source.data, {
             // Ensure the features are read with the correct projection
@@ -99,6 +104,7 @@ export function createLayer(layerConfig) {
         maxZoom: layerConfig.maxZoom,
         visible: layerConfig.visible,
         opacity: layerConfig.opacity,
+        selectable: layerConfig.selectable,
         source: new GeoTIFF({
           sources: [
             {
@@ -124,6 +130,7 @@ export function createLayer(layerConfig) {
         maxZoom: layerConfig.maxZoom,
         visible: layerConfig.visible,
         opacity: layerConfig.opacity,
+        selectable: layerConfig.selectable,
         source: new VectorTileSource({
           projection: layerConfig.source?.projection,
         }),

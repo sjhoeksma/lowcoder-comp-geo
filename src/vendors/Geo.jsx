@@ -554,11 +554,24 @@ function Geo(props) {
 
       // Optional: pointer move logic for changing cursor over WMS layers
       olMap.on('pointermove', function (evt) {
-        if (evt.dragging) return;
+        if (evt.dragging) return; // skip if the map is being dragged
+
+        var cursorStyle = 'default'; // Default cursor style
         const pixel = olMap.getEventPixel(evt.originalEvent);
-        const hit = olMap.hasFeatureAtPixel(pixel);
-        olMap.getTargetElement().style.cursor = hit ? 'pointer' : '';
+
+        // Check for features at the current pointer position
+        olMap.forEachFeatureAtPixel(pixel, function (feature, layer) {
+          // If a layer is found and its selectable property is not false
+          if (layer && layer.get('selectable') !== false) {
+            cursorStyle = 'pointer'; // Change the cursor to pointer
+            return true; // Stop iterating through the features
+          }
+        });
+
+        // Apply the determined cursor style to the map target element
+        olMap.getTargetElement().style.cursor = cursorStyle;
       });
+
 
       //Handle the loaded event
       olMap.on('loadend', function (event) {

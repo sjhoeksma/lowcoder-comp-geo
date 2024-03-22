@@ -9,6 +9,7 @@ export const enObj: I18nObjects = {
       "minZoom": 0,
       "maxZoom": 22,
       "visible": true,
+      "selectable": true,
       "source": {
         "peojection": "EPSG:4326",
         "data": {
@@ -282,6 +283,7 @@ export const enObj: I18nObjects = {
       maxZoom: 22,
       visible: true,
       opacity: 1,
+      selectable: false,
       source: {
         url: "https://wms.wheregroup.com/tileserver/style/osm-bright.json",
         projection: "EPSG:3857",
