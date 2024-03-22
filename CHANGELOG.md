@@ -1,3 +1,10 @@
+# [1.3.0-dev.35](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.34...v1.3.0-dev.35) (2024-03-22)
+
+
+### Bug Fixes
+
+* added loadLayers ([13f0769](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/13f07694ab589eb0041c2cc5a63b7099354018ee))
+
 # [1.3.0-dev.34](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.33...v1.3.0-dev.34) (2024-03-22)
 
 
