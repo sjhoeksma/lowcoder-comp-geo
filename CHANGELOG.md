@@ -1,3 +1,10 @@
+# [1.3.0-dev.34](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.33...v1.3.0-dev.34) (2024-03-22)
+
+
+### Bug Fixes
+
+* added feature varaible ([b2f1023](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/b2f1023543cb3a20842b8a95c861850461330f6e))
+
 # [1.3.0-dev.33](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.32...v1.3.0-dev.33) (2024-03-22)
 
 
