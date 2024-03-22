@@ -15,6 +15,19 @@ import Zoom from 'ol-ext/featureanimation/Zoom'
 import { Point } from 'ol/geom'
 import * as easing from 'ol/easing';
 
+export function parseCoords(coords) {
+  if (!coords) return []
+  try {
+    if (typeof coords === 'string') coords = JSON.parse(coords)
+  } catch (e) { }
+  try {
+    if (typeof coords === 'string') coords = JSON.parse("[" + coords + "]")
+  } catch (e) { }
+  if (Array.isArray(coords)) return coords
+  if (coords.longitude) return [coords.longitude, coords.latitude]
+  return coords
+}
+
 export function animateToLocation(map, coords, duration, props = {}) {
   const location = fromLonLat(coords);
   return map.getView().animate(Object.assign({ zoom: 15 }, {
@@ -96,5 +109,5 @@ export const animations = {
 
 export function animate(map, coords, duration = 2000, props = {}, name) {
   var func = animations[name || 'toLocation']
-  if (func) func(map, coords, duration, props)
+  if (func) func(map, parseCoords(coords), duration, props)
 }

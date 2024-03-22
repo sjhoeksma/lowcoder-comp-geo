@@ -534,7 +534,7 @@ function Geo(props) {
           if (!(featureEnabled('draw') &&
             (pdelete.getActive() || pmove.getActive() ||
               pedit.getActive() || ledit.getActive() || fedit.getActive()))
-            && layer && feature) { //only fire event if we are not drawing
+            && layer && layer.get("selectable") === true && feature) { //only fire event if we are not drawing
             fireEvent('click:feature', {
               extent: transformExtent(feature.getGeometry()?.extent_, 'EPSG:3857', 'EPSG:4326') || [],
               properties: feature.getProperties() || {},
