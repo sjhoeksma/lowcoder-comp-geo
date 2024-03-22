@@ -1,3 +1,10 @@
+# [1.3.0-dev.49](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.48...v1.3.0-dev.49) (2024-03-22)
+
+
+### Bug Fixes
+
+* handle Popup can take extent and getCenter from it ([ac5259d](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/ac5259d6b1f7db6ca87d983419e8aefa8e44d2e2))
+
 # [1.3.0-dev.48](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.47...v1.3.0-dev.48) (2024-03-22)
 
 
