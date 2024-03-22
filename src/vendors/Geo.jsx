@@ -157,8 +157,8 @@ function Geo(props) {
         && (showButton('draw:move') || showButton('draw:point') || showButton('draw:line')
           || showButton('draw:polygon') || showButton('draw:undo') || showButton('draw:redo')
           || showButton('draw:delete')))
-        || (featureEnabled('tracker') && showButton('tracker:save')
-          || showButton('center')))
+        || showButton('save')
+        || showButton('center'))
         olMap.addControl(mainbar);
 
       //GeoLocation
@@ -316,18 +316,15 @@ function Geo(props) {
         if (showButton('draw:redo')) mainbar.addControl(redo);
       }
 
-      //Are we supporting tracker
-      if (featureEnabled('tracker')) {
-        // Add a simple push button to save features
-        var save = new Button({
-          html: '<i class="fa fa-download"></i>',
-          title: "Save",
-          handleClick: function (e) {
-            fireEvent("tracker:save", new GeoJSON().writeFeaturesObjects(trackerVector.getSource().getFeatures()))
-          }
-        });
-        if (showButton('tracker:save')) mainbar.addControl(save);
-      }
+      // Add a simple push button to save features
+      var save = new Button({
+        html: '<i class="fa fa-download"></i>',
+        title: "Save",
+        handleClick: function (e) {
+          fireEvent("save")
+        }
+      });
+      if (showButton("save")) mainbar.addControl(save);
 
       //Fullscreen
       var fullscreen = new FullScreen()
@@ -498,7 +495,7 @@ function Geo(props) {
 
       //rotateNorth control
       var rotateNorth = new RotateNorthControl();
-      if (showButton('rotateNorth')) mainbar.addControl(rotateNorth);
+      if (showButton('north')) mainbar.addControl(rotateNorth);
 
       // CanvasScaleLine control
       var scaleLineControl = new CanvasScaleLine();

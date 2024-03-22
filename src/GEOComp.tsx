@@ -78,7 +78,7 @@ export const CompStyles = [
         draw:delete: false
         draw:redo: false,
         draw:undo: false,
-        tracker:save:false,
+        save:false,
         scale:false,
         fullscreen:false,
         layers:false,
@@ -87,7 +87,7 @@ export const CompStyles = [
         timeline: false,
         center:false,
         tracker :false,
-        rotateNorth: false,
+        north: false,
       }
  */
 var GEOComp = (function () {
