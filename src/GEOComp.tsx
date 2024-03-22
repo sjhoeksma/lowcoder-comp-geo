@@ -15,7 +15,8 @@ import {
   arrayStringExposingStateControl,
   withMethodExposing,
   AutoHeightControl,
-  withExposingRaw
+  withExposingRaw,
+  fromRecord
 } from "lowcoder-sdk";
 import styles from "./styles.module.css";
 import { i18nObjs, trans } from "./i18n/comps";
@@ -351,12 +352,12 @@ GEOComp = class extends GEOComp {
 GEOComp = withExposingRaw(
   GEOComp,
   {
-    name: "feature",
-    value: trans("value"),
-    code: trans("code"),
+    feature: "feature",
   },
   (comp: any) => {
-    return comp.exposingValues.event['click:feature'] || {}
+    return fromRecord({
+      feature: comp.exposingValues.event['click:feature'] || {},
+    });
   }
 );
 
