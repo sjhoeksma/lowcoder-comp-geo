@@ -25,6 +25,8 @@ import { useResizeDetector } from "react-resize-detector";
 // @ts-ignore
 import Notification from 'ol-ext/control/Notification'
 
+import { boolObjectOptionControl } from './BoolObjectOptionControl';
+
 
 export const CompStyles = [
   {
@@ -165,9 +167,14 @@ var GEOComp = (function () {
     buttons: withDefault(JSONObjectControl, "{menu:false,north:false,save:false}"),
     features: withDefault(
       JSONObjectControl,
-      "{modify:true,swipe:false,tracker:false,timeline:false,gpsCentered:true,largeButtons:false,scaleToBottom:false}"
+      "{modify:true,split:false,tracker:false,timeline:false,gpsCentered:true,largeButtons:false,scaleToBottom:false}"
     ),
     onEvent: eventHandlerControl(eventDefintions),
+    test: boolObjectOptionControl([
+      { label: "modify", state: true },
+      { label: "splitHorizontal", state: false },
+      { label: "splitVertical", state: false },
+    ])
   };
 
 
@@ -193,6 +200,7 @@ var GEOComp = (function () {
     events: any;
     event: any;
     feature: any
+    test: any
   }) => {
     const doDebug = function () {
       return props.defaults && props.defaults.debug === true
@@ -330,6 +338,7 @@ var GEOComp = (function () {
             {children.onEvent.propertyView()}
           </Section>
           <Section name="Behavior">
+            {children.test.propertyView({ label: "test features" })}
             {children.features.propertyView({ label: "Enabled features" })}
             {children.buttons.propertyView({ label: "Visible buttons" })}
             {children.menuTitle.propertyView({ label: "Menu title" })}
