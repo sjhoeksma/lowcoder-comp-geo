@@ -122,7 +122,7 @@ function Geo(props) {
       const validatedLayers = layers.filter(layer => layer !== null && layer !== undefined);
       const sortedLayers = validatedLayers
         .sort((a, b) => (a.order || 0) - (b.order || 0))
-        .map(createLayer)
+        .map(layerConfig => createLayer(layerConfig, map))
         .filter(layer => layer !== null && layer !== undefined);
       map.getLayers().clear();
       sortedLayers.forEach(layer => { if (layer) map.addLayer(layer) });
@@ -152,7 +152,8 @@ function Geo(props) {
           center: fromLonLat((props.center.length == 2 ? props.center : props.defaults.center) || geoLoc || [0, 0]),
           zoom: props.zoom || props.defaults.zoom,
           maxZoom: props.maxZoom || props.defaults.maxZoom || 100,
-          rotation: props.rotation || props.defaults.rotation
+          rotation: props.rotation || props.defaults.rotation,
+          projection: props.defaults.projection || 'EPSG:3857'
         }),
         target: 'GEO_' + geoId,
         layers: [],

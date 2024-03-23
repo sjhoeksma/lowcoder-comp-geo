@@ -141,6 +141,7 @@ var GEOComp = (function () {
       maxZoom:30,
       menuTitle: "Menu",
       menuContent: "No Content",
+      projection: "EPSG:3857",
       buttons: { 
         draw: true
       },

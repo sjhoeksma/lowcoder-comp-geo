@@ -17,7 +17,7 @@ import { geoJsonStyleFunction } from './Styles'
 import { applyBackground, applyStyle } from 'ol-mapbox-style';
 import { createXYZ } from 'ol/tilegrid.js';
 
-export function createLayer(layerConfig) {
+export function createLayer(layerConfig, map) {
   if (!layerConfig || !layerConfig.type) {
     console.warn("Skipping layer due to missing type or configuration:", layerConfig);
     return null;
@@ -90,7 +90,7 @@ export function createLayer(layerConfig) {
           features: new GeoJSON().readFeatures(layerConfig.source.data, {
             // Ensure the features are read with the correct projection
             dataProjection: layerConfig.source.projection || 'EPSG:4326', // Assuming the GeoJSON is in WGS 84
-            featureProjection: 'EPSG:3857' // Assuming the map projection
+            featureProjection: map.getView().getProjection() || 'EPSG:3857' // Assuming the map projection
           }),
         }),
         // Add this line to apply a generic style to the layer
@@ -132,7 +132,7 @@ export function createLayer(layerConfig) {
         opacity: layerConfig.opacity,
         selectable: layerConfig.selectable,
         source: new VectorTileSource({
-          projection: layerConfig.source?.projection,
+          projection: layerConfig.source?.projection || 'EPSG:3857',
         }),
         style: layerConfig.source.style,
       });
