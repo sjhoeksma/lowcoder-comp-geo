@@ -1,3 +1,17 @@
+# [1.3.0-dev.52](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.51...v1.3.0-dev.52) (2024-03-23)
+
+
+### Bug Fixes
+
+* build just for testing ([9aa21d7](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/9aa21d7731968de2bcba744c55935cb79d348a4b))
+* cleanup ([cc20ea2](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/cc20ea2b64ed77aa9d179d02f8e026c4029977fc))
+* moved draw to Modify and fixed resize error in previewmode ([8327ddf](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/8327ddf2b2abab0e385a430e79a9125f9ae3ef48))
+
+
+### Features
+
+* Map Projection in Advanced Options "needs enhancement" ([751f71b](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/751f71baec94a0c8b012e18e4537bb348dd55f59))
+
 # [1.3.0-dev.51](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.50...v1.3.0-dev.51) (2024-03-23)
 
 
