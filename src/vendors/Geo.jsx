@@ -174,9 +174,9 @@ function Geo(props) {
       mainbar.setPosition("top-left")
       if (!showButton('menu')) mainbar.element.classList.add('nomenu')
       if ((featureEnabled('draw')
-        && (showButton('draw:move') || showButton('draw:point') || showButton('draw:line')
-          || showButton('draw:polygon') || showButton('draw:undo') || showButton('draw:redo')
-          || showButton('draw:delete')))
+        && (showButton('modify:move') || showButton('modify:point') || showButton('modify:line')
+          || showButton('modify:polygon') || showButton('modify:undo') || showButton('modify:redo')
+          || showButton('modify:delete')))
         || showButton('save')
         || showButton('center'))
         olMap.addControl(mainbar);
@@ -195,15 +195,15 @@ function Geo(props) {
       if (showButton('center')) mainbar.addControl(geoLocation)
 
 
-      if (featureEnabled('draw')) {
+      if (featureEnabled('modify')) {
         // Edit control bar 
         var editbar = new Bar({
           toggleOne: true,	// one control active at the same time
           group: false			// group controls together
         });
-        if (showButton('draw:move') || showButton('draw:point') || showButton('draw:line')
-          || showButton('draw:polygon') || showButton('draw:undo') || showButton('draw:redo')
-          || showButton('draw:delete'))
+        if (showButton('modify:move') || showButton('modify:point') || showButton('modify:line')
+          || showButton('modify:polygon') || showButton('modify:undo') || showButton('modify:redo')
+          || showButton('modify:delete'))
           mainbar.addControl(editbar);
 
         //Add modify interaction
@@ -226,7 +226,7 @@ function Geo(props) {
           olMap.removeInteraction(snap);
           olMap.removeInteraction(modify);
         })
-        if (showButton('draw:move')) editbar.addControl(pmove);
+        if (showButton('modify:move')) editbar.addControl(pmove);
 
         // Add editing tools
         var pedit = new Toggle({
@@ -241,7 +241,7 @@ function Geo(props) {
             source: drawVector.getSource(),
           })
         });
-        if (showButton('draw:point')) editbar.addControl(pedit);
+        if (showButton('modify:point')) editbar.addControl(pedit);
 
         var ledit = new Toggle({
           html: '<i class="fa fa-share-alt" ></i>',
@@ -262,7 +262,7 @@ function Geo(props) {
             }
           })
         });
-        if (showButton('draw:line')) editbar.addControl(ledit);
+        if (showButton('modify:line')) editbar.addControl(ledit);
 
         var fedit = new Toggle({
           html: '<i class="fa fa-bookmark fa-rotate-270" ></i>',
@@ -284,7 +284,7 @@ function Geo(props) {
             }
           })
         });
-        if (showButton('draw:polygon')) editbar.addControl(fedit);
+        if (showButton('modify:polygon')) editbar.addControl(fedit);
 
         //DELETE editing tools
         var pSelect = new Select({ source: drawVector.getSource() });
@@ -303,15 +303,15 @@ function Geo(props) {
             }
           }
         });
-        if (showButton('draw:delete')) editbar.addControl(pdelete);
+        if (showButton('modify:delete')) editbar.addControl(pdelete);
 
         // Undo redo interaction
         var undoInteraction = new UndoRedo({ layers: [drawVector] });
         undoInteraction.on('stack:add', function (e) {
-          fireEvent("draw:add")
+          fireEvent("modify:add")
         })
         undoInteraction.on('stack:remove', function (e) {
-          fireEvent("draw:remove")
+          fireEvent("modify:remove")
         })
         olMap.addInteraction(undoInteraction);
 
@@ -323,7 +323,7 @@ function Geo(props) {
             undoInteraction.undo();
           }
         });
-        if (showButton('draw:undo')) mainbar.addControl(undo);
+        if (showButton('modify:undo')) mainbar.addControl(undo);
 
         // Add a simple push button to redo features
         var redo = new Button({
@@ -333,7 +333,7 @@ function Geo(props) {
             undoInteraction.redo();
           }
         });
-        if (showButton('draw:redo')) mainbar.addControl(redo);
+        if (showButton('modify:redo')) mainbar.addControl(redo);
       }
 
       // Add a simple push button to save features
@@ -526,7 +526,7 @@ function Geo(props) {
         var _feature = false;
         olMap.forEachFeatureAtPixel(evt.pixel, function (feature, layer) {
           // Vector feature click logic
-          if (!(featureEnabled('draw') &&
+          if (!(featureEnabled('modify') &&
             (pdelete.getActive() || pmove.getActive() ||
               pedit.getActive() || ledit.getActive() || fedit.getActive()))
             && layer && layer.get("selectable") !== false && feature) { //only fire event if we are not drawing
@@ -664,7 +664,8 @@ function Geo(props) {
   var windowSize = useScreenSize()
   useEffect(() => {
     var el = document.getElementById('GEO.' + geoId)
-    fireEvent('window:resize', { window: windowSize, element: el, size: el ? el.getBoundingClientRect() : null })
+    if (el)
+      fireEvent('window:resize', { element: el, windowSize: windowSize, bounds: el ? el.getBoundingClientRect() : null })
   }, [elementRef, windowSize])
 
 
@@ -686,7 +687,7 @@ Geo.propTypes = {
   maxZoom: PropTypes.number,
   rotation: PropTypes.number,
   onEvent: PropTypes.func,
-  skipRedraw: PropTypes.func,
+  skipRemodify: PropTypes.func,
   buttons: PropTypes.object,
   menuTitle: PropTypes.string,
   menuContent: PropTypes.string,

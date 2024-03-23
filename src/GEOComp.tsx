@@ -69,14 +69,14 @@ export const CompStyles = [
      buttons: { //All buttons are shown by default
         menu: false,
         zoom: false,
-        draw: false, //Will disable all draw buttons
-        draw:select : false,
-        draw:point : false,
-        draw:line: false,
-        draw:polygon: false,
-        draw:delete: false
-        draw:redo: false,
-        draw:undo: false,
+        modify: false, //Will disable all draw buttons
+        modify:select : false,
+        modify:point : false,
+        modify:line: false,
+        modify:polygon: false,
+        modify:delete: false
+        modify:redo: false,
+        modify:undo: false,
         save:false,
         scale:false,
         fullscreen:false,
@@ -94,8 +94,8 @@ var GEOComp = (function () {
   //The events supported
   const eventDefintions = [
     {
-      label: "onDraw",
-      value: "draw",
+      label: "onModify",
+      value: "modify",
       description: "Triggers when drawLayer data changes",
     },
     {
@@ -143,7 +143,7 @@ var GEOComp = (function () {
       menuContent: "No Content",
       projection: "EPSG:3857",
       buttons: { 
-        draw: true
+        modify: true
       },
       debug:true
     }`
@@ -165,7 +165,7 @@ var GEOComp = (function () {
     buttons: withDefault(JSONObjectControl, "{menu:false,north:false,save:false}"),
     features: withDefault(
       JSONObjectControl,
-      "{draw:true,swipe:false,tracker:false,timeline:false,gpsCentered:true,largeButtons:false,scaleToBottom:false}"
+      "{modify:true,swipe:false,tracker:false,timeline:false,gpsCentered:true,largeButtons:false,scaleToBottom:false}"
     ),
     onEvent: eventHandlerControl(eventDefintions),
   };
@@ -246,10 +246,15 @@ var GEOComp = (function () {
             break;
           case 'window:resize':
             if (props.features && props.features.scaleToBottom == true && props.autoHeight) {
-              var newHeight = dimensions.height + (eventObj.window.height - eventObj.size.bottom - (parseFloat(props.styles.padding.replace("px", "")) * 2) - 2)
-              eventObj.element.style.height = `${newHeight}px`
-              setDimensions({ width: dimensions.width, height: newHeight })
-              //console.log("Resize", props.autoHeight, newHeight)
+              const el = eventObj.el
+              const rec = eventObj.windowSize
+              const bounds = eventObj.bounds.getBoundingClientRect()
+              //var bottom = (parseFloat(props.styles.padding.replace("px", "")) * 2) - 2
+              var bottom = (parseFloat(el.style.paddingBottom.replace("px", "")) * 2) - 2
+              var newHeight = dimensions.height + (rec.height - bounds.bottom - bottom)
+              //eventObj.element.style.height = `${newHeight}px`
+              //setDimensions({ width: dimensions.width, height: newHeight })
+              console.log("Resize", props.autoHeight, newHeight, bounds)
             }
             break
           default:
