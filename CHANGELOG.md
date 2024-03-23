@@ -1,3 +1,10 @@
+# [1.3.0-dev.51](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.50...v1.3.0-dev.51) (2024-03-23)
+
+
+### Bug Fixes
+
+* popup projection and getProjection from map view instead of static "EPSG:3857" ([4607bb3](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/4607bb34b8f6236b7f2edf1b6ad1de4a8d0f7c11))
+
 # [1.3.0-dev.50](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.49...v1.3.0-dev.50) (2024-03-22)
 
 
