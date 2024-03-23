@@ -5,6 +5,7 @@
  */
 import Overlay from 'ol/Overlay';
 import { getCenter } from 'ol/extent';
+import { fromLonLat, transformExtent } from 'ol/proj';
 
 // Adjusted to accept a map instance directly
 export function showPopup(map, coordinates, message) {
@@ -42,11 +43,14 @@ export function showPopup(map, coordinates, message) {
     if (Array.isArray(coordinates)) {
         // If coordinates have more than two values, assume it's an extent and calculate its center.
         if (coordinates.length > 2) {
-            coordinates = getCenter(coordinates);
+            coordinates = getCenter(transformExtent(coordinates, 'EPSG:4326', map.getView().getProjection()));
+        }
+        else if (coordinates.length < 3) {
+            coordinates = fromLonLat(coordinates);
         }
         // Now coordinates will always be a pair here, suitable for setPosition.
         let content = popup.getElement().querySelector('.ol-popup-content');
         content.innerHTML = message;
-        popup.setPosition([coordinates[0], coordinates[1]]);
+        popup.setPosition(coordinates);
     }
 }

@@ -530,7 +530,7 @@ function Geo(props) {
               pedit.getActive() || ledit.getActive() || fedit.getActive()))
             && layer && layer.get("selectable") !== false && feature) { //only fire event if we are not drawing
             fireEvent('click:feature', {
-              extent: transformExtent(feature.getGeometry()?.extent_, 'EPSG:3857', 'EPSG:4326') || [],
+              extent: transformExtent(feature.getGeometry()?.extent_, olMap.getView().getProjection(), 'EPSG:4326') || [],
               properties: feature.getProperties() || {},
               layer: layer.get("name")
             })
@@ -582,7 +582,7 @@ function Geo(props) {
       //On move
       olMap.on('moveend', () => {
         const extent = olMap.getView().calculateExtent(olMap.getSize()); // Get the current extent
-        const transformedExtent = transformExtent(extent, 'EPSG:3857', 'EPSG:4326'); // Transform the extent to WGS 84
+        const transformedExtent = transformExtent(extent, olMap.getView().getProjection(), 'EPSG:4326'); // Transform the extent to WGS 84
         fireEvent('bbox:change', transformedExtent); // Call the callback with the updated bbox
       }
       );
