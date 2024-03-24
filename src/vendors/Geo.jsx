@@ -63,7 +63,6 @@ function Geo(props) {
     return props.features[name] == true
   }
 
-
   //Fire and event to controling ReactComponent
   const fireEvent = function (name, eventObject) {
     if (props.onEvent) {

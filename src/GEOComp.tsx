@@ -143,6 +143,7 @@ var GEOComp = (function () {
         timeline: false,
         gpsCentered: true,
         north: false,
+        scale: true,
         largeButtons: true,
         scaleToBottom: false,
         "modify:select": true,

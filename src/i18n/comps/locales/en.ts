@@ -58,6 +58,7 @@ export const en = {
     timeline: "Enable timeline",
     gpsCentered: "GPS location on startup",
     north: "Rotate map North",
+    scale: "Show scale of map",
     largeButtons: "Use large buttons",
     scaleToBottom: "Resize map to bottom (AutoHeigth)",
     "modify:select": "Select feature (Modify)",
