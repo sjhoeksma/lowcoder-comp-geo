@@ -305,8 +305,6 @@ var GEOComp = (function () {
         <>
           <Section name="Map">
             {children.layers.propertyView({ label: "layers" })}
-          </Section>
-          <Section name="View">
             {children.center.propertyView({ label: "center" })}
             {children.zoom.propertyView({ label: "zoom" })}
             {children.maxZoom.propertyView({ label: "maxZoom" })}
@@ -315,6 +313,10 @@ var GEOComp = (function () {
           </Section>
           <Section name="Interaction">
             {children.onEvent.propertyView()}
+          </Section>
+          <Section name="Menu">
+            {children.menuTitle.propertyView({ label: "Title" })}
+            {children.menuContent.propertyView({ label: "Content" })}
           </Section>
           <Section name="Styles">
             {children.autoHeight.getPropertyView()}
