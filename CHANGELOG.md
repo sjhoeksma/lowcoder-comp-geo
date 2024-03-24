@@ -1,3 +1,12 @@
+# [1.3.0-dev.60](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.59...v1.3.0-dev.60) (2024-03-24)
+
+
+### Bug Fixes
+
+* draw ([5b24687](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/5b24687e5b9834a1b8bd79eb06d24127c4cb1d23))
+* draw ([f846567](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/f8465676fd7820036d3cbdfff96d635937d8ab5a))
+* enabled scale ([04ce9a3](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/04ce9a38f4639b41f901097957a394bfcbce53df))
+
 # [1.3.0-dev.59](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.58...v1.3.0-dev.59) (2024-03-24)
 
 
