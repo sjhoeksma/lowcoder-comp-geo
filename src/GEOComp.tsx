@@ -498,8 +498,8 @@ GEOComp = withMethodExposing(GEOComp, [
   },
   {
     method: {
-      name: "configure",
-      description: "Configure the plugin by json",
+      name: "loadConfig",
+      description: "Load configuration the plugin by json",
       params: [
         {
           name: "json",
@@ -508,7 +508,31 @@ GEOComp = withMethodExposing(GEOComp, [
       ]
     },
     execute: async (comp: any, params: any) => {
-      console.log("Configure", comp)
+      if (params.length == 0) return
+      try {
+        var data = params[0]
+        console.log("Configure 1", params[0])
+        if (typeof data === 'string' || data instanceof String) {
+          // @ts-ignore
+          data = JSON.parse(data)
+        }
+
+
+      } catch (e) {
+        console.error("Failed to parse config data", e)
+      }
+    }
+  },
+  {
+    method: {
+      name: "saveConfig",
+      description: "Save configuration the plugin by json",
+    },
+    execute: (comp: any, params: any) => {
+      const data = comp.toJsonValue();
+      console.debug(JSON.stringify(data, null))
+      //Event config needs to be added
+      return JSON.stringify(data, null)
     }
   },
 ]);

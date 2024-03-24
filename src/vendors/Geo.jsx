@@ -664,7 +664,6 @@ function Geo(props) {
   useEffect(() => {
     var el = document.getElementById('GEO.' + geoId)
     if (el) {
-      console.log("Resize")
       fireEvent('window:resize', { element: el, windowSize: windowSize, bounds: el.getBoundingClientRect() })
     }
   }, [elementRef, windowSize])
