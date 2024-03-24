@@ -1,3 +1,12 @@
+# [1.3.0-dev.55](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.54...v1.3.0-dev.55) (2024-03-24)
+
+
+### Bug Fixes
+
+* bounds ([0177b68](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/0177b6806a13804c0419c51b820b26d61ee89dec))
+* element ref ([569cf30](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/569cf30aee04e9b958d5cc5415f5f2fbb2df9137))
+* removed debug ([0d367ac](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/0d367accdbc19354653fc1fc3bb5f728a9d1dcbd))
+
 # [1.3.0-dev.54](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.53...v1.3.0-dev.54) (2024-03-24)
 
 
