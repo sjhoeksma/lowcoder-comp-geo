@@ -1,3 +1,11 @@
+# [1.3.0-dev.59](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.58...v1.3.0-dev.59) (2024-03-24)
+
+
+### Bug Fixes
+
+* 2px from bottom ([cd4093f](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/cd4093f9f9052e9a56e9299aaf4dc2c244ab2a5b))
+* added save and loadConfig ([1910ce9](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/1910ce98db0b2514da85eb08236636b4ecd26f5d))
+
 # [1.3.0-dev.58](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.57...v1.3.0-dev.58) (2024-03-24)
 
 
