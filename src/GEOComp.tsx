@@ -237,11 +237,14 @@ var GEOComp = (function () {
             props.feature.onChange(eventObj)
             break;
           case 'window:resize':
-            if (featureEnabled('scaleToBottom') && props.autoHeight) {
-              var bottom = (parseFloat(eventObj.element.style.paddingBottom.replace("px", "")) * 2) - 2
+            if (true || (featureEnabled('scaleToBottom') && props.autoHeight)) {
+              const pads = props.styles.padding.split(' ');
+              const bottom = (parseFloat(pads[pads.length == 4 ? 3 : 0].replace("px", "")) * 2) - 2
               var newHeight = dimensions.height + (eventObj.windowSize.height - eventObj.bounds.bottom - bottom)
               eventObj.element.style.height = `${newHeight}px`
               setDimensions({ width: dimensions.width, height: newHeight })
+              if (featureEnabled("debug"))
+                console.debug("Resized done", newHeight)
             }
             break
           default:
@@ -491,6 +494,21 @@ GEOComp = withMethodExposing(GEOComp, [
     execute: async (comp: any, params: any) => {
       var map = comp.exposingValues.events['map:create']
       return clearFeatures(map, params[0])
+    }
+  },
+  {
+    method: {
+      name: "configure",
+      description: "Configure the plugin by json",
+      params: [
+        {
+          name: "json",
+          type: "JSONValue",
+        }
+      ]
+    },
+    execute: async (comp: any, params: any) => {
+      console.log("Configure", comp)
     }
   },
 ]);

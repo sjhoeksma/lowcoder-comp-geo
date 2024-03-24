@@ -663,8 +663,10 @@ function Geo(props) {
   var windowSize = useScreenSize()
   useEffect(() => {
     var el = document.getElementById('GEO.' + geoId)
-    if (el)
+    if (el) {
+      console.log("Resize")
       fireEvent('window:resize', { element: el, windowSize: windowSize, bounds: el.getBoundingClientRect() })
+    }
   }, [elementRef, windowSize])
 
 
