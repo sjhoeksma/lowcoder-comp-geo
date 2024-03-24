@@ -1,3 +1,12 @@
+# [1.3.0-dev.54](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.53...v1.3.0-dev.54) (2024-03-24)
+
+
+### Bug Fixes
+
+* defaults ([b79972b](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/b79972baa788e94ae810300402339243b6713fdf))
+* Features UI ([9db2fa8](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/9db2fa852179b0efed6f407405f5bc315c066d70))
+* Use BoolPureControl ([e25bc57](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/e25bc57704feb2474d3957978852aad2931d51dd))
+
 # [1.3.0-dev.53](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.52...v1.3.0-dev.53) (2024-03-24)
 
 
