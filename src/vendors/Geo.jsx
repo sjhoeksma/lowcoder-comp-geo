@@ -166,7 +166,7 @@ function Geo(props) {
       var mainbar = new Bar({ className: "mainbar" });
       mainbar.setPosition("top-left")
       if (!featureEnabled('menu')) mainbar.element.classList.add('nomenu')
-      if ((featureEnabled('draw')
+      if ((featureEnabled('modify')
         && (featureEnabled('modify:move') || featureEnabled('modify:point') || featureEnabled('modify:line')
           || featureEnabled('modify:polygon') || featureEnabled('modify:undo') || featureEnabled('modify:redo')
           || featureEnabled('modify:delete')))
