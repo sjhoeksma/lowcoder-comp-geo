@@ -2,10 +2,33 @@ import { ReactNode } from 'react'
 import {
     MultiCompBuilder,
     BoolPureControl,
+    StringControl,
+    stringSimpleControl,
+    NumberControl,
     withDefault,
 } from 'lowcoder-sdk'
 import { trans } from "./i18n/comps";
 
+var subLevel = new MultiCompBuilder(
+    {
+
+    }
+)
+
+var LayerBaseObject = new MultiCompBuilder(
+    {
+        type: stringSimpleControl(),
+        name: stringSimpleControl(),
+        minZoom: withDefault(NumberControl, 0),
+        maxZoom: withDefault(NumberControl, 30),
+        visible: withDefault(BoolPureControl, true),
+        opacity: withDefault(NumberControl, 100),
+        label: stringSimpleControl(),
+        state: withDefault(BoolPureControl, true),
+        //sublevel: layerSubLeveObjectControl(),
+    },
+    (props: any) => props
+).build();
 
 export function layersControl(config?: any) {
     const childrenMap: any = new Object();
