@@ -3,7 +3,6 @@ import {
   UICompBuilder,
   NameConfig,
   stringSimpleControl,
-  JSONObjectControl,
   NumberControl,
   ArrayControl,
   Section,
@@ -24,8 +23,6 @@ import { animate, showPopup, addFeatures, readFeatures, clearFeatures } from './
 import { useResizeDetector } from "react-resize-detector";
 // @ts-ignore
 import Notification from 'ol-ext/control/Notification'
-
-import { boolObjectOptionControl } from './BoolObjectOptionControl';
 import { featureControl } from './FeaturesControl';
 
 export const CompStyles = [
@@ -68,28 +65,6 @@ export const CompStyles = [
  * By setting the following items within default you can control behavior
      center:[] will disable automatich centering
      debug: true will show eventlog to console
-     buttons: { //All buttons are shown by default
-        menu: false,
-        zoom: false,
-        modify: false, //Will disable all draw buttons
-        modify:select : false,
-        modify:point : false,
-        modify:line: false,
-        modify:polygon: false,
-        modify:delete: false
-        modify:redo: false,
-        modify:undo: false,
-        save:false,
-        scale:false,
-        fullscreen:false,
-        layers:false,
-        swipeVertical: false,
-        swipeHorizontal: false,
-        timeline: false,
-        center:false,
-        tracker :false,
-        north: false,
-      }
  */
 
 var GEOComp = (function () {
@@ -137,20 +112,6 @@ var GEOComp = (function () {
   const childrenMap = {
     autoHeight: withDefault(AutoHeightControl, "fixed"),
     styles: styleControl(CompStyles),
-    defaults: withDefault(
-      JSONObjectControl,
-      `{
-      zoom:10,
-      maxZoom:30,
-      menuTitle: "Menu",
-      menuContent: "No Content",
-      projection: "EPSG:3857",
-      buttons: { 
-        modify: true
-      },
-      debug:true
-    }`
-    ),
     center: ArrayControl,
     layers: withDefault(
       ArrayControl,
@@ -166,34 +127,8 @@ var GEOComp = (function () {
     event: jsonObjectExposingStateControl("event"),
     feature: jsonObjectExposingStateControl("feature"),
     onEvent: eventHandlerControl(eventDefintions),
-    features: document.lowcoderdev ?
-      withDefault(JSONObjectControl,
-        `{
-        menu: false,
-        zoom: true,
-        fullscreen: true,
-        layers: true,
-        center: true,
-        modify: false,
-        split: false,
-        tracker: false,
-        timeline: false,
-        gpsCentered: false,
-        largeButtons: true,
-        scaleToBottom: false,
-        "modify:select": true,
-        "modify:point": true,
-        "modify:line": true,
-        "modify:polygon": true,
-        "modify:delete": true,
-        "modify:redo": true,
-        "modify:undo": true,
-        save: false,
-        splitVertical: false,
-        splitHorizontal: false,
-        north: false
-      }`
-      ) :
+    projection: stringSimpleControl(""),
+    features:
       featureControl({
         menu: false,
         zoom: true,
@@ -201,10 +136,12 @@ var GEOComp = (function () {
         layers: true,
         center: true,
         modify: false,
-        split: false,
+        save: false,
+        splitscreen: false,
         tracker: false,
         timeline: false,
         gpsCentered: false,
+        north: false,
         largeButtons: true,
         scaleToBottom: false,
         "modify:select": true,
@@ -214,10 +151,9 @@ var GEOComp = (function () {
         "modify:delete": true,
         "modify:redo": true,
         "modify:undo": true,
-        save: false,
-        splitVertical: false,
-        splitHorizontal: false,
-        north: false
+        "splitscreen:horizontal": false,
+        "splitscreen:vertical": true,
+        debug: false,
       }),
 
   };
@@ -236,7 +172,6 @@ var GEOComp = (function () {
     rotation: number;
     layers: any;
     bbox: any;
-    defaults: any;
     feature: any;
     features: any;
     menuTitle: string;
@@ -244,11 +179,8 @@ var GEOComp = (function () {
     autoHeight: boolean;
     events: any;
     event: any;
+    projection: string;
   }) => {
-    const doDebug = function () {
-      return props.defaults && props.defaults.debug === true
-    }
-
     //Default size of component
     const [dimensions, setDimensions] = useState({ width: 650, height: 400 });
     //Catch the resizing of component
@@ -308,12 +240,12 @@ var GEOComp = (function () {
               const el = eventObj.el
               const rec = eventObj.windowSize
               const bounds = eventObj.bounds.getBoundingClientRect()
-              //var bottom = (parseFloat(props.styles.padding.replace("px", "")) * 2) - 2
               var bottom = (parseFloat(el.style.paddingBottom.replace("px", "")) * 2) - 2
               var newHeight = dimensions.height + (rec.height - bounds.bottom - bottom)
-              //eventObj.element.style.height = `${newHeight}px`
-              //setDimensions({ width: dimensions.width, height: newHeight })
-              console.log("Resize", props.autoHeight, newHeight, bounds)
+              eventObj.element.style.height = `${newHeight}px`
+              setDimensions({ width: dimensions.width, height: newHeight })
+              if (featureEnabled('debug'))
+                console.debug("Resize", props.autoHeight, newHeight, bounds)
             }
             break
           default:
@@ -326,7 +258,7 @@ var GEOComp = (function () {
         //Fire the event to lowcoder
         props.onEvent(eventName, eventObj);
         //Send debug information to console
-        if (doDebug())
+        if (featureEnabled('debug'))
           console.debug("handleEvent", name, eventObj)
         resolve(_events)
       })
@@ -362,10 +294,10 @@ var GEOComp = (function () {
             rotation={props.rotation}
             menuContent={props.menuContent}
             menuTitle={props.menuTitle}
-            defaults={props.defaults}
             layers={props.layers}
             onEvent={handleEvent}
             features={props.features}
+            projection={props.projection}
           />
         </div>
       </div>
@@ -383,19 +315,17 @@ var GEOComp = (function () {
             {children.zoom.propertyView({ label: "zoom" })}
             {children.maxZoom.propertyView({ label: "maxZoom" })}
             {children.rotation.propertyView({ label: "rotation" })}
+            {children.projection.propertyView({ label: "projection" })}
           </Section>
           <Section name="Interaction">
             {children.onEvent.propertyView()}
-          </Section>
-          <Section name="Behavior">
-            {children.features.propertyView({ title: "Enabled features & Buttons" })}
           </Section>
           <Section name="Styles">
             {children.autoHeight.getPropertyView()}
             {children.styles.getPropertyView()}
           </Section>
-          <Section name="Advanced">
-            {children.defaults.propertyView({ label: "defaults" })}
+          <Section name="Behavior">
+            {children.features.propertyView({ title: trans("features.title") })}
           </Section>
           <div >
             <div style={{ "float": "right", "marginRight": "15px" }}>Version :  {version}</div>

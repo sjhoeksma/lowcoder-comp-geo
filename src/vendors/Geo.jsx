@@ -39,7 +39,7 @@ import { animate, geoJsonStyleFunction, useScreenSize } from './helpers'
 
 function Geo(props) {
   const [geoRef, setGeoRef] = useState();
-  const [geoLoc, setGeoLoc] = useState();
+  const [geoLoc, setGeoLoc] = useState([0, 0]);
   const [map, setMap] = useState();
   const [geoId] = useState(Math.random().toString(16).slice(2));
 
@@ -111,8 +111,7 @@ function Geo(props) {
   const loadLayers = function (map) {
     if (map) {
       // Validate and create new layers
-      const layers = Array.isArray(props.layers) ? props.layers :
-        props.defaults && Array.isArray(props.defaults.layers) ? props.defaults.layers : [];
+      const layers = Array.isArray(props.layers) ? props.layers : [];
       const validatedLayers = layers.filter(layer => layer !== null && layer !== undefined);
       const sortedLayers = validatedLayers
         .sort((a, b) => (a.order || 0) - (b.order || 0))
@@ -143,11 +142,11 @@ function Geo(props) {
       var olMap = new Map({
         controls: [],
         view: new View({
-          center: fromLonLat((props.center.length == 2 ? props.center : props.defaults.center) || geoLoc || [0, 0]),
-          zoom: props.zoom || props.defaults.zoom,
-          maxZoom: props.maxZoom || props.defaults.maxZoom || 100,
-          rotation: props.rotation || props.defaults.rotation,
-          projection: props.defaults.projection || 'EPSG:3857'
+          center: fromLonLat(props.center.length == 2 ? props.center : geoLoc),
+          zoom: props.zoom || 10,
+          maxZoom: props.maxZoom || 30,
+          rotation: props.rotation,
+          projection: props.projection || 'EPSG:3857'
         }),
         target: 'GEO_' + geoId,
         layers: [],
@@ -346,7 +345,7 @@ function Geo(props) {
 
       var secondbar = new Bar({ className: "ol-secondbar" });
       secondbar.setPosition("top-right")
-      if ((featureEnabled('swipe') && (featureEnabled('swipeHorizontal') || featureEnabled('swipeVertical')))
+      if ((featureEnabled('splitscreen') && (featureEnabled('splitscreen:horizontal') || featureEnabled('splitscreen:vertical')))
         || (featureEnabled('timeline') && featureEnabled('timeline')))
         olMap.addControl(secondbar);
 
@@ -359,13 +358,13 @@ function Geo(props) {
       if (featureEnabled('layers')) olMap.addControl(layerCtrl);
 
       // Swipe control bar 
-      if (featureEnabled('swipe')) {
+      if (featureEnabled('splitscreen')) {
         // Swipe control bar 
         var swipebar = new Bar({
           toggleOne: true,	// one control active at the same time
           group: false			// group controls together
         });
-        if (featureEnabled('swipe:vertical') || featureEnabled('swipe:horizontal'))
+        if (featureEnabled('splitscreen:vertical') || featureEnabled('splitscreen:horizontal'))
           secondbar.addControl(swipebar);
 
         var swipectrl = new Swipe({});
@@ -374,7 +373,7 @@ function Geo(props) {
 
         var swipeHorz = new Toggle({
           html: '<i class="fa fa-grip-lines-vertical fa-rotate-90"></i>',
-          title: "Swipe Horizontal",
+          title: "Splitscreen Horizontal",
           onToggle: function (event) {
             if (event.active) {
               swipectrl.set('orientation', 'horizontal')
@@ -382,14 +381,14 @@ function Geo(props) {
             } else {
               olMap.removeControl(swipectrl)
             }
-            fireEvent("toggle:swipe:horizontal", event)
+            fireEvent("splitsceen:horizontal", event)
           }
         });
-        if (featureEnabled('swipe:horizontal')) swipebar.addControl(swipeHorz);
+        if (featureEnabled('splitscreen:horizontal')) swipebar.addControl(swipeHorz);
 
         var swipeVert = new Toggle({
           html: '<i class="fa fa-grip-lines-vertical "></i>',
-          title: "Swipe Vertical",
+          title: "Splitscreen Vertical",
           onToggle: function (event) {
             if (event.active) {
               swipectrl.set('orientation', 'vertical')
@@ -397,18 +396,18 @@ function Geo(props) {
             } else {
               olMap.removeControl(swipectrl)
             }
-            fireEvent("toggle:swipe:vertical", event)
+            fireEvent("splitscreen:vertical", event)
           }
         });
-        if (featureEnabled('swipe:vertical')) swipebar.addControl(swipeVert);
+        if (featureEnabled('splitscreen:vertical')) swipebar.addControl(swipeVert);
       }
 
       // Menu Overlay
       var menu = new Overlay({
         closeBox: true,
         className: "slide-left menu",
-        content: `<div id="menuTitle" ><h1 id="menuTitle_` + geoId + `">${props.menuTitle.trim() || (props.defaults && props.defaults.menuTitle) || "&nbsp;"}</h1></div>
-        <div id="menuContent_`+ geoId + `">${props.menuContent || (props.defaults && props.defaults.menuContent)}</div>`
+        content: `<div id="menuTitle" ><h1 id="menuTitle_` + geoId + `">${props.menuTitle.trim() || "&nbsp;"}</h1></div>
+        <div id="menuContent_`+ geoId + `">${props.menuContent}</div>`
       });
       if (!featureEnabled('menu')) menu.element.classList.add('nomenu')
       olMap.addControl(menu);
@@ -592,12 +591,7 @@ function Geo(props) {
 
       setMap(olMap)
     }
-  }, [geoRef, props.defaults, props.featuresX]);
-
-  useEffect(() => {
-    if (geoRef)
-      console.log("Features", props.features)
-  }, [props.features])
+  }, [geoRef, props.features]);
 
 
   useEffect(() => {
@@ -627,7 +621,8 @@ function Geo(props) {
   //Center the location on map
   useEffect(() => {
     if (map) {
-      if (props.center && props.center.length == 2) map.getView().setCenter(fromLonLat(props.center))
+      if (props.center && props.center.length == 2)
+        map.getView().setCenter(fromLonLat(props.center))
       else if (geoLoc) {
         map.getView().setCenter(fromLonLat(geoLoc))
       }
@@ -637,14 +632,14 @@ function Geo(props) {
   useEffect(() => {
     if (map) {
       var el = document.getElementById('menuTitle_' + geoId)
-      if (el) el.innerHTML = (props.menuTitle.trim() || (props.defaults && props.defaults.menuTitle) || "&nbsp;")
+      if (el) el.innerHTML = (props.menuTitle.trim() || "&nbsp;")
     }
   }, [props.menuTitle]);
   //Menu content
   useEffect(() => {
     if (map) {
       var el = document.getElementById('menuContent_' + geoId)
-      if (el) el.innerHTML = props.menuContent || (props.defaults && props.defaults.menuContent)
+      if (el) el.innerHTML = props.menuContent
     }
   }, [props.menuContent]);
 
@@ -656,10 +651,10 @@ function Geo(props) {
 
   //GPS location
   useEffect(() => {
-    if (featureEnabled('gpsCentered') && !map) {
+    if (featureEnabled('gpsCentered')) {
       centerMe()
     }
-  }, [elementRef]);
+  }, [props.features.gpsCentered]);
 
 
   var windowSize = useScreenSize()
@@ -692,10 +687,10 @@ Geo.propTypes = {
   menuTitle: PropTypes.string,
   menuContent: PropTypes.string,
   layers: PropTypes.array,
-  defaults: PropTypes.object,
   features: PropTypes.object,
   width: PropTypes.number,
   height: PropTypes.number,
+  projection: PropTypes.string,
 }
 
 export default Geo;

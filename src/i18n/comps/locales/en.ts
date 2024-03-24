@@ -44,9 +44,31 @@ export const en = {
   "methods": {
     "xml": "Get XML",
   },
-  "key": "key",
-  "active": "active",
-  "boolObjectOptionControl": {
-    "optionI": "option{{i}}"
+  "features": {
+    title: "Feature [off/on]",
+    menu: "Show Menu",
+    zoom: "Show Zoom",
+    fullscreen: "Show Fullscreen",
+    layers: "Show Layers",
+    center: "Show Center on GPS",
+    modify: "Enable modify",
+    save: "Show the save button",
+    splitscreen: "Enable splitscreen",
+    tracker: "Enable tracker",
+    timeline: "Enable timeline",
+    gpsCentered: "GPS location on startup",
+    north: "Rotate map North",
+    largeButtons: "Use large buttons",
+    scaleToBottom: "Resize map to bottom (AutoHeigth)",
+    "modify:select": "Select feature (Modify)",
+    "modify:point": "Add point (Modify)",
+    "modify:line": "Add line (Modify)",
+    "modify:polygon": "Add polygon (Modify)",
+    "modify:delete": "Delete feature (Modify)",
+    "modify:redo": "Redo feature (Modify)",
+    "modify:undo": "Undo feature (Modify)",
+    "splitscreen:horizontal": "Horizontal (Splitscreen)",
+    "splitscreen:vertical": "Vertical (Splitscreen)",
+    debug: "Log debug to console"
   }
 };
