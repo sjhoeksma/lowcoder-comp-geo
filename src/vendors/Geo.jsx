@@ -125,7 +125,7 @@ function Geo(props) {
         map.addLayer(trackerVector)
       }
       //Add drawLayer and values if set
-      if (featureEnabled('draw')) {
+      if (featureEnabled('modify')) {
         map.addLayer(drawVector)
       }
       fireEvent("map:layers", layers)
@@ -650,7 +650,7 @@ function Geo(props) {
   useEffect(() => {
     if (map)
       loadLayers(map)
-  }, [map, props.layers]); // Re-evaluate when layers change
+  }, [map, props.layers, props.features.modify, props.features.tracker]); // Re-evaluate when layers change
 
   //GPS location
   useEffect(() => {
