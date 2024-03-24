@@ -117,9 +117,10 @@ var GEOComp = (function () {
       ArrayControl,
       `${JSON.stringify(i18nObjs.defaultData, null, 2)}`
     ),
-    zoom: NumberControl,
-    maxZoom: NumberControl,
-    rotation: NumberControl,
+    zoom: withDefault(NumberControl, 10),
+    maxZoom: withDefault(NumberControl, 30),
+    rotation: withDefault(NumberControl, 0),
+    projection: stringSimpleControl("EPSG:3857"),
     bbox: arrayStringExposingStateControl("bbox", [0, 0, 0, 0]),
     menuTitle: stringSimpleControl(""),
     menuContent: stringSimpleControl(""),
@@ -127,7 +128,7 @@ var GEOComp = (function () {
     event: jsonObjectExposingStateControl("event"),
     feature: jsonObjectExposingStateControl("feature"),
     onEvent: eventHandlerControl(eventDefintions),
-    projection: stringSimpleControl(""),
+
     features:
       featureControl({
         menu: false,
@@ -140,7 +141,7 @@ var GEOComp = (function () {
         splitscreen: false,
         tracker: false,
         timeline: false,
-        gpsCentered: false,
+        gpsCentered: true,
         north: false,
         largeButtons: true,
         scaleToBottom: false,

@@ -143,10 +143,10 @@ function Geo(props) {
         controls: [],
         view: new View({
           center: fromLonLat(props.center.length == 2 ? props.center : geoLoc),
-          zoom: props.zoom || 10,
-          maxZoom: props.maxZoom || 30,
+          zoom: props.zoom,
+          maxZoom: props.maxZoom,
           rotation: props.rotation,
-          projection: props.projection || 'EPSG:3857'
+          projection: props.projection
         }),
         target: 'GEO_' + geoId,
         layers: [],
@@ -584,27 +584,27 @@ function Geo(props) {
       // Notification Control
       olMap.addControl(notification);
 
-      //loadLayers(olMap)
-
       //Add map init event
       fireEvent('map:init', olMap);
 
       setMap(olMap)
     }
-  }, [geoRef, props.features]);
+  }, [geoRef, props.features, props.projection]);
 
 
   useEffect(() => {
     if (map) {
       geoRef.style.height = `${props.height}px`;
-      //geoRef.style.width=`${props.width}px`;
     }
   }, [props.height, props.width])
 
   //Zoom handling
   useEffect(() => {
-    if (map) map.getView().setZoom(props.zoom)
+    if (map) {
+      map.getView().setZoom(Math.min(props.zoom, props.maxZoom))
+    }
   }, [props.zoom]);
+
   //Max zoom handling
   useEffect(() => {
     if (map) {
@@ -612,12 +612,15 @@ function Geo(props) {
       map.getView().setZoom(Math.min(props.zoom, props.maxZoom))
     }
   }, [props.maxZoom]);
+
+
   //rotation handling
   useEffect(() => {
     if (map) {
       map.getView().setRotation(props.rotation)
     }
   }, [props.rotation]);
+
   //Center the location on map
   useEffect(() => {
     if (map) {
