@@ -146,7 +146,7 @@ var GEOComp = (function () {
         scale: true,
         largeButtons: true,
         scaleToBottom: false,
-        "modify:select": true,
+        "modify:move": true,
         "modify:point": true,
         "modify:line": true,
         "modify:polygon": true,

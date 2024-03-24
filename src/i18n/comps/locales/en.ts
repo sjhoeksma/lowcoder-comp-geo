@@ -61,7 +61,7 @@ export const en = {
     scale: "Show scale of map",
     largeButtons: "Use large buttons",
     scaleToBottom: "Resize map to bottom (AutoHeigth)",
-    "modify:select": "Select feature (Modify)",
+    "modify:move": "Select feature (Modify)",
     "modify:point": "Add point (Modify)",
     "modify:line": "Add line (Modify)",
     "modify:polygon": "Add polygon (Modify)",
