@@ -1,3 +1,10 @@
+# [1.3.0-dev.56](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.55...v1.3.0-dev.56) (2024-03-24)
+
+
+### Bug Fixes
+
+* Restored menu ([9c9d3d1](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/9c9d3d1f7d07c92f5ed6c3890a32574631d5535c))
+
 # [1.3.0-dev.55](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.54...v1.3.0-dev.55) (2024-03-24)
 
 
