@@ -1,3 +1,10 @@
+# [1.3.0-dev.53](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.52...v1.3.0-dev.53) (2024-03-24)
+
+
+### Bug Fixes
+
+* testing properties ([d081c26](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/d081c2641cf23dbba958e473d9deee5cb7701f39))
+
 # [1.3.0-dev.52](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.51...v1.3.0-dev.52) (2024-03-23)
 
 
