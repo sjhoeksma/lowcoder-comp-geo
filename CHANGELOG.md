@@ -1,3 +1,10 @@
+# [1.3.0-dev.57](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.56...v1.3.0-dev.57) (2024-03-24)
+
+
+### Bug Fixes
+
+* scroll to bottom ([4a1e656](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/4a1e656cfce4b518577d11a140903456ad4f1379))
+
 # [1.3.0-dev.56](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.55...v1.3.0-dev.56) (2024-03-24)
 
 
