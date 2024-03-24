@@ -242,8 +242,6 @@ var GEOComp = (function () {
               var newHeight = dimensions.height + (eventObj.windowSize.height - eventObj.bounds.bottom - bottom)
               eventObj.element.style.height = `${newHeight}px`
               setDimensions({ width: dimensions.width, height: newHeight })
-              if (featureEnabled('debug'))
-                console.debug("Resize", props.autoHeight, newHeight, eventObj.bounds)
             }
             break
           default:
