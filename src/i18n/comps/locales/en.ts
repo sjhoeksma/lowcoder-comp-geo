@@ -44,8 +44,8 @@ export const en = {
   "methods": {
     "xml": "Get XML",
   },
-  "label": "label",
-  "state": "state",
+  "key": "key",
+  "active": "active",
   "boolObjectOptionControl": {
     "optionI": "option{{i}}"
   }

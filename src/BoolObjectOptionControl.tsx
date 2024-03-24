@@ -3,58 +3,53 @@ import {
     StringControl,
     BoolPureControl,
     withDefault,
-    BoolControl,
-    disabledPropertyView,
-    hiddenPropertyView,
-    optionsControl,
+    manualOptionsControl
 } from 'lowcoder-sdk'
 import { trans } from "./i18n/comps";
-
-type OptionPropertyParam = {
-    autoMap?: boolean;
-};
-
-interface OptionCompProperty {
-    propertyView(param: OptionPropertyParam): React.ReactNode;
-}
 
 var BoolObjectOption = new MultiCompBuilder(
     {
         label: StringControl,
-        state: withDefault(BoolPureControl, true),
+        value: withDefault(BoolPureControl, true),
     },
     (props: any) => props
 ).build();
 
-BoolObjectOption = class extends BoolObjectOption implements OptionCompProperty {
-    propertyView(param: { autoMap?: boolean }) {
+BoolObjectOption = class extends BoolObjectOption {
+    propertyView() {
         return (
             <>
                 {this.children.label.propertyView({
-                    name: trans("label"),
-                    placeholder: param.autoMap ? "buttonName" : "",
+                    name: trans("key"),
+                    placeholder: "buttonName",
                 })}
-                {this.children.state.propertyView({ label: trans("state") })}
+                {this.children.value.propertyView({ label: trans("active") })}
             </>
         );
     }
 };
 
-export const BoolObjectOptionControl = optionsControl(BoolObjectOption, {
-    initOptions: [
-        { label: "button1", state: true },
-        { label: "button2", state: false },
-    ],
-    uniqField: "label",
-});
+export const boolObjectOptionControl = function (options: object) {
+    //ConvertObject to Array
+    if (!options) {
+        return manualOptionsControl(BoolObjectOption, {
+            initOptions: [
+                { label: "button1", value: true },
+                { label: "button2", value: false },
+            ],
+            uniqField: "label",
+        })
+    }
 
-export function boolObjectOptionControl(defaultValue: any) {
-    return optionsControl(BoolObjectOption, {
-        initOptions: defaultValue ? defaultValue : [
-            { label: "button1", state: true },
-            { label: "button2", state: false },
-        ],
+    var optionsRec = []
+    for (const [key, value] of Object.entries(options)) {
+        optionsRec.push({ label: key, value: value });
+    }
+    return manualOptionsControl(BoolObjectOption, {
+        initOptions: optionsRec,
         uniqField: "label",
     })
 }
+
+
 

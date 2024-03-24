@@ -57,24 +57,18 @@ function Geo(props) {
     source: new VectorSource(),
   }))
 
+
   //Function to check if updating of a variable is allowed
   const featureEnabled = function (name) {
-    return !((props.features && props.features[name] === false))
+    return props.features[name] == true
   }
+
 
   //Fire and event to controling ReactComponent
   const fireEvent = function (name, eventObject) {
     if (props.onEvent) {
       props.onEvent(name, eventObject || {})
     }
-  }
-
-  //All buttons are shown by default
-  const showButton = function (name) {
-    var btnBlock = name.split(':')[0]
-    return ((props.buttons && (props.buttons[name] === false || props.buttons[btnBlock] === false)) ||
-      (props.defaults && props.defaults.buttons && (props.defaults.buttons[name] === false || props.defaults.buttons[btnBlock] === false)))
-      ? false : true
   }
 
   //Fetch the geolocation based on browser or ip when center is not set
@@ -166,19 +160,19 @@ function Geo(props) {
         zoomInLabel: '+',
         zoomOutLabel: '-'
       })
-      if (!showButton('menu')) zoom.element.classList.add('nomenu')
-      if (showButton('zoom')) olMap.addControl(zoom)
+      if (!featureEnabled('menu')) zoom.element.classList.add('nomenu')
+      if (featureEnabled('zoom')) olMap.addControl(zoom)
 
       //Main menubar
       var mainbar = new Bar({ className: "mainbar" });
       mainbar.setPosition("top-left")
-      if (!showButton('menu')) mainbar.element.classList.add('nomenu')
+      if (!featureEnabled('menu')) mainbar.element.classList.add('nomenu')
       if ((featureEnabled('draw')
-        && (showButton('modify:move') || showButton('modify:point') || showButton('modify:line')
-          || showButton('modify:polygon') || showButton('modify:undo') || showButton('modify:redo')
-          || showButton('modify:delete')))
-        || showButton('save')
-        || showButton('center'))
+        && (featureEnabled('modify:move') || featureEnabled('modify:point') || featureEnabled('modify:line')
+          || featureEnabled('modify:polygon') || featureEnabled('modify:undo') || featureEnabled('modify:redo')
+          || featureEnabled('modify:delete')))
+        || featureEnabled('save')
+        || featureEnabled('center'))
         olMap.addControl(mainbar);
 
       //GeoLocation
@@ -192,7 +186,7 @@ function Geo(props) {
           notification.show("Searching GPS", 3000)
         }
       })
-      if (showButton('center')) mainbar.addControl(geoLocation)
+      if (featureEnabled('center')) mainbar.addControl(geoLocation)
 
 
       if (featureEnabled('modify')) {
@@ -201,9 +195,9 @@ function Geo(props) {
           toggleOne: true,	// one control active at the same time
           group: false			// group controls together
         });
-        if (showButton('modify:move') || showButton('modify:point') || showButton('modify:line')
-          || showButton('modify:polygon') || showButton('modify:undo') || showButton('modify:redo')
-          || showButton('modify:delete'))
+        if (featureEnabled('modify:move') || featureEnabled('modify:point') || featureEnabled('modify:line')
+          || featureEnabled('modify:polygon') || featureEnabled('modify:undo') || featureEnabled('modify:redo')
+          || featureEnabled('modify:delete'))
           mainbar.addControl(editbar);
 
         //Add modify interaction
@@ -226,7 +220,7 @@ function Geo(props) {
           olMap.removeInteraction(snap);
           olMap.removeInteraction(modify);
         })
-        if (showButton('modify:move')) editbar.addControl(pmove);
+        if (featureEnabled('modify:move')) editbar.addControl(pmove);
 
         // Add editing tools
         var pedit = new Toggle({
@@ -241,7 +235,7 @@ function Geo(props) {
             source: drawVector.getSource(),
           })
         });
-        if (showButton('modify:point')) editbar.addControl(pedit);
+        if (featureEnabled('modify:point')) editbar.addControl(pedit);
 
         var ledit = new Toggle({
           html: '<i class="fa fa-share-alt" ></i>',
@@ -262,7 +256,7 @@ function Geo(props) {
             }
           })
         });
-        if (showButton('modify:line')) editbar.addControl(ledit);
+        if (featureEnabled('modify:line')) editbar.addControl(ledit);
 
         var fedit = new Toggle({
           html: '<i class="fa fa-bookmark fa-rotate-270" ></i>',
@@ -284,7 +278,7 @@ function Geo(props) {
             }
           })
         });
-        if (showButton('modify:polygon')) editbar.addControl(fedit);
+        if (featureEnabled('modify:polygon')) editbar.addControl(fedit);
 
         //DELETE editing tools
         var pSelect = new Select({ source: drawVector.getSource() });
@@ -303,7 +297,7 @@ function Geo(props) {
             }
           }
         });
-        if (showButton('modify:delete')) editbar.addControl(pdelete);
+        if (featureEnabled('modify:delete')) editbar.addControl(pdelete);
 
         // Undo redo interaction
         var undoInteraction = new UndoRedo({ layers: [drawVector] });
@@ -323,7 +317,7 @@ function Geo(props) {
             undoInteraction.undo();
           }
         });
-        if (showButton('modify:undo')) mainbar.addControl(undo);
+        if (featureEnabled('modify:undo')) mainbar.addControl(undo);
 
         // Add a simple push button to redo features
         var redo = new Button({
@@ -333,7 +327,7 @@ function Geo(props) {
             undoInteraction.redo();
           }
         });
-        if (showButton('modify:redo')) mainbar.addControl(redo);
+        if (featureEnabled('modify:redo')) mainbar.addControl(redo);
       }
 
       // Add a simple push button to save features
@@ -344,16 +338,16 @@ function Geo(props) {
           fireEvent("save")
         }
       });
-      if (showButton("save")) mainbar.addControl(save);
+      if (featureEnabled("save")) mainbar.addControl(save);
 
       //Fullscreen
       var fullscreen = new FullScreen()
-      if (showButton('fullscreen')) olMap.addControl(fullscreen)
+      if (featureEnabled('fullscreen')) olMap.addControl(fullscreen)
 
       var secondbar = new Bar({ className: "ol-secondbar" });
       secondbar.setPosition("top-right")
-      if ((featureEnabled('swipe') && (showButton('swipeHorizontal') || showButton('swipeVertical')))
-        || (featureEnabled('timeline') && showButton('timeline')))
+      if ((featureEnabled('swipe') && (featureEnabled('swipeHorizontal') || featureEnabled('swipeVertical')))
+        || (featureEnabled('timeline') && featureEnabled('timeline')))
         olMap.addControl(secondbar);
 
       // Add a simple push button to save features
@@ -362,7 +356,7 @@ function Geo(props) {
         // collapsed: false,
         // mouseover: true
       });
-      if (showButton('layers')) olMap.addControl(layerCtrl);
+      if (featureEnabled('layers')) olMap.addControl(layerCtrl);
 
       // Swipe control bar 
       if (featureEnabled('swipe')) {
@@ -371,7 +365,7 @@ function Geo(props) {
           toggleOne: true,	// one control active at the same time
           group: false			// group controls together
         });
-        if (showButton('swipe:vertical') || showButton('swipe:horizontal'))
+        if (featureEnabled('swipe:vertical') || featureEnabled('swipe:horizontal'))
           secondbar.addControl(swipebar);
 
         var swipectrl = new Swipe({});
@@ -391,7 +385,7 @@ function Geo(props) {
             fireEvent("toggle:swipe:horizontal", event)
           }
         });
-        if (showButton('swipe:horizontal')) swipebar.addControl(swipeHorz);
+        if (featureEnabled('swipe:horizontal')) swipebar.addControl(swipeHorz);
 
         var swipeVert = new Toggle({
           html: '<i class="fa fa-grip-lines-vertical "></i>',
@@ -406,7 +400,7 @@ function Geo(props) {
             fireEvent("toggle:swipe:vertical", event)
           }
         });
-        if (showButton('swipe:vertical')) swipebar.addControl(swipeVert);
+        if (featureEnabled('swipe:vertical')) swipebar.addControl(swipeVert);
       }
 
       // Menu Overlay
@@ -416,7 +410,7 @@ function Geo(props) {
         content: `<div id="menuTitle" ><h1 id="menuTitle_` + geoId + `">${props.menuTitle.trim() || (props.defaults && props.defaults.menuTitle) || "&nbsp;"}</h1></div>
         <div id="menuContent_`+ geoId + `">${props.menuContent || (props.defaults && props.defaults.menuContent)}</div>`
       });
-      if (!showButton('menu')) menu.element.classList.add('nomenu')
+      if (!featureEnabled('menu')) menu.element.classList.add('nomenu')
       olMap.addControl(menu);
 
       // A toggle control to show/hide the menu
@@ -429,7 +423,7 @@ function Geo(props) {
           fireEvent("toggle:menu", event)
         }
       });
-      if (showButton('menu')) olMap.addControl(toggle);
+      if (featureEnabled('menu')) olMap.addControl(toggle);
 
       if (featureEnabled('timeline')) {
         var histo = [
@@ -480,7 +474,7 @@ function Geo(props) {
             fireEvent("toggle:timeline", e)
           }
         });
-        if (showButton('timeline')) secondbar.addControl(timeline);
+        if (featureEnabled('timeline')) secondbar.addControl(timeline);
         //Toggle the timeline classes
         timeline.on("change:active", (event) => {
           if (event.active) {
@@ -510,16 +504,16 @@ function Geo(props) {
         minZoom: 16,
         minAccuracy: 10000
       });
-      if (featureEnabled('tracker') && showButton('tracker'))
+      if (featureEnabled('tracker') && featureEnabled('tracker'))
         olMap.addControl(geoTracker)
 
       //rotateNorth control
       var rotateNorth = new RotateNorthControl();
-      if (showButton('north')) mainbar.addControl(rotateNorth);
+      if (featureEnabled('north')) mainbar.addControl(rotateNorth);
 
       // CanvasScaleLine control
       var scaleLineControl = new CanvasScaleLine();
-      if (showButton('scale')) olMap.addControl(scaleLineControl);
+      if (featureEnabled('scale')) olMap.addControl(scaleLineControl);
 
       //Handling Events
       const singleClick = function (evt) {
@@ -598,14 +592,20 @@ function Geo(props) {
 
       setMap(olMap)
     }
-  }, [geoRef, props.defaults, props.buttons, props.features]);
+  }, [geoRef, props.defaults, props.featuresX]);
+
+  useEffect(() => {
+    if (geoRef)
+      console.log("Features", props.features)
+  }, [props.features])
+
 
   useEffect(() => {
     if (map) {
       geoRef.style.height = `${props.height}px`;
       //geoRef.style.width=`${props.width}px`;
     }
-  }, [map, props.height, props.width])
+  }, [props.height, props.width])
 
   //Zoom handling
   useEffect(() => {
@@ -632,7 +632,7 @@ function Geo(props) {
         map.getView().setCenter(fromLonLat(geoLoc))
       }
     }
-  }, [map, props.center, geoLoc]);
+  }, [props.center, geoLoc]);
   //Menu title
   useEffect(() => {
     if (map) {
@@ -650,7 +650,8 @@ function Geo(props) {
 
   // Dynamic layer updating
   useEffect(() => {
-    loadLayers(map)
+    if (map)
+      loadLayers(map)
   }, [map, props.layers]); // Re-evaluate when layers change
 
   //GPS location
@@ -688,7 +689,6 @@ Geo.propTypes = {
   rotation: PropTypes.number,
   onEvent: PropTypes.func,
   skipRemodify: PropTypes.func,
-  buttons: PropTypes.object,
   menuTitle: PropTypes.string,
   menuContent: PropTypes.string,
   layers: PropTypes.array,

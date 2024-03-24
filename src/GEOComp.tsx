@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   UICompBuilder,
   NameConfig,
@@ -26,7 +26,7 @@ import { useResizeDetector } from "react-resize-detector";
 import Notification from 'ol-ext/control/Notification'
 
 import { boolObjectOptionControl } from './BoolObjectOptionControl';
-
+import { featureControl } from './FeaturesControl';
 
 export const CompStyles = [
   {
@@ -91,6 +91,7 @@ export const CompStyles = [
         north: false,
       }
  */
+
 var GEOComp = (function () {
 
   //The events supported
@@ -164,17 +165,61 @@ var GEOComp = (function () {
     events: jsonObjectExposingStateControl("events"),
     event: jsonObjectExposingStateControl("event"),
     feature: jsonObjectExposingStateControl("feature"),
-    buttons: withDefault(JSONObjectControl, "{menu:false,north:false,save:false}"),
-    features: withDefault(
-      JSONObjectControl,
-      "{modify:true,split:false,tracker:false,timeline:false,gpsCentered:true,largeButtons:false,scaleToBottom:false}"
-    ),
     onEvent: eventHandlerControl(eventDefintions),
-    test: boolObjectOptionControl([
-      { label: "modify", state: true },
-      { label: "splitHorizontal", state: false },
-      { label: "splitVertical", state: false },
-    ])
+    features: document.lowcoderdev ?
+      withDefault(JSONObjectControl,
+        `{
+        menu: false,
+        zoom: true,
+        fullscreen: true,
+        layers: true,
+        center: true,
+        modify: false,
+        split: false,
+        tracker: false,
+        timeline: false,
+        gpsCentered: false,
+        largeButtons: true,
+        scaleToBottom: false,
+        "modify:select": true,
+        "modify:point": true,
+        "modify:line": true,
+        "modify:polygon": true,
+        "modify:delete": true,
+        "modify:redo": true,
+        "modify:undo": true,
+        save: false,
+        splitVertical: false,
+        splitHorizontal: false,
+        north: false
+      }`
+      ) :
+      featureControl({
+        menu: false,
+        zoom: true,
+        fullscreen: true,
+        layers: true,
+        center: true,
+        modify: false,
+        split: false,
+        tracker: false,
+        timeline: false,
+        gpsCentered: false,
+        largeButtons: true,
+        scaleToBottom: false,
+        "modify:select": true,
+        "modify:point": true,
+        "modify:line": true,
+        "modify:polygon": true,
+        "modify:delete": true,
+        "modify:redo": true,
+        "modify:undo": true,
+        save: false,
+        splitVertical: false,
+        splitHorizontal: false,
+        north: false
+      }),
+
   };
 
 
@@ -192,22 +237,22 @@ var GEOComp = (function () {
     layers: any;
     bbox: any;
     defaults: any;
-    buttons: any;
+    feature: any;
     features: any;
     menuTitle: string;
     menuContent: string;
     autoHeight: boolean;
     events: any;
     event: any;
-    feature: any
-    test: any
   }) => {
     const doDebug = function () {
       return props.defaults && props.defaults.debug === true
     }
+
     //Default size of component
     const [dimensions, setDimensions] = useState({ width: 650, height: 400 });
     //Catch the resizing of component
+
     const { width, height, ref: conRef } = useResizeDetector({
       onResize: () => {
         const container = conRef.current;
@@ -228,6 +273,12 @@ var GEOComp = (function () {
         })
       }
     });
+
+
+    //Check if feature is Enabled
+    const featureEnabled = function (name: any) {
+      return props.features[name] == true
+    }
 
     //Cache for all events
     var _events = {}
@@ -253,7 +304,7 @@ var GEOComp = (function () {
             props.feature.onChange(eventObj)
             break;
           case 'window:resize':
-            if (props.features && props.features.scaleToBottom == true && props.autoHeight) {
+            if (featureEnabled('scaleToBottom') && props.autoHeight) {
               const el = eventObj.el
               const rec = eventObj.windowSize
               const bounds = eventObj.bounds.getBoundingClientRect()
@@ -309,13 +360,12 @@ var GEOComp = (function () {
             zoom={props.zoom}
             maxZoom={props.maxZoom}
             rotation={props.rotation}
-            buttons={props.buttons}
             menuContent={props.menuContent}
             menuTitle={props.menuTitle}
             defaults={props.defaults}
-            features={props.features}
             layers={props.layers}
             onEvent={handleEvent}
+            features={props.features}
           />
         </div>
       </div>
@@ -338,11 +388,7 @@ var GEOComp = (function () {
             {children.onEvent.propertyView()}
           </Section>
           <Section name="Behavior">
-            {children.test.propertyView({ label: "test features" })}
-            {children.features.propertyView({ label: "Enabled features" })}
-            {children.buttons.propertyView({ label: "Visible buttons" })}
-            {children.menuTitle.propertyView({ label: "Menu title" })}
-            {children.menuContent.propertyView({ label: "Menu content" })}
+            {children.features.propertyView({ title: "Enabled features & Buttons" })}
           </Section>
           <Section name="Styles">
             {children.autoHeight.getPropertyView()}
@@ -359,6 +405,7 @@ var GEOComp = (function () {
     })
     .build();
 })();
+
 
 //Add autoheight to component
 GEOComp = class extends GEOComp {
