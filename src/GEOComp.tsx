@@ -14,7 +14,9 @@ import {
   arrayStringExposingStateControl,
   withMethodExposing,
   AutoHeightControl,
+  changeValueAction,
 } from "lowcoder-sdk";
+//import { changeValueAction } from "lowcoder-core";
 import styles from "./styles.module.css";
 import { i18nObjs, trans } from "./i18n/comps";
 import { Geo } from "./vendors";
@@ -25,6 +27,7 @@ import { useResizeDetector } from "react-resize-detector";
 import Notification from 'ol-ext/control/Notification'
 import { featureControl } from './FeaturesControl';
 import { geoContext } from './GEOContext';
+import { deepMerge } from './vendors/helpers/DeepMerge';
 
 export const CompStyles = [
   {
@@ -547,15 +550,9 @@ GEOComp = withMethodExposing(GEOComp, [
             }
           }
         }
-        for (const [key, value] of Object.entries(data)) {
-          var child = comp.children[key]
-          console.log(key, child)
-          if (child.value) {
-            child.value(value)
-          } else {
-            console.debug("setConfig not supported for ", child)
-          }
-        }
+        //Load by the new values dispatching them, 
+        //first merging the current values with the new values
+        comp.dispatch(changeValueAction(deepMerge(comp.toJsonValue(), data), true))
       } catch (e) {
         console.error("Failed to parse config data", e)
         return false
@@ -590,7 +587,6 @@ GEOComp = withMethodExposing(GEOComp, [
           }
         }
       }
-
       //Should we convert the data into string
       data = params[1] !== true ? data : JSON.stringify(data, null)
       if (geoContext.previewMode)
