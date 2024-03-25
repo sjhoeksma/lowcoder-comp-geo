@@ -499,8 +499,8 @@ GEOComp = withMethodExposing(GEOComp, [
   },
   {
     method: {
-      name: "loadConfig",
-      description: "Load configuration the plugin by json",
+      name: "setConfig",
+      description: "Set configuration the plugin by json",
       params: [
         {
           name: "json",
@@ -526,14 +526,20 @@ GEOComp = withMethodExposing(GEOComp, [
   },
   {
     method: {
-      name: "saveConfig",
-      description: "Save configuration the plugin by json",
+      name: "getConfig",
+      description: "Get configuration the plugin by json",
+      params: [
+        {
+          name: "asString",
+          type: "boolean",
+        }
+      ]
     },
     execute: (comp: any, params: any) => {
       const data = comp.toJsonValue();
       console.debug(JSON.stringify(data, null))
       //Event config needs to be added
-      return JSON.stringify(data, null)
+      return params[0] === true ? JSON.stringify(data, null) : data
     }
   },
 ]);
