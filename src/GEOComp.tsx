@@ -532,7 +532,7 @@ GEOComp = withMethodExposing(GEOComp, [
         },
       ]
     },
-    execute: async (comp: any, params: any) => {
+    execute: (comp: any, params: any) => {
       if (params.length == 0) return
       //Create filter based on param
       const filter = parseFilter(params[1])
@@ -553,6 +553,7 @@ GEOComp = withMethodExposing(GEOComp, [
         //Load by the new values dispatching them, 
         //first merging the current values with the new values
         comp.dispatch(changeValueAction(deepMerge(comp.toJsonValue(), data), true))
+        return true
       } catch (e) {
         console.error("Failed to parse config data", e)
         return false
