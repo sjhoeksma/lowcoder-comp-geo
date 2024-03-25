@@ -347,6 +347,22 @@ GEOComp = class extends GEOComp {
   }
 };
 
+const parseFilter = function (data: any, defFilter = ['layers']) {
+  var filter = data || defFilter
+  if (!Array.isArray(filter)) {
+    try {
+      filter = JSON.parse("[" + filter + "]")
+    } catch (e) {
+      try {
+        filter = JSON.parse('["' + filter + '"]')
+      } catch (ee) {
+        filter = defFilter
+      }
+    }
+  }
+  return filter
+}
+
 /**
  * Exposes methods on GEOComp component to allow calling from parent component.
  * Includes animate, notify, showPopup, addFeatures, and readFeatures methods.
@@ -506,24 +522,43 @@ GEOComp = withMethodExposing(GEOComp, [
         {
           name: "json",
           type: "JSONValue",
-        }
+        },
+        {
+          name: "filter",
+          type: "JSONValue",
+        },
       ]
     },
     execute: async (comp: any, params: any) => {
       if (params.length == 0) return
+      //Create filter based on param
+      const filter = parseFilter(params[1])
       try {
         var data = params[0]
-        console.log("Configure 1", params[0])
         if (typeof data === 'string' || data instanceof String) {
           // @ts-ignore
           data = JSON.parse(data)
         }
+        //Filter out data not needed
+        if (filter.length != 0) {
+          for (const [key, value] of Object.entries(data)) {
+            if (!filter.includes(key)) {
+              delete data[key]
+            }
+          }
+        }
         for (const [key, value] of Object.entries(data)) {
-          console.log(key, comp.children[key])
-          //comp.children[key].value(value)
+          var child = comp.children[key]
+          console.log(key, child)
+          if (child.value) {
+            child.value(value)
+          } else {
+            console.debug("setConfig not supported for ", child)
+          }
         }
       } catch (e) {
         console.error("Failed to parse config data", e)
+        return false
       }
     }
   },
@@ -533,16 +568,31 @@ GEOComp = withMethodExposing(GEOComp, [
       description: "Get configuration the plugin by json",
       params: [
         {
+          name: "filter",
+          type: "JSONValue",
+        },
+        {
           name: "asString",
           type: "boolean",
-        }
+        },
       ]
     },
     execute: (comp: any, params: any) => {
+      //Create filter based on param
+      const filter = parseFilter(params[0])
+      //Get the json config data
       var data = comp.toJsonValue();
-      delete data.onEvent
-      data = params[0] !== true ? data : JSON.stringify(data, null)
-      // @ts-ignore
+      //Filter out data not needed
+      if (filter.length != 0) {
+        for (const [key, value] of Object.entries(data)) {
+          if (!filter.includes(key)) {
+            delete data[key]
+          }
+        }
+      }
+
+      //Should we convert the data into string
+      data = params[1] !== true ? data : JSON.stringify(data, null)
       if (geoContext.previewMode)
         console.debug(data)
       //Event config needs to be added
