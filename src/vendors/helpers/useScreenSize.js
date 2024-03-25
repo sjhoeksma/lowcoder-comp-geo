@@ -1,5 +1,5 @@
 // useScreenSize.js
-import { geoContext } from '../../GeoContext';
+import { geoContext } from '../../GEOContext';
 import { useState, useLayoutEffect } from 'react';
 
 export function useScreenSize() {

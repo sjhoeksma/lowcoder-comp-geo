@@ -24,7 +24,7 @@ import { useResizeDetector } from "react-resize-detector";
 // @ts-ignore
 import Notification from 'ol-ext/control/Notification'
 import { featureControl } from './FeaturesControl';
-import { geoContext } from './GeoContext';
+import { geoContext } from './GEOContext';
 
 export const CompStyles = [
   {
