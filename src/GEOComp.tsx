@@ -24,6 +24,7 @@ import { useResizeDetector } from "react-resize-detector";
 // @ts-ignore
 import Notification from 'ol-ext/control/Notification'
 import { featureControl } from './FeaturesControl';
+import { geoContext } from './GeoContext';
 
 export const CompStyles = [
   {
@@ -517,8 +518,10 @@ GEOComp = withMethodExposing(GEOComp, [
           // @ts-ignore
           data = JSON.parse(data)
         }
-
-
+        for (const [key, value] of Object.entries(data)) {
+          console.log(key, comp.children[key])
+          //comp.children[key].value(value)
+        }
       } catch (e) {
         console.error("Failed to parse config data", e)
       }
@@ -536,10 +539,14 @@ GEOComp = withMethodExposing(GEOComp, [
       ]
     },
     execute: (comp: any, params: any) => {
-      const data = comp.toJsonValue();
-      console.debug(JSON.stringify(data, null))
+      var data = comp.toJsonValue();
+      delete data.onEvent
+      data = params[0] !== true ? data : JSON.stringify(data, null)
+      // @ts-ignore
+      if (geoContext.previewMode)
+        console.debug(data)
       //Event config needs to be added
-      return params[0] === true ? JSON.stringify(data, null) : data
+      return data
     }
   },
 ]);

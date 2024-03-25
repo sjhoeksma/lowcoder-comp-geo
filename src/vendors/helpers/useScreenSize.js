@@ -1,4 +1,5 @@
 // useScreenSize.js
+import { geoContext } from '../../GeoContext';
 import { useState, useLayoutEffect } from 'react';
 
 export function useScreenSize() {
@@ -8,7 +9,7 @@ export function useScreenSize() {
     });
 
     //Should not be added in dev
-    if (!document.lowcoderdev)
+    if (!geoContext.previewMode)
         useLayoutEffect(() => {
             const handleResize = function () {
                 const rec = {
