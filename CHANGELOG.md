@@ -1,3 +1,17 @@
+# [1.3.0-dev.61](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.60...v1.3.0-dev.61) (2024-03-25)
+
+
+### Bug Fixes
+
+* added GEOContext ([b5ca00c](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/b5ca00c9b3bb8e46b18dda7229040067a9286a3d))
+* complete setConfig en getConfig ([aac686e](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/aac686e0a779751ab4cf6f225599c47b884a515c))
+* made synchrone ([d6b1c62](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/d6b1c6272d3625bfab476be5511bb1c45cf15edf))
+* move not visible ([78ab1f4](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/78ab1f489cf3d01ab3bcb2f27f9ebbbb7c7bce9c))
+* renamed loadConfig to setConfig ([d69969d](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/d69969d19287096702d02ebd0c01c29886bc61be))
+* setConfig ([bf6e023](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/bf6e023fbf73721e40f3889f6cb965a3bca7cb7f))
+* typo error of GEOContext ([c92567d](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/c92567d1984626888139561b1ce61a8c82d68dcc))
+* Work inprogress ([7969319](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/796931985231e295ae8f61a6f8e63ca6b67ca83b))
+
 # [1.3.0-dev.60](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.59...v1.3.0-dev.60) (2024-03-24)
 
 
