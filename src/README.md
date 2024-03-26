@@ -21,7 +21,7 @@ Start with cloning the repository on to you local hard drive. Install all depend
 
 ```bash
 git clone https://github.com/sjhoeksma/lowcoder-comp-geo.git
-cd lowcoder-comp-bpmn-io
+cd lowcoder-comp-geo
 yarn install
 yarn start
 ```
