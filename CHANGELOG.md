@@ -24,3 +24,6 @@
 - Use lowcoder styling template where possible, or add it to styles
 - Simplify the styling of the layer popup
 - Add location point on home, not just a bounce circle
+- Implement timeline function and layer types
+- Implement splitscreen in layers
+- Add the options to load a config based on parameters
