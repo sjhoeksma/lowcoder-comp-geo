@@ -2,9 +2,10 @@
 
 This plugin enables the usage of [Openlayers GEO viewer](https://openlayers.org/) within lowcoder. To use this plugin. Open your lowcoder environment goto the app. Select insert tab, extensions and plugins and add: **lowcoder-comp-geo**
 
-Edit properties explained:
-* Add bullet
+# Documentation
 
+We have created a (https://sjhoeksma.github.io/lowcoder-comp-geo/)[seperated documentation] page explain all the features. 
+[![documentation](https://github.com/sjhoeksma/lowcoder-comp-geo/blob/main/images/documentation.png?raw=true)](https://sjhoeksma.github.io/lowcoder-comp-geo/)
 
 # Example
 To help you with understanding how you can use this plugin we have added an [example application](https://github.com/sjhoeksma/lowcoder-comp-geo/blob/main/lowcoder-example/lowcoder-comp-geo.json?raw=true). Just download the json application file and import it within lowcoder. 
