@@ -113,10 +113,21 @@ function Geo(props) {
     if (map) {
       //Remove the current layers
       map.getLayers().clear();
+      const sortFn = function (a, b) {
+        const av = (a.get('order') || 0)
+        const bv = (b.get('order') || 0)
+        if (av < bv) {
+          return -1;
+        } else if (av > bv) {
+          return 1;
+        }
+        return 0;
+      }
       const layers = (Array.isArray(props.layers) ? props.layers : [])
         .map(layerConfig => createLayer(layerConfig, map))
         .filter(layer => layer !== null && layer !== undefined)
-      const workinglayers = [...layers]
+        .sort(sortFn);
+      var workinglayers = [...layers]
       //Sort all layers an groups and add them to map
       const layerGroups = {}
       layers.forEach((layer, idx) => {
@@ -129,10 +140,11 @@ function Geo(props) {
                 case 'history':
                   layer.setVisible(false) //History is always invisable
                   break;
-                case 'default':
-                  return //Skip adding to group
               }
               layerGroups[g] = layerGroups[g] ? [...layerGroups[g], layer] : [layer]
+              //Remove the layer from working layers
+              const index = workinglayers.indexOf(layer);
+              if (index >= 0) workinglayers.splice(index, 1);
             })
           }
         }
@@ -142,20 +154,11 @@ function Geo(props) {
         workinglayers.push(new LayerGroup({
           name: key,
           layers: value,
-          order: Math.min(...value.map(item => { return item.get('order') || 999999 })) - 1
+          order: Math.min(...value.map(item => { return item.get('order') || 999999 }))
         }))
       }
       //Sort the working layer
-      workinglayers.sort((a, b) => {
-        const av = (a.get('order') || 0)
-        const bv = (b.get('order') || 0)
-        if (av < bv) {
-          return -1;
-        } else if (av > bv) {
-          return 1;
-        }
-        return 0;
-      });
+      workinglayers.sort(sortFn);
       workinglayers.forEach(layer => {
         map.addLayer(layer)
       })
@@ -265,7 +268,7 @@ function Geo(props) {
         var pedit = new Toggle({
           html: '<i class="fa fa-map-marker" ></i>',
           title: 'Point',
-          onToggle: () => {
+          onToggle: (active) => {
             olMap.removeInteraction(snap);
             olMap.removeInteraction(modify);
           },
@@ -279,7 +282,7 @@ function Geo(props) {
         var ledit = new Toggle({
           html: '<i class="fa fa-share-alt" ></i>',
           title: 'Line',
-          onToggle: () => {
+          onToggle: (active) => {
             olMap.removeInteraction(snap);
             olMap.removeInteraction(modify);
           },
@@ -300,7 +303,7 @@ function Geo(props) {
         var fedit = new Toggle({
           html: '<i class="fa fa-bookmark fa-rotate-270" ></i>',
           title: 'Polygon',
-          onToggle: () => {
+          onToggle: (active) => {
             olMap.removeInteraction(snap);
             olMap.removeInteraction(modify);
           },
@@ -408,20 +411,34 @@ function Geo(props) {
           secondbar.addControl(swipebar);
 
         var swipectrl = new Swipe({});
-        swipectrl.set('position', 0, 5)
         //Todo Add the layers for the swipe control
+
+        const findSplits = function (layers) {
+          layers.forEach((layer) => {
+            if (layer.get("splitscreen") == "left" && layer.isVisible()) {
+              swipectrl.addLayer(layer, false);
+            } else if (layer.get("splitscreen") == "right" && layer.isVisible()) {
+              swipectrl.addLayer(layer, true);
+            } else if (layer instanceof LayerGroup) {
+              findSplits(layer.getLayers())
+            }
+          })
+        }
 
         var swipeHorz = new Toggle({
           html: '<i class="fa fa-grip-lines-vertical fa-rotate-90"></i>',
           title: "Splitscreen Horizontal",
-          onToggle: function (event) {
-            if (event.active) {
-              swipectrl.set('orientation', 'horizontal')
+          onToggle: function (active) {
+            if (active) {
               olMap.addControl(swipectrl)
+              swipectrl.set('orientation', 'horizontal')
+              swipectrl.set('position', 0.5)
+              swipectrl.removeLayers();
+              findSplits(olMap.getLayers())
             } else {
               olMap.removeControl(swipectrl)
             }
-            fireEvent("splitsceen:horizontal", event)
+            fireEvent("splitsceen:horizontal", active)
           }
         });
         if (featureEnabled('splitscreen:horizontal')) swipebar.addControl(swipeHorz);
@@ -429,14 +446,17 @@ function Geo(props) {
         var swipeVert = new Toggle({
           html: '<i class="fa fa-grip-lines-vertical "></i>',
           title: "Splitscreen Vertical",
-          onToggle: function (event) {
-            if (event.active) {
-              swipectrl.set('orientation', 'vertical')
+          onToggle: function (active) {
+            if (active) {
               olMap.addControl(swipectrl)
+              swipectrl.set('orientation', 'vertical')
+              swipectrl.set('position', 0.5)
+              swipectrl.removeLayers();
+              findSplits(olMap.getLayers())
             } else {
               olMap.removeControl(swipectrl)
             }
-            fireEvent("splitscreen:vertical", event)
+            fireEvent("splitscreen:vertical", active)
           }
         });
         if (featureEnabled('splitscreen:vertical')) swipebar.addControl(swipeVert);
@@ -457,9 +477,9 @@ function Geo(props) {
         className: 'ol-menu',
         html: '<i class="fa fa-bars" ></i>',
         title: "Menu",
-        onToggle: function (event) {
+        onToggle: function (active) {
           menu.toggle();
-          fireEvent("toggle:menu", event)
+          fireEvent("toggle:menu", active)
         }
       });
       if (featureEnabled('menu')) olMap.addControl(toggle);
@@ -509,8 +529,8 @@ function Geo(props) {
         var timeline = new Toggle({
           html: '<i class="fa fa-clock"></i>',
           title: "Timeline",
-          onToggle: function (e) {
-            fireEvent("toggle:timeline", e)
+          onToggle: function (active) {
+            fireEvent("toggle:timeline", active)
           }
         });
         if (featureEnabled('timeline')) secondbar.addControl(timeline);

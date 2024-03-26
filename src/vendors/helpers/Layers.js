@@ -35,6 +35,7 @@ export function createLayer(layerConfig, map) {
         groups: layerConfig.groups,
         extra: layerConfig.extra,
         order: layerConfig.order,
+        splitscreen: layerConfig.splitscreen,
         source: new VectorTileSource({
           attributions: layerConfig.attributions,
           format: new MVT(),
@@ -52,6 +53,7 @@ export function createLayer(layerConfig, map) {
         groups: layerConfig.groups,
         extra: layerConfig.extra,
         order: layerConfig.order,
+        splitscreen: layerConfig.splitscreen,
         source: new TileWMS({
           url: layerConfig.source.url,
           params: layerConfig.source.params,
@@ -70,6 +72,7 @@ export function createLayer(layerConfig, map) {
         groups: layerConfig.groups,
         extra: layerConfig.extra,
         order: layerConfig.order,
+        splitscreen: layerConfig.splitscreen,
         source: new VectorSource({
           format: new GeoJSON(),
           url: layerConfig.source.url,
@@ -86,6 +89,7 @@ export function createLayer(layerConfig, map) {
         groups: layerConfig.groups,
         extra: layerConfig.extra,
         order: layerConfig.order,
+        splitscreen: layerConfig.splitscreen,
         source: new XYZ({
           url: layerConfig.source.url,
         }),
@@ -101,6 +105,7 @@ export function createLayer(layerConfig, map) {
         groups: layerConfig.groups,
         extra: layerConfig.extra,
         order: layerConfig.order,
+        splitscreen: layerConfig.splitscreen,
         source: new VectorSource({
           features: new GeoJSON().readFeatures(layerConfig.source.data, {
             // Ensure the features are read with the correct projection
@@ -123,6 +128,7 @@ export function createLayer(layerConfig, map) {
         groups: layerConfig.groups,
         extra: layerConfig.extra,
         order: layerConfig.order,
+        splitscreen: layerConfig.splitscreen,
         source: new GeoTIFF({
           sources: [
             {
@@ -152,6 +158,7 @@ export function createLayer(layerConfig, map) {
         groups: layerConfig.groups,
         extra: layerConfig.extra,
         order: layerConfig.order,
+        splitscreen: layerConfig.splitscreen,
         source: new VectorTileSource({
           projection: layerConfig.source?.projection || 'EPSG:3857',
         }),
@@ -172,6 +179,7 @@ export function createLayer(layerConfig, map) {
         groups: layerConfig.groups,
         extra: layerConfig.extra,
         order: layerConfig.order,
+        splitscreen: layerConfig.splitscreen,
         source: new TileArcGISRest({
           url: layerConfig.source?.url,
           params: layerConfig.source.params || {},
@@ -189,6 +197,7 @@ export function createLayer(layerConfig, map) {
         groups: layerConfig.groups,
         extra: layerConfig.extra,
         order: layerConfig.order,
+        splitscreen: layerConfig.splitscreen,
         source: new ImageArcGISRest({
           url: layerConfig.source?.url,
           ratio: layerConfig.source.ratio || 1,

@@ -248,7 +248,8 @@ export const enObj: I18nObjects = {
       order: 4,
       minZoom: 0,
       maxZoom: 22,
-      visible: false,
+      splitscreen: "left",
+      visible: true,
       source: {
         url: "https://wms.wheregroup.com/tileserver/tile/world-0-14/{z}/{x}/{y}.pbf",
       },
@@ -275,7 +276,7 @@ export const enObj: I18nObjects = {
       order: 2,
       minZoom: 0,
       maxZoom: 22,
-      visible: true,
+      visible: false,
       selectable: true,
       source: {
         url: "https://sampleserver6.arcgisonline.com/ArcGIS/rest/services/USA/MapServer",
@@ -309,7 +310,8 @@ export const enObj: I18nObjects = {
       visible: true,
       opacity: 1,
       selectable: false,
-      groups: ['default', 'splitscreen'],
+      splitscreen: "right",
+      groups: ['base'],
       source: {
         url: "https://wms.wheregroup.com/tileserver/style/osm-bright.json",
         projection: "EPSG:3857",
@@ -321,8 +323,8 @@ export const enObj: I18nObjects = {
       order: -1,
       minZoom: 0,
       maxZoom: 19,
-      visible: true,
-      groups: ['default', 'splitscreen'],
+      visible: false,
+      groups: ['base'],
       source: {
         url: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
       },

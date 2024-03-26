@@ -141,7 +141,7 @@ var GEOComp = (function () {
         center: true,
         modify: false,
         save: false,
-        splitscreen: false,
+        splitscreen: true,
         tracker: false,
         timeline: false,
         gpsCentered: true,
@@ -156,7 +156,7 @@ var GEOComp = (function () {
         "modify:delete": true,
         "modify:redo": true,
         "modify:undo": true,
-        "splitscreen:horizontal": false,
+        "splitscreen:horizontal": true,
         "splitscreen:vertical": true,
         debug: false,
       }),
@@ -329,7 +329,7 @@ var GEOComp = (function () {
             {children.autoHeight.getPropertyView()}
             {children.styles.getPropertyView()}
           </Section>
-          <Section name="Behavior">
+          <Section name="Behavior" open="false">
             {children.features.propertyView({ title: trans("features.title") })}
           </Section>
           <div >
