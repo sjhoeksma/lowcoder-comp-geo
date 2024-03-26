@@ -16,7 +16,6 @@ import {
   AutoHeightControl,
   changeValueAction,
 } from "lowcoder-sdk";
-//import { changeValueAction } from "lowcoder-core";
 import styles from "./styles.module.css";
 import { i18nObjs, trans } from "./i18n/comps";
 import { Geo } from "./vendors";
