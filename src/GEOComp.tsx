@@ -549,8 +549,8 @@ GEOComp = withMethodExposing(GEOComp, [
             }
           }
         }
-        //Load by the new values dispatching them, 
-        //first merging the current values with the new values
+        //Load the new values by dispatching them, 
+        //First merging the current values with the new values
         comp.dispatch(changeValueAction(deepMerge(comp.toJsonValue(), data), true))
         return true
       } catch (e) {

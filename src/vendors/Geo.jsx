@@ -11,7 +11,7 @@ import { RingLoader } from 'react-spinners'
 
 //The real GEO OpenLayers packages
 import { Map, View } from 'ol/index';
-import { Vector as VectorLayer } from 'ol/layer';
+import { Vector as VectorLayer, Group as LayerGroup } from 'ol/layer';
 import { Vector as VectorSource } from 'ol/source';
 import { LineString, Polygon } from 'ol/geom';
 import { fromLonLat, transformExtent } from 'ol/proj';
@@ -36,6 +36,8 @@ import LayerSwitcher from 'ol-ext/control/LayerSwitcher'
 import RotateNorthControl from './RotateNorthControl'
 import { createLayer } from './helpers/Layers'
 import { animate, geoJsonStyleFunction, useScreenSize } from './helpers'
+
+const defMinDate = '1900'
 
 function Geo(props) {
   const [geoRef, setGeoRef] = useState();
@@ -109,15 +111,54 @@ function Geo(props) {
 
   const loadLayers = function (map) {
     if (map) {
-      // Validate and create new layers
-      const layers = Array.isArray(props.layers) ? props.layers : [];
-      const validatedLayers = layers.filter(layer => layer !== null && layer !== undefined);
-      const sortedLayers = validatedLayers
-        .sort((a, b) => (a.order || 0) - (b.order || 0))
-        .map(layerConfig => createLayer(layerConfig, map))
-        .filter(layer => layer !== null && layer !== undefined);
+      //Remove the current layers
       map.getLayers().clear();
-      sortedLayers.forEach(layer => { if (layer) map.addLayer(layer) });
+      const layers = (Array.isArray(props.layers) ? props.layers : [])
+        .map(layerConfig => createLayer(layerConfig, map))
+        .filter(layer => layer !== null && layer !== undefined)
+      const workinglayers = [...layers]
+      //Sort all layers an groups and add them to map
+      const layerGroups = {}
+      layers.forEach((layer, idx) => {
+        if (layer) {
+          if (layer.get('groups')) {
+            const groups = layer.get('groups')
+            const gr = Array.isArray(groups) ? groups : [groups]
+            gr.forEach((g) => {
+              switch (g) {
+                case 'history':
+                  layer.setVisible(false) //History is always invisable
+                  break;
+                case 'default':
+                  return //Skip adding to group
+              }
+              layerGroups[g] = layerGroups[g] ? [...layerGroups[g], layer] : [layer]
+            })
+          }
+        }
+      });
+      //Convert layerGroups into LayerGroups
+      for (const [key, value] of Object.entries(layerGroups)) {
+        workinglayers.push(new LayerGroup({
+          name: key,
+          layers: value,
+          order: Math.min(...value.map(item => { return item.get('order') || 999999 })) - 1
+        }))
+      }
+      //Sort the working layer
+      workinglayers.sort((a, b) => {
+        const av = (a.get('order') || 0)
+        const bv = (b.get('order') || 0)
+        if (av < bv) {
+          return -1;
+        } else if (av > bv) {
+          return 1;
+        }
+        return 0;
+      });
+      workinglayers.forEach(layer => {
+        map.addLayer(layer)
+      })
 
       //TrackerVector
       if (featureEnabled('tracker')) {
@@ -424,30 +465,29 @@ function Geo(props) {
       if (featureEnabled('menu')) olMap.addControl(toggle);
 
       if (featureEnabled('timeline')) {
-        var histo = [
-          /* no more ?
-          new ol.layer.Geoportail({ 
-            name: '1970',
-            title: '1965-1980',
-            key: 'orthohisto',
-            layer: 'ORTHOIMAGERY.ORTHOPHOTOS.1965-1980' 
-          }),
-          */
-        ]
+        //From layers get all histroy
+        var histo = []
+        props.layers.forEach((layer) => {
+          if (layer.type && layer.date && (
+            (Array.isArray(layer.group) && layer.group.includes('history')) ||
+            (typeof layer.type === "string" && layer.type == 'history'))) {
+            histo.push[layer]
+          }
+        })
         //Timeline
         var tline = new Timeline({
           className: 'ol-pointer ol-zoomhover ol-timeline',
           features: histo,
-          minDate: new Date('1923'),
-          maxDate: new Date(),
-          getFeatureDate: function (l) { return l.get('name'); },
-          getHTML: function (l) { return l.get('name'); }
+          minDate: new Date(props.minDate || defMinDate),
+          maxDate: new Date(props.maxDate),
+          getFeatureDate: function (l) { return l.get('date'); },
+          getHTML: function (l) { return l.get('date'); }
         });
 
         tline.on('scroll', function (e) {
           var layer, dmin = Infinity;
           histo.forEach(function (l, i) {
-            var d = new Date(l.get('name'));
+            var d = new Date(l.get('date'));
             var dt = Math.abs(e.date - d);
             if (dt < dmin) {
               layer = l;
@@ -457,11 +497,12 @@ function Geo(props) {
           });
           if (layer) {
             layer.setVisible(true);
-            $('.date').text(layer.get('title') || layer.get('name'));
           }
+          fireEvent("timeline:scroll", e)
         });
         tline.on('select', function (e) {
           tline.setDate(e.feature);
+          fireEvent("timeline:select", e)
         });
 
 

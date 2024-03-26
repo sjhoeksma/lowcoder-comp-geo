@@ -32,6 +32,9 @@ export function createLayer(layerConfig, map) {
         visible: layerConfig.visible,
         opacity: layerConfig.opacity,
         selectable: layerConfig.selectable,
+        groups: layerConfig.groups,
+        extra: layerConfig.extra,
+        order: layerConfig.order,
         source: new VectorTileSource({
           attributions: layerConfig.attributions,
           format: new MVT(),
@@ -46,6 +49,9 @@ export function createLayer(layerConfig, map) {
         visible: layerConfig.visible,
         opacity: layerConfig.opacity,
         selectable: layerConfig.selectable,
+        groups: layerConfig.groups,
+        extra: layerConfig.extra,
+        order: layerConfig.order,
         source: new TileWMS({
           url: layerConfig.source.url,
           params: layerConfig.source.params,
@@ -61,6 +67,9 @@ export function createLayer(layerConfig, map) {
         visible: layerConfig.visible,
         opacity: layerConfig.opacity,
         selectable: layerConfig.selectable,
+        groups: layerConfig.groups,
+        extra: layerConfig.extra,
+        order: layerConfig.order,
         source: new VectorSource({
           format: new GeoJSON(),
           url: layerConfig.source.url,
@@ -74,6 +83,9 @@ export function createLayer(layerConfig, map) {
         visible: layerConfig.visible,
         opacity: layerConfig.opacity,
         selectable: layerConfig.selectable,
+        groups: layerConfig.groups,
+        extra: layerConfig.extra,
+        order: layerConfig.order,
         source: new XYZ({
           url: layerConfig.source.url,
         }),
@@ -86,6 +98,9 @@ export function createLayer(layerConfig, map) {
         visible: layerConfig.visible,
         opacity: layerConfig.opacity,
         selectable: layerConfig.selectable,
+        groups: layerConfig.groups,
+        extra: layerConfig.extra,
+        order: layerConfig.order,
         source: new VectorSource({
           features: new GeoJSON().readFeatures(layerConfig.source.data, {
             // Ensure the features are read with the correct projection
@@ -105,6 +120,9 @@ export function createLayer(layerConfig, map) {
         visible: layerConfig.visible,
         opacity: layerConfig.opacity,
         selectable: layerConfig.selectable,
+        groups: layerConfig.groups,
+        extra: layerConfig.extra,
+        order: layerConfig.order,
         source: new GeoTIFF({
           sources: [
             {
@@ -131,6 +149,9 @@ export function createLayer(layerConfig, map) {
         visible: layerConfig.visible,
         opacity: layerConfig.opacity,
         selectable: layerConfig.selectable,
+        groups: layerConfig.groups,
+        extra: layerConfig.extra,
+        order: layerConfig.order,
         source: new VectorTileSource({
           projection: layerConfig.source?.projection || 'EPSG:3857',
         }),
@@ -148,6 +169,9 @@ export function createLayer(layerConfig, map) {
         visible: layerConfig.visible,
         opacity: layerConfig.opacity,
         selectable: layerConfig.selectable,
+        groups: layerConfig.groups,
+        extra: layerConfig.extra,
+        order: layerConfig.order,
         source: new TileArcGISRest({
           url: layerConfig.source?.url,
           params: layerConfig.source.params || {},
@@ -162,6 +186,9 @@ export function createLayer(layerConfig, map) {
         visible: layerConfig.visible,
         opacity: layerConfig.opacity,
         selectable: layerConfig.selectable,
+        groups: layerConfig.groups,
+        extra: layerConfig.extra,
+        order: layerConfig.order,
         source: new ImageArcGISRest({
           url: layerConfig.source?.url,
           ratio: layerConfig.source.ratio || 1,
@@ -169,6 +196,15 @@ export function createLayer(layerConfig, map) {
           crossOrigin: layerConfig.source.crossOrigin,
         }),
       });
+
+    /* History ? 
+    new ol.layer.Geoportail({ 
+      name: '1970',
+      title: '1965-1980',
+      key: 'orthohisto',
+      layer: 'ORTHOIMAGERY.ORTHOPHOTOS.1965-1980' 
+    }),
+    */
 
     default:
       //Error will cause issue within lowcoder. So just use log

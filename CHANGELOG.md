@@ -27,3 +27,4 @@
 - Implement timeline function and layer types
 - Implement splitscreen in layers
 - Add the options to load a config based on parameters
+- Hide history layers from layer menu, and group the in on layergroup

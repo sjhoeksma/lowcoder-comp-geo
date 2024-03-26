@@ -309,6 +309,7 @@ export const enObj: I18nObjects = {
       visible: true,
       opacity: 1,
       selectable: false,
+      groups: ['default', 'splitscreen'],
       source: {
         url: "https://wms.wheregroup.com/tileserver/style/osm-bright.json",
         projection: "EPSG:3857",
@@ -321,6 +322,7 @@ export const enObj: I18nObjects = {
       minZoom: 0,
       maxZoom: 19,
       visible: true,
+      groups: ['default', 'splitscreen'],
       source: {
         url: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
       },
