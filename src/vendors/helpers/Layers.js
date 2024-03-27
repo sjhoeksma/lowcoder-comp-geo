@@ -27,6 +27,7 @@ export function createLayer(layerConfig, map) {
     case 'mvt':
       return new VectorTileLayer({
         name: layerConfig.name,
+        title: layerConfig.title || layerConfig.name,
         minZoom: layerConfig.minZoom,
         maxZoom: layerConfig.maxZoom,
         visible: layerConfig.visible,
@@ -45,6 +46,7 @@ export function createLayer(layerConfig, map) {
     case 'wms':
       return new TileLayer({
         name: layerConfig.name,
+        title: layerConfig.title || layerConfig.name,
         minZoom: layerConfig.minZoom,
         maxZoom: layerConfig.maxZoom,
         visible: layerConfig.visible,
@@ -64,6 +66,7 @@ export function createLayer(layerConfig, map) {
     case 'wfs':
       return new VectorLayer({
         name: layerConfig.name,
+        title: layerConfig.title || layerConfig.name,
         minZoom: layerConfig.minZoom,
         maxZoom: layerConfig.maxZoom,
         visible: layerConfig.visible,
@@ -81,6 +84,7 @@ export function createLayer(layerConfig, map) {
     case 'xyz':
       return new TileLayer({
         name: layerConfig.name,
+        title: layerConfig.title || layerConfig.name,
         minZoom: layerConfig.minZoom,
         maxZoom: layerConfig.maxZoom,
         visible: layerConfig.visible,
@@ -97,6 +101,7 @@ export function createLayer(layerConfig, map) {
     case 'geojson':
       return new VectorLayer({
         name: layerConfig.name,
+        title: layerConfig.title || layerConfig.name,
         minZoom: layerConfig.minZoom,
         maxZoom: layerConfig.maxZoom,
         visible: layerConfig.visible,
@@ -120,6 +125,7 @@ export function createLayer(layerConfig, map) {
     case 'cog':
       return new TileLayer({
         name: layerConfig.name,
+        title: layerConfig.title || layerConfig.name,
         minZoom: layerConfig.minZoom,
         maxZoom: layerConfig.maxZoom,
         visible: layerConfig.visible,
@@ -150,6 +156,7 @@ export function createLayer(layerConfig, map) {
       const layer = new VectorTileLayer({
         declutter: true,
         name: layerConfig.name,
+        title: layerConfig.title || layerConfig.name,
         minZoom: layerConfig.minZoom,
         maxZoom: layerConfig.maxZoom,
         visible: layerConfig.visible,
@@ -171,6 +178,7 @@ export function createLayer(layerConfig, map) {
     case 'arcgis-mapserver-tile':
       return new TileLayer({
         name: layerConfig.name,
+        title: layerConfig.title || layerConfig.name,
         minZoom: layerConfig.minZoom,
         maxZoom: layerConfig.maxZoom,
         visible: layerConfig.visible,
@@ -189,6 +197,7 @@ export function createLayer(layerConfig, map) {
     case 'arcgis-mapserver-image':
       return new ImageLayer({
         name: layerConfig.name,
+        title: layerConfig.title || layerConfig.name,
         minZoom: layerConfig.minZoom,
         maxZoom: layerConfig.maxZoom,
         visible: layerConfig.visible,

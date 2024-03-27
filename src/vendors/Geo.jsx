@@ -37,6 +37,11 @@ import RotateNorthControl from './RotateNorthControl'
 import { createLayer } from './helpers/Layers'
 import { animate, geoJsonStyleFunction, useScreenSize } from './helpers'
 
+//WorkArround, undo needs getSource
+class LayerGroupUndo extends LayerGroup {
+  getSource() { return null }
+}
+
 const defMinDate = '1900'
 
 function Geo(props) {
@@ -49,7 +54,8 @@ function Geo(props) {
   const [notification] = useState(new Notification({}))
   // Vector layer for drawing
   const [drawVector] = useState(new VectorLayer({
-    name: 'drawing',
+    name: 'draw',
+    title: "Drawing",
     source: new VectorSource(),
     style: geoJsonStyleFunction
   }))
@@ -151,8 +157,9 @@ function Geo(props) {
       });
       //Convert layerGroups into LayerGroups
       for (const [key, value] of Object.entries(layerGroups)) {
-        workinglayers.push(new LayerGroup({
+        workinglayers.push(new LayerGroupUndo({
           name: key,
+          title: key.charAt(0).toUpperCase() + key.slice(1),
           layers: value,
           order: Math.min(...value.map(item => { return item.get('order') || 999999 }))
         }))
