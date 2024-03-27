@@ -105,6 +105,11 @@ var GEOComp = (function () {
       description: "Triggers when there is a bbox change",
     },
     {
+      label: "onTimeline",
+      value: "timeline",
+      description: "Triggers when there is a timeline change",
+    },
+    {
       label: "onEvent",
       value: "event",
       description: "Triggers when there is no special event handler is triggered",
@@ -131,6 +136,8 @@ var GEOComp = (function () {
     event: jsonObjectExposingStateControl("event"),
     feature: jsonObjectExposingStateControl("feature"),
     onEvent: eventHandlerControl(eventDefintions),
+    startDate: stringSimpleControl(""), //TODO replace with datepicker
+    endDate: stringSimpleControl(""),
 
     features:
       featureControl({
@@ -185,6 +192,8 @@ var GEOComp = (function () {
     events: any;
     event: any;
     projection: string;
+    startDate: string;
+    endDate: string;
   }) => {
     //Default size of component
     const [dimensions, setDimensions] = useState({ width: 650, height: 400 });
@@ -301,6 +310,8 @@ var GEOComp = (function () {
             onEvent={handleEvent}
             features={props.features}
             projection={props.projection}
+            startDate={props.startDate}
+            endDate={props.endDate}
           />
         </div>
       </div>
@@ -324,6 +335,10 @@ var GEOComp = (function () {
           <Section name="Menu">
             {children.menuTitle.propertyView({ label: "Title" })}
             {children.menuContent.propertyView({ label: "Content" })}
+          </Section>
+          <Section name="Timeline">
+            {children.startDate.propertyView({ label: "Start Date" })}
+            {children.endDate.propertyView({ label: "End Date" })}
           </Section>
           <Section name="Styles">
             {children.autoHeight.getPropertyView()}

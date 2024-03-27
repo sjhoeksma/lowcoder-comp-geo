@@ -496,25 +496,30 @@ function Geo(props) {
         var histo = []
         props.layers.forEach((layer) => {
           if (layer.type && layer.date && (
-            (Array.isArray(layer.group) && layer.group.includes('history')) ||
-            (typeof layer.type === "string" && layer.type == 'history'))) {
+            (Array.isArray(layer.get("groups")) && layer.get("groups").includes('history')) ||
+            (typeof layer.get("groups") === "string" && layer.get("groups") == 'history'))) {
             histo.push[layer]
           }
         })
+        const timelineDate = function (layer) {
+          const ex = layer.get("extra")
+          if (ex) return ex.timelineDate
+          return ""
+        }
         //Timeline
         var tline = new Timeline({
           className: 'ol-pointer ol-zoomhover ol-timeline',
           features: histo,
-          minDate: new Date(props.minDate || defMinDate),
-          maxDate: new Date(props.maxDate),
-          getFeatureDate: function (l) { return l.get('date'); },
-          getHTML: function (l) { return l.get('date'); }
+          minDate: new Date(props.startDate || defMinDate),
+          maxDate: new Date(props.endDate),
+          getFeatureDate: function (l) { return timelineDate(l) },
+          getHTML: function (l) { return timelineDate(l) }
         });
 
         tline.on('scroll', function (e) {
           var layer, dmin = Infinity;
           histo.forEach(function (l, i) {
-            var d = new Date(l.get('date'));
+            var d = new Date(timelineDate(l));
             var dt = Math.abs(e.date - d);
             if (dt < dmin) {
               layer = l;
@@ -548,7 +553,7 @@ function Geo(props) {
             geoTracker.element.classList.add('timeline')
             geoLocation.element.classList.add('timeline')
             olMap.addControl(tline);
-            fireEvent('timeline:active')
+            fireEvent('timeline:active', true)
           } else {
             scaleLineControl.element.classList.remove('timeline')
             geoTracker.element.classList.remove('timeline')
@@ -557,7 +562,7 @@ function Geo(props) {
             //Work arround voor scaleLineControl not moving
             olMap.removeControl(scaleLineControl);
             olMap.addControl(scaleLineControl);
-            fireEvent('timeline:inactive')
+            fireEvent('timeline:active', false)
           }
         });
       }
@@ -656,7 +661,7 @@ function Geo(props) {
 
       setMap(olMap)
     }
-  }, [geoRef, props.features, props.projection]);
+  }, [geoRef, props.features, props.projection, props.startDate, props.endDate]);
 
 
   useEffect(() => {
@@ -762,6 +767,8 @@ Geo.propTypes = {
   width: PropTypes.number,
   height: PropTypes.number,
   projection: PropTypes.string,
+  startDate: PropTypes.string,
+  endDate: PropTypes.string,
 }
 
 export default Geo;
