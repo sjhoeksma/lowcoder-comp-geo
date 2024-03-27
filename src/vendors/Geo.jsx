@@ -143,8 +143,8 @@ function Geo(props) {
             const gr = Array.isArray(groups) ? groups : [groups]
             gr.forEach((g) => {
               switch (g) {
-                case 'history':
-                  layer.setVisible(false) //History is always invisable
+                case 'timeline':
+                  layer.setVisible(false) //Timelines is always invisable
                   break;
               }
               layerGroups[g] = layerGroups[g] ? [...layerGroups[g], layer] : [layer]
@@ -161,7 +161,8 @@ function Geo(props) {
           name: key,
           title: key.charAt(0).toUpperCase() + key.slice(1),
           layers: value,
-          order: Math.min(...value.map(item => { return item.get('order') || 999999 }))
+          order: Math.min(...value.map(item => { return item.get('order') || 999999 })),
+          displayInLayerSwitcher: key !== "timeline"
         }))
       }
       //Sort the working layer
@@ -500,13 +501,19 @@ function Geo(props) {
 
         //From layers get all histroy
         var histo = []
-        props.layers.forEach((layer) => {
-          if (layer.get("groups") && timelineDate(layer) && (
-            (Array.isArray(layer.get("groups")) && layer.get("groups").includes('timeline')) ||
-            (typeof layer.get("groups") === "string" && layer.get("groups") == 'timeline'))) {
-            histo.push[layer]
-          }
-        })
+        function fillTimeline(layers) {
+          layers.forEach((layer) => {
+            if (layer.get("groups") && timelineDate(layer) && (
+              (Array.isArray(layer.get("groups")) && layer.get("groups").includes('timeline')) ||
+              (typeof layer.get("groups") === "string" && layer.get("groups") == 'timeline'))) {
+              histo.push[layer]
+            } else if (layer instanceof LayerGroup) {
+              fillTimeline(layers.getLayers())
+            }
+          })
+        }
+        fillTimeline(props.layers)
+
 
         //Timeline
         var tline = new Timeline({
@@ -555,7 +562,7 @@ function Geo(props) {
             geoTracker.element.classList.add('timeline')
             geoLocation.element.classList.add('timeline')
             olMap.addControl(tline);
-            fireEvent('timeline:active', true)
+            fireEvent('timeline:state', true)
           } else {
             scaleLineControl.element.classList.remove('timeline')
             geoTracker.element.classList.remove('timeline')
@@ -564,7 +571,7 @@ function Geo(props) {
             //Work arround voor scaleLineControl not moving
             olMap.removeControl(scaleLineControl);
             olMap.addControl(scaleLineControl);
-            fireEvent('timeline:active', false)
+            fireEvent('timeline:state', false)
           }
         });
       }

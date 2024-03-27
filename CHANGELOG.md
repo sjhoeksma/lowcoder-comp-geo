@@ -25,4 +25,5 @@
 - Simplify the styling of the layer popup
 - Add location point on home, not just a bounce circle
 - Implement timeline function and layer types
-- Hide history layers from layer menu, and group the in on layergroup
+- Hide timeline layers from layer menu, and group the in on layergroup
+- Check if is workable on mobile
