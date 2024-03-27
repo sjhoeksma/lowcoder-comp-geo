@@ -27,6 +27,7 @@ import Notification from 'ol-ext/control/Notification'
 import { featureControl } from './FeaturesControl';
 import { geoContext } from './GEOContext';
 import { deepMerge } from './vendors/helpers/DeepMerge';
+import { layersControl } from './LayersControl';
 
 export const CompStyles = [
   {
@@ -121,24 +122,20 @@ var GEOComp = (function () {
     autoHeight: withDefault(AutoHeightControl, "fixed"),
     styles: styleControl(CompStyles),
     center: ArrayControl,
-    layers: withDefault(
-      ArrayControl,
-      `${JSON.stringify(i18nObjs.defaultData, null, 2)}`
-    ),
+    layers: layersControl(i18nObjs.defaultData),
     zoom: withDefault(NumberControl, 10),
     maxZoom: withDefault(NumberControl, 30),
     rotation: withDefault(NumberControl, 0),
     projection: stringSimpleControl("EPSG:3857"),
     bbox: arrayStringExposingStateControl("bbox", [0, 0, 0, 0]),
-    menuTitle: stringSimpleControl(""),
-    menuContent: stringSimpleControl(""),
+    menuTitle: stringSimpleControl(),
+    menuContent: stringSimpleControl(),
     events: jsonObjectExposingStateControl("events"),
     event: jsonObjectExposingStateControl("event"),
     feature: jsonObjectExposingStateControl("feature"),
     onEvent: eventHandlerControl(eventDefintions),
-    startDate: stringSimpleControl(""), //TODO replace with datepicker
-    endDate: stringSimpleControl(""),
-
+    startDate: stringSimpleControl(), //TODO replace with datepicker
+    endDate: stringSimpleControl(),
     features:
       featureControl({
         menu: false,
@@ -167,7 +164,6 @@ var GEOComp = (function () {
         "splitscreen:vertical": true,
         debug: false,
       }),
-
   };
 
 
@@ -194,6 +190,8 @@ var GEOComp = (function () {
     projection: string;
     startDate: string;
     endDate: string;
+
+    test: any
   }) => {
     //Default size of component
     const [dimensions, setDimensions] = useState({ width: 650, height: 400 });
@@ -306,7 +304,7 @@ var GEOComp = (function () {
             rotation={props.rotation}
             menuContent={props.menuContent}
             menuTitle={props.menuTitle}
-            layers={props.layers}
+            layers={props.layers.data}
             onEvent={handleEvent}
             features={props.features}
             projection={props.projection}
@@ -322,7 +320,7 @@ var GEOComp = (function () {
       return (
         <>
           <Section name="Map">
-            {children.layers.propertyView({ label: "layers" })}
+            {children.layers.propertyView({ title: "layers" })}
             {children.center.propertyView({ label: "center" })}
             {children.zoom.propertyView({ label: "zoom" })}
             {children.maxZoom.propertyView({ label: "maxZoom" })}

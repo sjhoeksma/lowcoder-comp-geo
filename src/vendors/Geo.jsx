@@ -129,6 +129,7 @@ function Geo(props) {
         }
         return 0;
       }
+      console.log("Layers", props.layers, typeof props.layers, (Array.isArray(props.layers) ? props.layers : []))
       const layers = (Array.isArray(props.layers) ? props.layers : [])
         .map(layerConfig => createLayer(layerConfig, map))
         .filter(layer => layer !== null && layer !== undefined)
@@ -138,15 +139,17 @@ function Geo(props) {
       const layerGroups = {}
       layers.forEach((layer, idx) => {
         if (layer) {
-          if (layer.get('groups')) {
+          if (layer.get('timeline')) {
+            layer.setVisible(false) //Timelines is always invisable
+            g = "timeline"
+            layerGroups[g] = layerGroups[g] ? [...layerGroups[g], layer] : [layer]
+            //Remove the layer from working layers
+            const index = workinglayers.indexOf(layer);
+            if (index >= 0) workinglayers.splice(index, 1);
+          } else if (layer.get('groups')) {
             const groups = layer.get('groups')
             const gr = Array.isArray(groups) ? groups : [groups]
             gr.forEach((g) => {
-              switch (g) {
-                case 'timeline':
-                  layer.setVisible(false) //Timelines is always invisable
-                  break;
-              }
               layerGroups[g] = layerGroups[g] ? [...layerGroups[g], layer] : [layer]
               //Remove the layer from working layers
               const index = workinglayers.indexOf(layer);
@@ -493,28 +496,21 @@ function Geo(props) {
       if (featureEnabled('menu')) olMap.addControl(toggle);
 
       if (featureEnabled('timeline')) {
-        const timelineDate = function (layer) {
-          const ex = layer.get("extra")
-          if (ex) return ex.timelineDate
-          return ""
-        }
-
-
         //Timeline
         var tline = new Timeline({
           className: 'ol-pointer ol-zoomhover ol-timeline',
           features: [],
           minDate: new Date(props.startDate || defMinDate),
           maxDate: new Date(props.endDate),
-          getFeatureDate: function (l) { return timelineDate(l) },
-          getHTML: function (l) { return timelineDate(l) }
+          getFeatureDate: function (l) { return l.get("timeline") },
+          getHTML: function (l) { return l.get("timeline") }
         });
 
         var histo = []
         tline.on('scroll', function (e) {
           var layer, dmin = Infinity;
           histo.forEach(function (l, i) {
-            var d = new Date(timelineDate(l));
+            var d = new Date(l.get("timeline"));
             var dt = Math.abs(e.date - d);
             if (dt < dmin) {
               layer = l;

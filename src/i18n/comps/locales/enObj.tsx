@@ -3,7 +3,8 @@ import { I18nObjects } from "./types";
 export const enObj: I18nObjects = {
   defaultData: [
     {
-      "name": "GeoJson with Style and Image src",
+      "label": "GeoJson",
+      "title": "GeoJson with Style and Image src",
       "type": "geojson",
       "order": 7,
       "minZoom": 0,
@@ -214,7 +215,7 @@ export const enObj: I18nObjects = {
       }
     },
     {
-      name: "Egypt DSM - COG",
+      label: "Egypt DSM - COG",
       type: "cog",
       order: 6,
       minZoom: 0,
@@ -226,7 +227,7 @@ export const enObj: I18nObjects = {
       },
     },
     {
-      name: "Contours - WFS",
+      label: "Contours - WFS",
       type: "wfs",
       order: 5,
       minZoom: 0,
@@ -243,7 +244,7 @@ export const enObj: I18nObjects = {
       },
     },
     {
-      name: "World Basemap - MVT/pbf",
+      label: "World Basemap - MVT/pbf",
       type: "mvt",
       order: 4,
       minZoom: 0,
@@ -258,7 +259,7 @@ export const enObj: I18nObjects = {
       },
     },
     {
-      name: "USA MapServer ImageLayer - ArcGIS MapServer",
+      label: "USA MapServer ImageLayer - ArcGIS MapServer",
       type: "arcgis-mapserver-image",
       order: 3,
       minZoom: 0,
@@ -271,7 +272,7 @@ export const enObj: I18nObjects = {
       },
     },
     {
-      name: "USA MapServer TileLayer - ArcGIS MapServer",
+      label: "USA MapServer TileLayer - ArcGIS MapServer",
       type: "arcgis-mapserver-tile",
       order: 2,
       minZoom: 0,
@@ -283,7 +284,7 @@ export const enObj: I18nObjects = {
       },
     },
     {
-      name: "NASA | BlueMarble NextGeneration - WMS",
+      label: "NASA | BlueMarble NextGeneration - WMS",
       type: "wms",
       order: 1,
       minZoom: 0,
@@ -302,7 +303,7 @@ export const enObj: I18nObjects = {
       opacity: 1,
     },
     {
-      name: "Mapbox Style GL - JSON",
+      label: "Mapbox Style GL - JSON",
       type: "stylegl",
       order: 0,
       minZoom: 0,
@@ -311,20 +312,18 @@ export const enObj: I18nObjects = {
       opacity: 1,
       selectable: false,
       splitscreen: "right",
-      groups: ['base'],
       source: {
         url: "https://wms.wheregroup.com/tileserver/style/osm-bright.json",
         projection: "EPSG:3857",
       },
     },
     {
-      name: "Open Street Map - XYZ",
+      label: "Open Street Map - XYZ",
       type: "xyz",
       order: -1,
       minZoom: 0,
       maxZoom: 19,
       visible: false,
-      groups: ['base'],
       source: {
         url: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
       },

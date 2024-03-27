@@ -71,5 +71,33 @@ export const en = {
     "splitscreen:horizontal": "Horizontal (Splitscreen)",
     "splitscreen:vertical": "Vertical (Splitscreen)",
     debug: "Log debug to console"
+  },
+  layer: {
+    type: "Type",
+    name: "Name",
+    label: "Name",
+    title: "Title",
+    minZoom: "Min Zoom",
+    maxZoom: "Max Zoom",
+    visible: "Visible",
+    opacity: "Opacity",
+    selectable: "Selectable",
+    groups: "Group(s)",
+    order: "Order",
+    splitscreen: "Splitscreen",
+    timeline: "Timeline",
+    userVisible: "Visible in layermenu",
+    source: "Source",
+    url: 'url',
+    attributions: 'attributions',
+    params: 'params',
+    serverType: 'serverType',
+    crossOrigin: 'crossOrigin',
+    data: 'data',
+    projection: 'projection',
+    tileSize: 'tileSize',
+    nodata: 'nodata',
+    ratio: 'ratio',
+    style: 'style'
   }
 };

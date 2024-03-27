@@ -26,7 +26,7 @@ export function createLayer(layerConfig, map) {
   switch (layerConfig.type) {
     case 'mvt':
       return new VectorTileLayer({
-        name: layerConfig.name,
+        name: layerConfig.label,
         title: layerConfig.title || layerConfig.name,
         minZoom: layerConfig.minZoom,
         maxZoom: layerConfig.maxZoom,
@@ -46,7 +46,7 @@ export function createLayer(layerConfig, map) {
       });
     case 'wms':
       return new TileLayer({
-        name: layerConfig.name,
+        name: layerConfig.label,
         title: layerConfig.title || layerConfig.name,
         minZoom: layerConfig.minZoom,
         maxZoom: layerConfig.maxZoom,
@@ -67,7 +67,7 @@ export function createLayer(layerConfig, map) {
       });
     case 'wfs':
       return new VectorLayer({
-        name: layerConfig.name,
+        name: layerConfig.label,
         title: layerConfig.title || layerConfig.name,
         minZoom: layerConfig.minZoom,
         maxZoom: layerConfig.maxZoom,
@@ -86,7 +86,7 @@ export function createLayer(layerConfig, map) {
       });
     case 'xyz':
       return new TileLayer({
-        name: layerConfig.name,
+        name: layerConfig.label,
         title: layerConfig.title || layerConfig.name,
         minZoom: layerConfig.minZoom,
         maxZoom: layerConfig.maxZoom,
@@ -104,7 +104,7 @@ export function createLayer(layerConfig, map) {
       });
     case 'geojson':
       return new VectorLayer({
-        name: layerConfig.name,
+        name: layerConfig.label,
         title: layerConfig.title || layerConfig.name,
         minZoom: layerConfig.minZoom,
         maxZoom: layerConfig.maxZoom,
@@ -129,7 +129,7 @@ export function createLayer(layerConfig, map) {
 
     case 'cog':
       return new TileLayer({
-        name: layerConfig.name,
+        name: layerConfig.label,
         title: layerConfig.title || layerConfig.name,
         minZoom: layerConfig.minZoom,
         maxZoom: layerConfig.maxZoom,
@@ -161,7 +161,7 @@ export function createLayer(layerConfig, map) {
     case 'stylegl':
       const layer = new VectorTileLayer({
         declutter: true,
-        name: layerConfig.name,
+        name: layerConfig.label,
         title: layerConfig.title || layerConfig.name,
         minZoom: layerConfig.minZoom,
         maxZoom: layerConfig.maxZoom,
@@ -180,11 +180,11 @@ export function createLayer(layerConfig, map) {
       });
       applyStyle(layer, layerConfig.source?.url, '');
       applyBackground(layer, layerConfig.source?.url);
-
       return layer;
+
     case 'arcgis-mapserver-tile':
       return new TileLayer({
-        name: layerConfig.name,
+        name: layerConfig.label,
         title: layerConfig.title || layerConfig.name,
         minZoom: layerConfig.minZoom,
         maxZoom: layerConfig.maxZoom,
@@ -202,9 +202,10 @@ export function createLayer(layerConfig, map) {
           crossOrigin: layerConfig.source.crossOrigin,
         }),
       });
+
     case 'arcgis-mapserver-image':
       return new ImageLayer({
-        name: layerConfig.name,
+        name: layerConfig.label,
         title: layerConfig.title || layerConfig.name,
         minZoom: layerConfig.minZoom,
         maxZoom: layerConfig.maxZoom,
