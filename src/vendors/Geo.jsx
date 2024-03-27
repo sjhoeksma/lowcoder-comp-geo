@@ -492,20 +492,22 @@ function Geo(props) {
       if (featureEnabled('menu')) olMap.addControl(toggle);
 
       if (featureEnabled('timeline')) {
-        //From layers get all histroy
-        var histo = []
-        props.layers.forEach((layer) => {
-          if (layer.type && layer.date && (
-            (Array.isArray(layer.get("groups")) && layer.get("groups").includes('history')) ||
-            (typeof layer.get("groups") === "string" && layer.get("groups") == 'history'))) {
-            histo.push[layer]
-          }
-        })
         const timelineDate = function (layer) {
           const ex = layer.get("extra")
           if (ex) return ex.timelineDate
           return ""
         }
+
+        //From layers get all histroy
+        var histo = []
+        props.layers.forEach((layer) => {
+          if (layer.get("groups") && timelineDate(layer) && (
+            (Array.isArray(layer.get("groups")) && layer.get("groups").includes('timeline')) ||
+            (typeof layer.get("groups") === "string" && layer.get("groups") == 'timeline'))) {
+            histo.push[layer]
+          }
+        })
+
         //Timeline
         var tline = new Timeline({
           className: 'ol-pointer ol-zoomhover ol-timeline',
