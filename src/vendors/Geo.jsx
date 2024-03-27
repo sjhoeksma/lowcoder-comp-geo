@@ -499,32 +499,18 @@ function Geo(props) {
           return ""
         }
 
-        //From layers get all histroy
-        var histo = []
-        function fillTimeline(layers) {
-          layers.forEach((layer) => {
-            if (layer.get("groups") && timelineDate(layer) && (
-              (Array.isArray(layer.get("groups")) && layer.get("groups").includes('timeline')) ||
-              (typeof layer.get("groups") === "string" && layer.get("groups") == 'timeline'))) {
-              histo.push[layer]
-            } else if (layer instanceof LayerGroup) {
-              fillTimeline(layers.getLayers())
-            }
-          })
-        }
-        fillTimeline(props.layers)
-
 
         //Timeline
         var tline = new Timeline({
           className: 'ol-pointer ol-zoomhover ol-timeline',
-          features: histo,
+          features: [],
           minDate: new Date(props.startDate || defMinDate),
           maxDate: new Date(props.endDate),
           getFeatureDate: function (l) { return timelineDate(l) },
           getHTML: function (l) { return timelineDate(l) }
         });
 
+        var histo = []
         tline.on('scroll', function (e) {
           var layer, dmin = Infinity;
           histo.forEach(function (l, i) {
@@ -558,6 +544,22 @@ function Geo(props) {
         //Toggle the timeline classes
         timeline.on("change:active", (event) => {
           if (event.active) {
+            //From layers get all histroy
+            function fillTimeline(layers) {
+              layers.forEach((layer) => {
+                console.log(layer)
+                if (layer instanceof LayerGroup) {
+                  fillTimeline(layer.getLayers())
+                } else if (layer.get("groups") && timelineDate(layer) && (
+                  (Array.isArray(layer.get("groups")) && layer.get("groups").includes('timeline')) ||
+                  (typeof layer.get("groups") === "string" && layer.get("groups") == 'timeline'))) {
+                  histo.push[layer]
+                }
+              })
+            }
+            fillTimeline(olMap.getLayers())
+            tline.setFeatures(histo)
+
             scaleLineControl.element.classList.add('timeline')
             geoTracker.element.classList.add('timeline')
             geoLocation.element.classList.add('timeline')
