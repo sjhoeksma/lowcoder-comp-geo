@@ -1,3 +1,18 @@
+# [1.3.0-dev.62](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.61...v1.3.0-dev.62) (2024-03-27)
+
+
+### Bug Fixes
+
+* added link to documentation side ([56be5c4](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/56be5c45b8f55e8fe6f054b7ed46d1cbdb1e0edd))
+* markdown link ([84472b7](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/84472b7c85f106a8257ed1907141086f89164191))
+* readme ([5e30f77](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/5e30f779d018c5dd377be62a4ee82cc213eae430))
+* Sorting ([80d9954](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/80d9954fc40ad70a71469c946f46a64ab7e6ca3b))
+* splitscreen buttons ([e9dc8fb](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/e9dc8fb7dfc43659997db1ef655945007a8b9724))
+* splitscreen support ([8e06570](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/8e06570382f0e44b4cd5a5d2a0b864e3496623d1))
+* timeline ([e985b83](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/e985b83ce600477af366e8b601c65b186bb395e3))
+* timeline ([753b4c5](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/753b4c524c4f097b3950e5c94cc98e9f4405e45e))
+* timeline ([10c3036](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/10c30361abf94acf04ac00c082484d5d0fc4e7a3))
+* timeline ([9618b2a](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/9618b2a52b6160574002f0974166530e302d2566))
 
 ## [ToDo]
 - Add left mouse event -> allow to popup
