@@ -1,3 +1,11 @@
+# [1.3.0-dev.67](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.66...v1.3.0-dev.67) (2024-03-28)
+
+
+### Bug Fixes
+
+* json format for layer ([1a8d675](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/1a8d675cd3d3d90b8d3d132dba8f8fec6763e87b))
+* moved getFormat to source ([4c9c8e9](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/4c9c8e90c585fede106e4af8e6db363de09958d9))
+
 # [1.3.0-dev.66](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.65...v1.3.0-dev.66) (2024-03-28)
 
 
