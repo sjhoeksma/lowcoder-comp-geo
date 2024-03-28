@@ -1,3 +1,10 @@
+# [1.3.0-dev.66](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.65...v1.3.0-dev.66) (2024-03-28)
+
+
+### Bug Fixes
+
+* format in getFeatues ([d8b874d](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/d8b874d43f09676518c3a7701a4713696016e097))
+
 # [1.3.0-dev.65](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.64...v1.3.0-dev.65) (2024-03-28)
 
 
