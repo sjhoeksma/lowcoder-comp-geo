@@ -543,12 +543,9 @@ function Geo(props) {
             //From layers get all histroy
             function fillTimeline(layers) {
               layers.forEach((layer) => {
-                console.log(layer)
                 if (layer instanceof LayerGroup) {
                   fillTimeline(layer.getLayers())
-                } else if (layer.get("groups") && timelineDate(layer) && (
-                  (Array.isArray(layer.get("groups")) && layer.get("groups").includes('timeline')) ||
-                  (typeof layer.get("groups") === "string" && layer.get("groups") == 'timeline'))) {
+                } else if (layer.get("timeline")) {
                   histo.push[layer]
                 }
               })

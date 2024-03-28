@@ -182,6 +182,8 @@ LayerObjectOption = class extends LayerObjectOption {
 };
 
 
+//TODO: Change this to a function so it can be used directly instead of data
+
 export function layersControl(config?: any) {
     const manualOptions = config ? config : [
         { label: "Test", title: "test" }
