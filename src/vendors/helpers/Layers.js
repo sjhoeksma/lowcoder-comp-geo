@@ -275,7 +275,7 @@ export function setFeatures(map, data, name, clear) {
     const reader = layer.getFormat || new GeoJSON()
     if (reader && data) {
       //Now add the features based on types
-      if (Array.isArray(params[0])) {
+      if (Array.isArray(data)) {
         data.forEach((rec) => {
           source.setFeature(reader.readFeature(rec))
         })
