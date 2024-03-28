@@ -1,3 +1,11 @@
+# [1.3.0-dev.63](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.62...v1.3.0-dev.63) (2024-03-28)
+
+
+### Bug Fixes
+
+* setFeature ([8df627e](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/8df627e2dd6554b1f440a77209f38f05825c0f89))
+* timeline selection ([dbc9be6](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/dbc9be6e233e9a60926687297626edc276373a8a))
+
 # [1.3.0-dev.62](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.61...v1.3.0-dev.62) (2024-03-27)
 
 
