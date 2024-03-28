@@ -71,3 +71,5 @@
 - Implement timeline function and layer types
 - Hide timeline layers from layer menu, and group the in on layergroup
 - Check if is workable on mobile
+- Problem with changing drawlayer, will not setFeatures
+- Loading of JSON not working

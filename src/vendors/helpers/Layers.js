@@ -118,7 +118,7 @@ export function createLayer(layerConfig, map) {
         splitscreen: layerConfig.splitscreen,
         displayInLayerSwitcher: layerConfig.userVisible,
         source: new VectorSource({
-          features: new GeoJSON().readFeatures(layerConfig.source.data, {
+          features: new GeoJSON().readFeatures(JSON.stringify(layerConfig.source.data, null), {
             // Ensure the features are read with the correct projection
             dataProjection: layerConfig.source.projection || 'EPSG:4326', // Assuming the GeoJSON is in WGS 84
             featureProjection: map.getView().getProjection() || 'EPSG:3857' // Assuming the map projection
@@ -254,49 +254,51 @@ export function findLayer(map, name) {
 }
 
 export function setFeatures(map, data, name, clear) {
-  const layer = findLayer(map, name);
-  if (layer) {
-    const source = layer.getSource()
-    //Check if there is a undo stack connected to this source, if so clear and disable
-    var undos = []
-    //Disable all undo stacks
-    map.getControls().forEach((c) => {
-      if (c instanceof UndoRedo && c.getActive()) {
-        undos.push(c)
-        c.setActive(false)
-      }
-    })
+  return new Promise((resolve, reject) => {
+    const layer = findLayer(map, name);
+    if (layer) {
+      const source = layer.getSource()
+      //Check if there is a undo stack connected to this source, if so clear and disable
+      var undos = []
+      //Disable all undo stacks
+      map.getControls().forEach((c) => {
+        if (c instanceof UndoRedo && c.getActive()) {
+          undos.push(c)
+          c.setActive(false)
+        }
+      })
 
-    //Check if we should clear te source
-    if (clear) {
-      source.clear()
-      undos.forEach((c) => { c.clear() })
-    }
-    const reader = (source.getFormat ? source.getFormat() : null) || new GeoJSON()
-    if (reader && data) {
-      //Now add the features based on types
-      if (Array.isArray(data)) {
-        data.forEach((rec) => {
-          if (source.setFeatures) {
-            source.setFeatures(reader.readFeatures(rec))
-          } else {
-            source.addFeatures(reader.readFeatures(rec))
-          }
-        })
-      } else {
-        if (source.setFeatures) {
-          source.setFeatures(reader.readFeatures(data))
+      //Check if we should clear te source
+      if (clear) {
+        source.clear()
+        undos.forEach((c) => { c.clear() })
+      }
+      const reader = (source.getFormat ? source.getFormat() : null) || new GeoJSON()
+      if (reader && data) {
+        //Now add the features based on types
+        if (Array.isArray(data)) {
+          data.forEach((rec) => {
+            if (source.setFeatures) {
+              source.setFeatures(reader.readFeatures(rec))
+            } else {
+              source.addFeatures(reader.readFeatures(rec))
+            }
+          })
         } else {
-          source.addFeatures(reader.readFeatures(data))
+          if (source.setFeatures) {
+            source.setFeatures(reader.readFeatures(data))
+          } else {
+            source.addFeatures(reader.readFeatures(data))
+          }
         }
       }
+      //Enable the undo stack
+      undos.forEach((c) => { c.setActive(true) })
+      //Enable the connected undo check
+      return resolve()//Exit, work is done
     }
-    //Enable the undo stack
-    undos.forEach((c) => { c.setActive(true) })
-    //Enable the connected undo check
-    return true//Exit, work is done
-  }
-  return false
+    return reject()
+  })
 }
 
 //Read feature of map
@@ -307,7 +309,7 @@ export function getFeatures(map, name) {
     //Check if there is a undo stack connected to this source, if so clear and disable
     return new GeoJSON().writeFeaturesObject(source.getFeatures())
   }
-  return false
+  return Promise.reject()
 }
 
 //Clear feature of map
@@ -315,7 +317,7 @@ export function clearFeatures(map, name) {
   const layer = findLayer(map, name);
   if (layer) {
     layer.getSource().clear()
-    return true
+    return Promise.resolve()
   }
-  return false
+  return Promise.reject()
 }
