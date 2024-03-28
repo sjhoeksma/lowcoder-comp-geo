@@ -272,15 +272,23 @@ export function setFeatures(map, data, name, clear) {
       source.clear()
       undos.forEach((c) => { c.clear() })
     }
-    const reader = layer.getFormat || new GeoJSON()
+    const reader = layer.getFormat() || new GeoJSON()
     if (reader && data) {
       //Now add the features based on types
       if (Array.isArray(data)) {
         data.forEach((rec) => {
-          source.setFeature(reader.readFeature(rec))
+          if (source.setFeatures) {
+            source.setFeatures(reader.readFeatures(rec))
+          } else {
+            source.addFeatures(reader.readFeatures(rec))
+          }
         })
       } else {
-        source.setFeature(reader.readFeature(data))
+        if (source.setFeatures) {
+          source.setFeatures(reader.readFeatures(data))
+        } else {
+          source.addFeatures(reader.readFeatures(data))
+        }
       }
     }
     //Enable the undo stack
