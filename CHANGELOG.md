@@ -1,3 +1,10 @@
+# [1.3.0-dev.65](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.64...v1.3.0-dev.65) (2024-03-28)
+
+
+### Bug Fixes
+
+* setFeatures ([9f635eb](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/9f635eba332395e53d38f29864756a0e1547fe33))
+
 # [1.3.0-dev.64](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.63...v1.3.0-dev.64) (2024-03-28)
 
 
