@@ -98,6 +98,9 @@ export const en = {
     tileSize: 'tileSize',
     nodata: 'nodata',
     ratio: 'ratio',
-    style: 'style'
+    style: 'style',
+    map: 'Map',
+    layer: 'Layer ',
+    settings: 'Stettings'
   }
 };

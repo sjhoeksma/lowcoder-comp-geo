@@ -20,7 +20,7 @@ import styles from "./styles.module.css";
 import { i18nObjs, trans } from "./i18n/comps";
 import { Geo } from "./vendors";
 import { version } from '../package.json';
-import { animate, showPopup, addFeatures, readFeatures, clearFeatures } from './vendors/helpers'
+import { animate, showPopup, getFeatures, setFeatures, clearFeatures } from './vendors/helpers'
 import { useResizeDetector } from "react-resize-detector";
 // @ts-ignore
 import Notification from 'ol-ext/control/Notification'
@@ -475,7 +475,7 @@ GEOComp = withMethodExposing(GEOComp, [
   },
   {
     method: {
-      name: "addFeatures",
+      name: "setFeatures",
       description: "Add feature to layer",
       params: [
         {
@@ -494,12 +494,12 @@ GEOComp = withMethodExposing(GEOComp, [
     },
     execute: async (comp: any, params: any) => {
       var map = comp.exposingValues.events['map:create']
-      return addFeatures(map, params[0], params[1], params[2])
+      return setFeatures(map, params[0], params[1], params[2] == true)
     }
   },
   {
     method: {
-      name: "readFeatures",
+      name: "getFeatures",
       description: "Read features from layer",
       params: [
         {
@@ -510,7 +510,7 @@ GEOComp = withMethodExposing(GEOComp, [
     },
     execute: async (comp: any, params: any) => {
       var map = comp.exposingValues.events['map:create']
-      return readFeatures(map, params[0])
+      return getFeatures(map, params[0])
     }
   },
   {

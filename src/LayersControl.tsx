@@ -7,12 +7,12 @@ import {
     NumberControl,
     withDefault,
     dropdownControl,
-    Section,
     StringOrJSONObjectControl,
     JSONObjectControl,
     manualOptionsControl,
 } from 'lowcoder-sdk'
 import { trans } from "./i18n/comps";
+import { Divider } from "antd"
 
 
 function layerSourceControl() {
@@ -106,9 +106,13 @@ function layerSourceControl() {
 
             return (
                 <>
-                    <Section name={params.label}>
-                        {list}
-                    </Section>
+                    <Divider orientation="left" dashed orientationMargin="0px" style={{ margin: "0px" }} >
+                        {trans("layer.source")}
+                    </Divider>
+                    {list}
+                    <Divider orientation="left" dashed orientationMargin="0px" style={{ margin: "0px" }} >
+                        {trans("layer.settings")}
+                    </Divider>
                 </>
             );
         }
@@ -132,6 +136,9 @@ var LayerObjectOption = new MultiCompBuilder(
             { label: "arcgis-mapserver-image", value: "arcgis mapserver image" }
         ]),
         source: layerSourceControl(),
+        visible: withDefault(BoolPureControl, true),
+        selectable: withDefault(BoolPureControl, true),
+        userVisible: withDefault(BoolPureControl, true),
         order: NumberControl,
         minZoom: withDefault(NumberControl, 0),
         maxZoom: withDefault(NumberControl, 30),
@@ -143,10 +150,7 @@ var LayerObjectOption = new MultiCompBuilder(
             { label: "Left", value: "left" },
             { label: "Right", value: "right" }]),
         timeline: StringControl,
-        visible: withDefault(BoolPureControl, true),
-        selectable: withDefault(BoolPureControl, true),
-        userVisible: withDefault(BoolPureControl, true),
-        style: JSONObjectControl,
+        //  style: JSONObjectControl,
     },
     (props: any) => props)
     .setPropertyViewFn((children: any) => (<></>))
@@ -174,7 +178,8 @@ LayerObjectOption = class extends LayerObjectOption {
             }
         })
         return (
-            <>
+            <>  <Divider orientation="left" dashed orientationMargin="0px" style={{ margin: "0px" }}>
+                {trans("layer.map")}</Divider>
                 {list}
             </>
         );
@@ -194,7 +199,6 @@ export function layersControl(config?: any) {
             uniqField: "label"
         })
     };
-    var orgView: any
 
     //Class is rebuiled not retuning same class 
     class LayersControlTemp extends new MultiCompBuilder(childrenMap, (props: any) => props)
@@ -209,18 +213,19 @@ export function layersControl(config?: any) {
         }): ReactNode {
             return (
                 <>
-                    {this.children.data.propertyView({ title: params.title, newOptionLabel: 'Layer ' })}
+                    {this.children.data.propertyView({ title: params.title, newOptionLabel: trans("layer.layer") })}
                 </>
             );
         }
+        orgView: any
         getView(): any {
             const p = super.getView()
-            var changed = JSON.stringify(p, null) != JSON.stringify(orgView, null)
+            var changed = JSON.stringify(p, null) != JSON.stringify(this.orgView, null)
             if (changed) {
-                orgView = p
+                this.orgView = p
                 return p
             }
-            return orgView
+            return this.orgView
         }
     }
     return LayersControlTemp;

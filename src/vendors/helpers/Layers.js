@@ -16,6 +16,7 @@ import GeoJSON from 'ol/format/GeoJSON';
 import { geoJsonStyleFunction } from './Styles'
 import { applyBackground, applyStyle } from 'ol-mapbox-style';
 import { createXYZ } from 'ol/tilegrid.js';
+import UndoRedo from 'ol-ext/interaction/UndoRedo'
 
 export function createLayer(layerConfig, map) {
   if (!layerConfig || !layerConfig.type) {
@@ -252,25 +253,38 @@ export function findLayer(map, name) {
   return null
 }
 
-export function addFeatures(map, data, name, clear) {
+export function setFeatures(map, data, name, clear) {
   const layer = findLayer(map, name);
   if (layer) {
     const source = layer.getSource()
     //Check if there is a undo stack connected to this source, if so clear and disable
+    var undos = []
+    //Disable all undo stacks
+    map.getControls().forEach((c) => {
+      if (c instanceof UndoRedo && c.getActive()) {
+        undos.push(c)
+        c.setActive(false)
+      }
+    })
 
     //Check if we should clear te source
-    if (params[2] == true) source.clear()
+    if (clear) {
+      source.clear()
+      undos.forEach((c) => { c.clear() })
+    }
     const reader = layer.getFormat || new GeoJSON()
     if (reader && data) {
       //Now add the features based on types
       if (Array.isArray(params[0])) {
         data.forEach((rec) => {
-          source.addFeature(reader.readFeature(rec))
+          source.setFeature(reader.readFeature(rec))
         })
       } else {
-        source.addFeature(reader.readFeature(data))
+        source.setFeature(reader.readFeature(data))
       }
     }
+    //Enable the undo stack
+    undos.forEach((c) => { c.setActive(true) })
     //Enable the connected undo check
     return true//Exit, work is done
   }
@@ -278,7 +292,7 @@ export function addFeatures(map, data, name, clear) {
 }
 
 //Read feature of map
-export function readFeatures(map, name) {
+export function getFeatures(map, name) {
   const layer = findLayer(map, name);
   if (layer) {
     const source = layer.getSource()

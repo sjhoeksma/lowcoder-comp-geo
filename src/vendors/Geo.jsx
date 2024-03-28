@@ -56,12 +56,14 @@ function Geo(props) {
   const [drawVector] = useState(new VectorLayer({
     name: 'draw',
     title: "Drawing",
+    displayInLayerSwitcher: false,
     source: new VectorSource(),
     style: geoJsonStyleFunction
   }))
   // Vector layer for the tracker
   const [trackerVector] = useState(new VectorLayer({
     name: 'tracker',
+    displayInLayerSwitcher: false,
     source: new VectorSource(),
   }))
 
@@ -129,7 +131,6 @@ function Geo(props) {
         }
         return 0;
       }
-      console.log("Layers", props.layers, typeof props.layers, (Array.isArray(props.layers) ? props.layers : []))
       const layers = (Array.isArray(props.layers) ? props.layers : [])
         .map(layerConfig => createLayer(layerConfig, map))
         .filter(layer => layer !== null && layer !== undefined)
@@ -141,7 +142,7 @@ function Geo(props) {
         if (layer) {
           if (layer.get('timeline')) {
             layer.setVisible(false) //Timelines is always invisable
-            g = "timeline"
+            var g = "timeline"
             layerGroups[g] = layerGroups[g] ? [...layerGroups[g], layer] : [layer]
             //Remove the layer from working layers
             const index = workinglayers.indexOf(layer);
