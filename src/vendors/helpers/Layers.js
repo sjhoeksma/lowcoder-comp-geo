@@ -18,6 +18,16 @@ import { applyBackground, applyStyle } from 'ol-mapbox-style';
 import { createXYZ } from 'ol/tilegrid.js';
 import UndoRedo from 'ol-ext/interaction/UndoRedo'
 
+/**
+ * Creates and returns an OpenLayers layer instance for the given layer configuration object.
+ * 
+ * Supports various layer types like MVT, WMS, WFS, XYZ, GeoJSON etc. and handles creating the 
+ * appropriate OpenLayers layer class and source based on the provided layerConfig type.
+ * 
+ * Returns null if the layer type is not supported.
+ * 
+ * This is designed to be used as a helper utility for applications using OpenLayers.
+ */
 export function createLayer(layerConfig, map) {
   if (!layerConfig || !layerConfig.type) {
     console.warn("Skipping layer due to missing type or configuration:", layerConfig);
@@ -246,7 +256,15 @@ export function createLayer(layerConfig, map) {
   }
 };
 
+/**
+ * Finds a layer in the given map by name.
+ * 
+ * @param {ol.Map} map - The map to search for the layer.
+ * @param {string} name - The name of the layer to find.
+ * @returns {ol.layer.Base|null} The layer with the given name, or null if not found.
+ */
 export function findLayer(map, name) {
+  if (!map) return null
   const layers = map.getLayers().getArray();
   for (var i = 0; i < layers.length; i++) {
     const layer = layers[i]
@@ -257,8 +275,16 @@ export function findLayer(map, name) {
   return null
 }
 
+/**
+ * Finds a layer by name on the given map and sets its features, optionally clearing existing features first.
+ * 
+ * @param {ol.Map} map The OpenLayers map instance
+ * @param {Object|Array} data The GeoJSON feature(s) to add to the layer 
+ * @param {string} name The name of the layer to update 
+ * @param {boolean} clear Whether to clear existing features before adding new ones
+ * @returns {boolean} True if the layer was found and updated, false otherwise
+*/
 export function setFeatures(map, data, name, clear) {
-
   const layer = findLayer(map, name);
   if (layer) {
     const source = layer.getSource()
@@ -308,7 +334,12 @@ export function setFeatures(map, data, name, clear) {
   return false
 }
 
-//Read feature of map
+
+/**
+ * Gets the features from the layer with the given name.
+ * Returns the features as a GeoJSON object if the layer is found, 
+ * otherwise returns false.
+*/
 export function getFeatures(map, name) {
   const layer = findLayer(map, name);
   if (layer) {
@@ -322,7 +353,13 @@ export function getFeatures(map, name) {
   return false
 }
 
-//Clear feature of map
+
+/**
+ * Clears all features from the layer with the given name.
+ * @param {ol.Map} map OpenLayers map instance
+ * @param {string} name Name of the layer to clear
+ * @returns {boolean} True if layer was found and cleared, false otherwise
+ */
 export function clearFeatures(map, name) {
   const layer = findLayer(map, name);
   if (layer) {
