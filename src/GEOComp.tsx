@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import {
   UICompBuilder,
   NameConfig,
@@ -20,14 +20,13 @@ import styles from "./styles.module.css";
 import { i18nObjs, trans } from "./i18n/comps";
 import { Geo } from "./vendors";
 import { version } from '../package.json';
-import { animate, showPopup, getFeatures, setFeatures, clearFeatures } from './vendors/helpers'
+import { animate, showPopup, getFeatures, setFeatures, clearFeatures, deepMerge } from './vendors/helpers'
 import { useResizeDetector } from "react-resize-detector";
-// @ts-ignore
-import Notification from 'ol-ext/control/Notification'
 import { featureControl } from './FeaturesControl';
 import { geoContext } from './GEOContext';
-import { deepMerge } from './vendors/helpers/DeepMerge';
 import { layersControl } from './LayersControl';
+// @ts-ignore
+import Notification from 'ol-ext/control/Notification'
 
 export const CompStyles = [
   {
