@@ -1,3 +1,10 @@
+# [1.3.0-dev.69](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.68...v1.3.0-dev.69) (2024-03-29)
+
+
+### Bug Fixes
+
+* Added projection getFeatures ([3efd1f5](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/3efd1f5b89e844ed11e3b1d2fdc347c3e6e4a11b))
+
 # [1.3.0-dev.68](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.67...v1.3.0-dev.68) (2024-03-29)
 
 
