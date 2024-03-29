@@ -7,6 +7,14 @@ import {
 import { trans } from "./i18n/comps";
 
 
+/**
+ * Generates a feature control component by mapping feature flag keys 
+ * to boolean controls.
+ * 
+ * Accepts a config object with feature flag keys mapped to their default 
+ * enabled values. Renders boolean controls for each feature flag, with 
+ * getView() returning the current enabled state of each flag.
+ */
 export function featureControl(config?: any) {
     const childrenMap: any = new Object();
     const initConfig = Object.assign({}, config)
