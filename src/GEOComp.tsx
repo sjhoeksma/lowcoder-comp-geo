@@ -156,6 +156,7 @@ var GEOComp = (function () {
         "modify:move": true,
         "modify:point": true,
         "modify:line": true,
+        "modify:oval": true,
         "modify:polygon": true,
         "modify:delete": true,
         "modify:redo": true,

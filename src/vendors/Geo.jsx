@@ -31,6 +31,7 @@ import Swipe from 'ol-ext/control/Swipe'
 import UndoRedo from 'ol-ext/interaction/UndoRedo'
 import ModifyFeature from 'ol-ext/interaction/ModifyFeature'
 import LayerSwitcher from 'ol-ext/control/LayerSwitcher'
+import DrawRegular from 'ol-ext/interaction/DrawRegular'
 
 ///Local import
 import RotateNorthControl from './RotateNorthControl'
@@ -55,7 +56,6 @@ function Geo(props) {
   // Vector layer for drawing
   const [drawVector] = useState(new VectorLayer({
     name: 'draw',
-    title: "Drawing",
     displayInLayerSwitcher: false,
     source: new VectorSource(),
     style: geoJsonStyleFunction
@@ -223,7 +223,8 @@ function Geo(props) {
       if (!featureEnabled('menu')) mainbar.element.classList.add('nomenu')
       if ((featureEnabled('modify')
         && (featureEnabled('modify:move') || featureEnabled('modify:point') || featureEnabled('modify:line')
-          || featureEnabled('modify:polygon') || featureEnabled('modify:undo') || featureEnabled('modify:redo')
+          || featureEnabled('modify:polygon') || featureEnabled('modify:oval')
+          || featureEnabled('modify:undo') || featureEnabled('modify:redo')
           || featureEnabled('modify:delete')))
         || featureEnabled('save')
         || featureEnabled('center'))
@@ -250,7 +251,8 @@ function Geo(props) {
           group: false			// group controls together
         });
         if (featureEnabled('modify:move') || featureEnabled('modify:point') || featureEnabled('modify:line')
-          || featureEnabled('modify:polygon') || featureEnabled('modify:undo') || featureEnabled('modify:redo')
+          || featureEnabled('modify:polygon') || featureEnabled('modify:oval')
+          || featureEnabled('modify:undo') || featureEnabled('modify:redo')
           || featureEnabled('modify:delete'))
           mainbar.addControl(editbar);
 
@@ -290,6 +292,24 @@ function Geo(props) {
           })
         });
         if (featureEnabled('modify:point')) editbar.addControl(pedit);
+
+        // Add editing tools
+        var cedit = new Toggle({
+          html: '<i class="fa fa-circle" ></i>',
+          title: 'Oval',
+          onToggle: (active) => {
+            olMap.removeInteraction(snap);
+            olMap.removeInteraction(modify);
+          },
+          interaction: new DrawRegular({
+            source: drawVector.getSource(),
+            // geometryName: 'geom',
+            // condition: ol.events.condition.altKeyOnly,
+            sides: 0,
+            //canRotate: $("#rotation").prop('checked')
+          })
+        });
+        if (featureEnabled('modify:oval')) editbar.addControl(cedit);
 
         var ledit = new Toggle({
           html: '<i class="fa fa-share-alt" ></i>',
@@ -597,7 +617,7 @@ function Geo(props) {
         olMap.forEachFeatureAtPixel(evt.pixel, function (feature, layer) {
           // Vector feature click logic
           if (!(featureEnabled('modify') &&
-            (pdelete.getActive() || pmove.getActive() ||
+            (pdelete.getActive() || pmove.getActive() || cedit.getActive() ||
               pedit.getActive() || ledit.getActive() || fedit.getActive()))
             && layer && layer.get("selectable") !== false && feature) { //only fire event if we are not drawing
             fireEvent('click:feature', {

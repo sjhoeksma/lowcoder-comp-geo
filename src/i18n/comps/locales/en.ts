@@ -64,6 +64,7 @@ export const en = {
     "modify:move": "Select feature (Modify)",
     "modify:point": "Add point (Modify)",
     "modify:line": "Add line (Modify)",
+    "modify:oval": "Add oval (Modify)",
     "modify:polygon": "Add polygon (Modify)",
     "modify:delete": "Delete feature (Modify)",
     "modify:redo": "Redo feature (Modify)",
