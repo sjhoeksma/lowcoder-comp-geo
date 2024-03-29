@@ -22,5 +22,13 @@
             "selection": true,
             "currentFile": true
         }
+    },
+    "methodexposed": {
+        "description": "Markdown for all Methods",
+        "prompt": "Write code assigning a variable with for all exposed methods within withMethodExposing of the selection a markdown. Summarize what it is meant to accomplish including all parameters.Use markdown formating to make the it organized and readable.",
+        "context": {
+            "selection": true,
+            "currentFile": true
+        }
     }
 }

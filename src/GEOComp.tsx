@@ -488,7 +488,7 @@ GEOComp = withMethodExposing(GEOComp, [
   {
     method: {
       name: "getFeatures",
-      description: "Read features from layer",
+      description: "Get features from layer",
       params: [
         {
           name: "layer",
@@ -595,7 +595,7 @@ GEOComp = withMethodExposing(GEOComp, [
       //Event config needs to be added
       return data
     }
-  },
+  }
 ]);
 
 

@@ -123,6 +123,89 @@ GEOComp exposes events that can be handled in the parent component:
 
 This allows integrating custom popup content, selection logic, etc.
 
+## Exposed Methods
+
+### animate
+
+Perform animation
+
+**Parameters:**
+
+- `coords` (JSONValue): Coordinates for animation
+- `duration` (number): Duration of animation
+- `properties` (JSON): Properties for feature
+- `animation` (string): Type of animation (toLocation,toExtent,pulse,home)
+
+### map
+
+Return the last map object
+
+**Parameters:**
+
+None
+
+### notify
+
+Notify message
+
+**Parameters:** 
+
+- `message` (string): Notification message
+- `duration` (number): Display duration
+
+### showPopup
+
+Displays a popup at the specified coordinates with a given message
+
+**Parameters:**
+
+- `coordinates` (JSONValue): Coordinates where the popup should appear 
+- `message` (string): Message to display in the popup
+
+### setFeatures
+
+Add feature to layer
+
+**Parameters:**
+
+- `data` (JSONValue): GeoJSON feature(s) to add 
+- `layer` (string): Layer name
+- `clear` (boolean, optional): Clear layer first if true
+
+### getFeatures 
+
+Get features from layer
+
+**Parameters:**
+
+- `layer` (string): Layer name
+
+### clearFeatures
+
+Clear features from layer
+
+**Parameters:**
+
+- `layer` (string): Layer name
+
+### setConfig
+
+Set configuration the plugin by json
+
+**Parameters:**
+
+- `json` (JSONValue): Config object
+- `filter` (JSONValue): Layer Filter to apply
+
+### getConfig
+
+Get configuration the plugin by json
+
+**Parameters:**
+
+- `filter` (JSONValue): Layer Filter to apply
+
+
 # Building the plugin
 
 Before you start make your you have a up-to-date version on node installed locally.
