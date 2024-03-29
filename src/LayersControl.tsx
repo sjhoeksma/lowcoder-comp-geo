@@ -8,15 +8,20 @@ import {
     withDefault,
     dropdownControl,
     StringOrJSONObjectControl,
-    JSONObjectControl,
     manualOptionsControl,
 } from 'lowcoder-sdk'
 import { trans } from "./i18n/comps";
 import { Divider } from "antd"
 
 
+/**
+ * Creates a SourceControl component that allows configuring the source 
+ * parameters for a map layer. It is a customized MultiCompBuilder that
+ * generates different source parameters based on the layer type.
+ * The propertyView method renders a UI for configuring the relevant 
+ * source parameters.
+ */
 export function SourceControl() {
-    // const childrenMap: any =
     const childrenMap: any = {
         url: stringSimpleControl(),
         attributions: withDefault(StringControl, ''),
@@ -120,6 +125,12 @@ export function SourceControl() {
     return SourceTemp;
 }
 
+/**
+ * Creates a LayerObjectOption component using MultiCompBuilder.
+ * Allows configuring properties like label, title, source etc for a layer.
+ * Provides controls for selecting layer type, visibility, opacity etc.
+ * Handles rendering the layer options.
+ */
 var LayerObjectOption = new MultiCompBuilder(
     {
         label: StringControl,
@@ -156,6 +167,12 @@ var LayerObjectOption = new MultiCompBuilder(
     .setPropertyViewFn((children: any) => (<></>))
     .build();
 
+/**
+ * Creates a LayerObjectOption component using MultiCompBuilder.
+ * Allows configuring properties like label, title, source etc for a layer.
+ * Provides controls for selecting layer type, visibility, opacity etc.
+ * Handles rendering the layer options.
+ */
 LayerObjectOption = class extends LayerObjectOption {
     constructor(obj: any) {
         if (obj.value) {
@@ -186,6 +203,11 @@ LayerObjectOption = class extends LayerObjectOption {
     }
 };
 
+/**
+ * Creates a LayersControl component using MultiCompBuilder to configure layer options.
+ * Allows selecting layer type, visibility, opacity etc. 
+ * Handles rendering the layer options and returns the LayersControl class.
+ */
 export function layersControl(config?: any) {
     const manualOptions = config ? config : [
         { label: "Layer1", title: "Layer" }
