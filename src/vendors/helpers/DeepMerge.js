@@ -1,3 +1,9 @@
+/**
+ * Deep merges two or more objects together.
+ *
+ * @param {...Object} objs - The objects to merge together
+ * @returns {Object} - A new object that is the merged result
+ */
 export function deepMerge(...objs) {
 
     /**
