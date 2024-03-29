@@ -2,6 +2,7 @@
   "name": "lowcoder-comp-geo",
   "version": "1.3.0-dev.69",
   "type": "module",
+  "homepage": "https://sjhoeksma.github.io/lowcoder-comp-geo/",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/sjhoeksma/lowcoder-comp-geo.git"
