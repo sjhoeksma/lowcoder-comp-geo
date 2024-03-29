@@ -8,14 +8,13 @@
  * Returns null if layer type is not supported.
  */
 import { Vector as VectorLayer, VectorTile as VectorTileLayer, Image as ImageLayer } from 'ol/layer';
-import { OSM, XYZ, TileWMS, Vector as VectorSource, VectorTile as VectorTileSource, TileArcGISRest, ImageArcGISRest } from 'ol/source';
+import { XYZ, TileWMS, Vector as VectorSource, VectorTile as VectorTileSource, TileArcGISRest, ImageArcGISRest } from 'ol/source';
 import GeoTIFF from 'ol/source/GeoTIFF.js';
 import TileLayer from 'ol/layer/WebGLTile.js';
 import MVT from 'ol/format/MVT';
 import GeoJSON from 'ol/format/GeoJSON';
 import { geoJsonStyleFunction } from './Styles'
 import { applyBackground, applyStyle } from 'ol-mapbox-style';
-import { createXYZ } from 'ol/tilegrid.js';
 import UndoRedo from 'ol-ext/interaction/UndoRedo'
 
 /**

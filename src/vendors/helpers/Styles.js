@@ -51,7 +51,7 @@ export const darkStroke = new Style({
 
 /**
  * Function to dynamically style GeoJSON features based on their properties.
- * @param {import('ol/Feature').default} feature - The GeoJSON feature to style.
+ * @param {ol.Feature} feature - The GeoJSON feature to style.
  * @returns {Style} The style for the given feature.
  */
 export const geoJsonStyleFunction = (feature) => {
