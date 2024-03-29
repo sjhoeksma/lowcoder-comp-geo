@@ -2,6 +2,11 @@
 import { geoContext } from '../../GEOContext';
 import { useState, useLayoutEffect } from 'react';
 
+/**
+ * Custom hook that tracks the browser window's width and height. 
+ * Updates on window resize events.
+ * Returns object with width and height properties.
+ */
 export function useScreenSize() {
     const [screenSize, setScreenSize] = useState({
         width: window.innerWidth,
