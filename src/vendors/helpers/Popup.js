@@ -7,7 +7,16 @@ import Overlay from 'ol/Overlay';
 import { getCenter } from 'ol/extent';
 import { fromLonLat, transformExtent } from 'ol/proj';
 
-// Adjusted to accept a map instance directly
+
+/**
+ * Shows a popup overlay on the provided map at the given coordinates
+ * with the specified content message. Creates the popup if it does not
+ * already exist.
+ * 
+ * @param {ol.Map} map The map to show the popup on.
+ * @param {ol.Coordinate|ol.Extent} coordinates The popup location as a coordinate pair or extent.
+ * @param {string} message The HTML content for the popup.
+ */
 export function showPopup(map, coordinates, message) {
     let popup = map.getOverlayById('infoPopup');
     if (!popup) {
