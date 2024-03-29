@@ -15,7 +15,7 @@ import { trans } from "./i18n/comps";
 import { Divider } from "antd"
 
 
-function layerSourceControl() {
+export function SourceControl() {
     // const childrenMap: any =
     const childrenMap: any = {
         url: stringSimpleControl(),
@@ -35,7 +35,7 @@ function layerSourceControl() {
     };
 
     //Class is rebuiled not retuning same class 
-    class LayerSourceTemp extends new MultiCompBuilder(childrenMap, (props: any) => props)
+    class SourceTemp extends new MultiCompBuilder(childrenMap, (props: any) => props)
         .setPropertyViewFn((children: any) => (<></>))
         .build() {
 
@@ -117,7 +117,7 @@ function layerSourceControl() {
             );
         }
     }
-    return LayerSourceTemp;
+    return SourceTemp;
 }
 
 var LayerObjectOption = new MultiCompBuilder(
@@ -135,7 +135,7 @@ var LayerObjectOption = new MultiCompBuilder(
             { label: "arcgis-mapserver-tile", value: "arcgis mapserver tile" },
             { label: "arcgis-mapserver-image", value: "arcgis mapserver image" }
         ]),
-        source: layerSourceControl(),
+        source: SourceControl(),
         visible: withDefault(BoolPureControl, true),
         selectable: withDefault(BoolPureControl, true),
         userVisible: withDefault(BoolPureControl, true),
@@ -186,12 +186,9 @@ LayerObjectOption = class extends LayerObjectOption {
     }
 };
 
-
-//TODO: Change this to a function so it can be used directly instead of data
-
 export function layersControl(config?: any) {
     const manualOptions = config ? config : [
-        { label: "Test", title: "test" }
+        { label: "Layer1", title: "Layer" }
     ]
     const childrenMap: any = {
         data: manualOptionsControl(LayerObjectOption, {

@@ -104,7 +104,6 @@ export function createLayer(layerConfig, map) {
         }),
       });
     case 'geojson':
-      console.log(JSON.stringify(layerConfig.source?.data || {}))
       return new VectorLayer({
         name: layerConfig.label,
         title: layerConfig.title || layerConfig.name,
@@ -119,11 +118,15 @@ export function createLayer(layerConfig, map) {
         splitscreen: layerConfig.splitscreen,
         displayInLayerSwitcher: layerConfig.userVisible,
         source: new VectorSource({
-          features: new GeoJSON().readFeatures(JSON.stringify(layerConfig.source?.data || {}), {
+          features: new GeoJSON().readFeatures(
+            (typeof layerConfig.source.data == "string") ?
+              layerConfig.source.data :
+              JSON.stringify(layerConfig.source.data || {}), {
             // Ensure the features are read with the correct projection
             dataProjection: layerConfig.source.projection || 'EPSG:4326', // Assuming the GeoJSON is in WGS 84
             featureProjection: map.getView().getProjection() || 'EPSG:3857' // Assuming the map projection
-          }),
+          })
+
         }),
         // Add this line to apply a generic style to the layer
         style: geoJsonStyleFunction
@@ -255,9 +258,15 @@ export function findLayer(map, name) {
 }
 
 export function setFeatures(map, data, name, clear) {
+
   const layer = findLayer(map, name);
   if (layer) {
     const source = layer.getSource()
+    const reader = (source.getFormat ? source.getFormat() : null) || new GeoJSON({
+      dataProjection: source.get('projection') || 'EPSG:4326', // Assuming the GeoJSON is in WGS 84,
+      featureProjection: map.getView().getProjection() || 'EPSG:3857' // Assuming the map projection
+    })
+
     //Check if there is a undo stack connected to this source, if so clear and disable
     var undos = []
     //Disable all undo stacks
@@ -273,7 +282,6 @@ export function setFeatures(map, data, name, clear) {
       source.clear()
       undos.forEach((c) => { c.clear() })
     }
-    const reader = (source.getFormat ? source.getFormat() : null) || new GeoJSON()
     if (reader && data) {
       //Now add the features based on types
       if (Array.isArray(data)) {
