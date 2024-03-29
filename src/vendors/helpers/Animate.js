@@ -16,6 +16,12 @@ import { Point } from 'ol/geom'
 import * as easing from 'ol/easing';
 
 const emptyCallback = function () { }
+
+/**
+ * Parses a coordinate value and returns an array of [longitude, latitude].
+ * Handles stringified JSON, array, and object coordinate formats.
+ * Returns empty array if unable to parse coordinates.
+ */
 export function parseCoords(coords) {
   if (!coords) return []
   try {
@@ -29,6 +35,14 @@ export function parseCoords(coords) {
   return coords
 }
 
+/**
+ * Animates the map view to the given coordinates.
+ * 
+ * @param {import('ol/Map').default} map The map to animate.
+ * @param {number[]} coords The longitude and latitude of the location to animate to. 
+ * @param {number} [duration=2000] Duration of the animation in milliseconds.
+ * @param {Object} [props] Additional properties for the view animation.
+ */
 export function animateToLocation(map, coords, duration, props = {}) {
   const location = fromLonLat(coords);
   return map.getView().animate(Object.assign({ zoom: 15 }, {
@@ -37,6 +51,14 @@ export function animateToLocation(map, coords, duration, props = {}) {
   }, props), props.callback || emptyCallback);
 }
 
+/**
+ * Animates the map view to center on the given extent. 
+ * 
+ * @param {import('ol/Map').default} map The map to animate
+ * @param {number[]} coords The extent to animate to as [minx, miny, maxx, maxy]
+ * @param {number} [duration=2000] Duration of animation in milliseconds
+ * @param {Object} [props] Additional properties for the view animation
+ */
 export function animateToExtent(map, coords, duration, props = {}) {
   const geographicCenter = getCenter(coords);
   const location = fromLonLat(geographicCenter);
@@ -47,7 +69,15 @@ export function animateToExtent(map, coords, duration, props = {}) {
 }
 
 
-// Pulse feature at coord
+
+/**
+ * Animates a pulsing effect on the provided feature coordinate.
+ * 
+ * @param {import('ol/Map').default} map The map to animate on.
+ * @param {number[]} coords The longitude and latitude of the feature to pulse.
+ * @param {number} [duration=3000] Duration of the pulse animation in milliseconds.
+ * @param {Object} [props] Additional properties for the animation.
+ */
 export function pulseFeature(map, coords, duration, props = {}) {
   props = Object.assign({ _easing: "upAndDown", _style: "Circle", _color: "red" }, props)
   //const location = fromLonLat(coords);
@@ -82,6 +112,15 @@ export function pulseFeature(map, coords, duration, props = {}) {
   }))
 }
 
+/**
+ * Animates a pulsing effect by calling pulseFeature multiple 
+ * times with a delay between each call.
+ * 
+ * @param {import('ol/Map').default} map - The map to animate on.
+ * @param {number[]} coords - The longitude and latitude to pulse. 
+ * @param {number} [duration=3000] - Duration of each pulse.
+ * @param {Object} [props] - Additional properties for the animation.
+ */
 export function animatePulse(map, coords, duration, props = {}) {
   var count = props._pulseCount ? props._pulseCount : props._easing == "bounce" ? 1 : 3;
   for (var i = 0; i < count; i++) {
@@ -91,6 +130,14 @@ export function animatePulse(map, coords, duration, props = {}) {
   };
 }
 
+/**
+ * Animates panning to a location, then animates a pulse effect.
+ * 
+ * @param {import('ol/Map').default} map - The map to animate on.
+ * @param {number[]} coords - The longitude and latitude to pan and pulse to.
+ * @param {number} duration - Duration of the pulse animation.  
+ * @param {Object} [props] - Additional properties for the animations.
+ */
 export function animateHome(map, coords, duration, props = {}) {
   animateToLocation(map, coords, props.locDuration || duration,
     Object.assign(props, {
@@ -101,6 +148,10 @@ export function animateHome(map, coords, duration, props = {}) {
   )
 }
 
+/**
+ * Object containing animation helper functions that can be called to 
+ * animate the map in different ways.
+ */
 export const animations = {
   'toLocation': animateToLocation,
   'toExtent': animateToExtent,
@@ -108,6 +159,14 @@ export const animations = {
   'home': animateHome,
 }
 
+/**
+ * Animates the map view in some way by calling one of the animation helper functions.
+ * @param {import('ol/Map').default} map - The map to animate
+ * @param {number[]} coords - The map coordinates (longitude, latitude) to animate to
+ * @param {number} [duration=2000] - Duration of the animation in milliseconds 
+ * @param {Object} [props] - Additional properties to pass to the animation function
+ * @param {string} [name] - Name of the animation function to call (default 'toLocation')
+ */
 export function animate(map, coords, duration = 2000, props = {}, name) {
   var func = animations[name || 'toLocation']
   if (func) func(map, parseCoords(coords), duration, props)
