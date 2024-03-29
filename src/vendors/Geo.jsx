@@ -45,6 +45,12 @@ class LayerGroupUndo extends LayerGroup {
 
 const defMinDate = '1900'
 
+/**
+ * Geo component renders an OpenLayers map with various features like 
+ * layers, controls, interactions etc. based on passed props.
+ * Handles map events and bubble them up to parent component.
+ * Allows dynamically updating layers, controls, interactions etc.
+*/
 function Geo(props) {
   const [geoRef, setGeoRef] = useState();
   const [geoLoc, setGeoLoc] = useState([0, 0]);
