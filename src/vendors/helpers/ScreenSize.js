@@ -1,4 +1,3 @@
-// useScreenSize.js
 import { geoContext } from '../../GEOContext';
 import { useState, useLayoutEffect } from 'react';
 
