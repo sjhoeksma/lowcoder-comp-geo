@@ -1,3 +1,20 @@
+# [1.3.0-dev.70](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.69...v1.3.0-dev.70) (2024-03-29)
+
+
+### Bug Fixes
+
+* Added code README ([8ddb2c4](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/8ddb2c43b2091595a31869b72d6d0d69d4cd6c87))
+* Added docsify ([30b5731](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/30b57310edebea91d27cc89eae05e6d64f020713))
+* added homepage ([923d44b](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/923d44b6a56e55689c5acd8d611b0b12cd57f73e))
+* Added Readme ([2ea8e72](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/2ea8e72855eca88690676935980347ab28dde5b7))
+* cleanup code ([a8dc003](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/a8dc003bebe68815a22bd8061be1abecd44bb762))
+* Documentation for Release ([8a8bcc9](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/8a8bcc91f0fe0f428758c4bdad355845024922a6))
+* Moved parseFilter ([f672877](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/f67287746e81614a6c2e7df759c6f994f748b800))
+* Removed symbolic ([aa88b27](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/aa88b27bf5a3f1f2e4bcc6481ad59c7d9c156d83))
+* Rename of useScreenSize ([e8aa94e](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/e8aa94e9124f2aa2bbd87c6492fdb6319f112853))
+* src README ([11ad861](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/11ad861a4920551f3132d83b8bd60daf5f20b2a8))
+* update Readme ([5063f27](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/5063f27043eb7500df749c2fd1c6663c117128e2))
+
 # [1.3.0-dev.69](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.68...v1.3.0-dev.69) (2024-03-29)
 
 
