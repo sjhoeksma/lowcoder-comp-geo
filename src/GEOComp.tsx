@@ -20,7 +20,7 @@ import styles from "./styles.module.css";
 import { i18nObjs, trans } from "./i18n/comps";
 import { Geo } from "./vendors";
 import { version } from '../package.json';
-import { animate, showPopup, getFeatures, setFeatures, clearFeatures, deepMerge } from './vendors/helpers'
+import { animate, showPopup, getFeatures, setFeatures, clearFeatures, deepMerge, parseFilter } from './vendors/helpers'
 import { useResizeDetector } from "react-resize-detector";
 import { featureControl } from './FeaturesControl';
 import { geoContext } from './GEOContext';
@@ -28,6 +28,10 @@ import { layersControl } from './LayersControl';
 // @ts-ignore
 import Notification from 'ol-ext/control/Notification'
 
+/**
+ * Array of style configuration objects for styling the component.
+ * Each object has a name, label, and style property key.
+ */
 export const CompStyles = [
   {
     name: "padding",
@@ -69,7 +73,6 @@ export const CompStyles = [
      center:[] will disable automatich centering
      debug: true will show eventlog to console
  */
-
 var GEOComp = (function () {
 
   //The events supported
@@ -362,21 +365,6 @@ GEOComp = class extends GEOComp {
   }
 };
 
-const parseFilter = function (data: any, defFilter = ['layers']) {
-  var filter = data || defFilter
-  if (!Array.isArray(filter)) {
-    try {
-      filter = JSON.parse("[" + filter + "]")
-    } catch (e) {
-      try {
-        filter = JSON.parse('["' + filter + '"]')
-      } catch (ee) {
-        filter = defFilter
-      }
-    }
-  }
-  return filter
-}
 
 /**
  * Exposes methods on GEOComp component to allow calling from parent component.

@@ -368,3 +368,26 @@ export function clearFeatures(map, name) {
   }
   return false
 }
+
+/**
+ * Parses a filter value, ensuring it is an array.
+ * 
+ * Accepts a filter value which may be an array, stringified array, 
+ * or scalar value. Always returns an array, defaulting to ['layers'].
+ * Handles invalid JSON strings by falling back to the default.
+*/
+export const parseFilter = function (data, defFilter = ['layers']) {
+  var filter = data || defFilter
+  if (!Array.isArray(filter)) {
+    try {
+      filter = JSON.parse("[" + filter + "]")
+    } catch (e) {
+      try {
+        filter = JSON.parse('["' + filter + '"]')
+      } catch (ee) {
+        filter = defFilter
+      }
+    }
+  }
+  return filter
+}
