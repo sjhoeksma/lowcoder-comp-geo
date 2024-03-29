@@ -1,0 +1,17 @@
+{
+    "Improve variable names": {
+        "prompt": "Suppose that you are writing code for a production level application which is shared by many developers in your team. Take the current code, and update the variable names so that it should improve the readability of the code and help the other developers maintain it without much difficulty.",
+        "context": {
+            "codebase": false,
+            "selection": true
+        }
+    },
+    "readme": {
+        "description": "Readme for current dir",
+        "prompt": "Write a detailed README.md file to document the code located in the same directory as my current selection. Summarize what the code in this directory is meant to accomplish. Explain the key files, functions, classes, and features. Use Markdown formatting for headings, code blocks, lists, etc. to make the it organized and readable. Aim for a beginner-friendly explanation that gives a developer unfamiliar with the code a good starting point to understand it. Make sure to include: - Overview of directory purpose - Functionality explanations - Relevant diagrams or visuals if helpful. Write the README content clearly and concisely using complete sentences and paragraphs based on the shared context. Use proper spelling, grammar, and punctuation throughout. Surround your full README text with triple backticks so it renders properly as a code block. Do not make assumptions or fabricating additional details.",
+        "context": {
+            "currentDir": true,
+            "selection": true
+        }
+    }
+}

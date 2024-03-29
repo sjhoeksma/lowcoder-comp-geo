@@ -12,25 +12,3 @@ To help you with understanding how you can use this plugin we have added an [exa
 
 #### Viewer
 ![viewer](https://github.com/sjhoeksma/lowcoder-comp-geo/blob/main/images/viewer-example.png?raw=true)
-
-# Development
-
-Before you start make your you have a up-to-date version on node installed locally.
-
-Start with cloning the repository on to you local hard drive. Install all dependecies and start te component test environment. Make any changes to the code you want and the will be visible in the test environment. 
-
-```bash
-git clone https://github.com/sjhoeksma/lowcoder-comp-geo.git
-cd lowcoder-comp-geo
-yarn install
-yarn start
-```
-
-When you are finished you can build your own version or deploy it to npmjs
-
-```bash
-# Building
-yarn build 
-# Or Publishing
-yarn build --publish
-```
