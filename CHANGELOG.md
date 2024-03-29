@@ -1,3 +1,12 @@
+# [1.3.0-dev.68](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.67...v1.3.0-dev.68) (2024-03-29)
+
+
+### Bug Fixes
+
+* Circle ([b8c6483](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/b8c6483df5cc6c33ba9ff60be4d4d708dd9ec08c))
+* Layers ([e94cd7b](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/e94cd7ba1f9042a850e6d80c99b57b7aa8fa2ff5))
+* package nr ([4753b58](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/4753b5815bf34cdf5fe410a334dbc97319b6db0f))
+
 # [1.3.0-dev.67](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.66...v1.3.0-dev.67) (2024-03-28)
 
 
