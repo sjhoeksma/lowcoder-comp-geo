@@ -16,6 +16,7 @@
     "antd": "^5.15.4",
     "better-docs": "^2.7.3",
     "jsdoc": "^4.0.2",
+    "jsdoc-to-markdown": "^8.0.1",
     "lowcoder-cli": "^0.0.30",
     "lowcoder-sdk": "^2.3.1",
     "ol": "^9.0.0",
@@ -48,7 +49,8 @@
     "start": "vite",
     "build": "lowcoder-cli build",
     "build_publish": "lowcoder-cli build --publish",
-    "docs": "jsdoc --readme README.md -c jsdoc.json -r src -d jsdoc"
+    "docs": "jsdoc --readme README.md -c jsdoc.json -r src -d jsdoc",
+    "jsdoc2md": "jsdoc2md -p table -r table -c jsdoc.json src/*.* > docs/code.md"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
