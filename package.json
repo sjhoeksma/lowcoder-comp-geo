@@ -46,7 +46,7 @@
     "start": "vite",
     "build": "lowcoder-cli build",
     "build_publish": "lowcoder-cli build --publish",
-    "docs": "docsify server ./docs"
+    "docs": "docsify serve ./docs"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
