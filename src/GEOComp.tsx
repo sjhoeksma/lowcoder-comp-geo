@@ -76,7 +76,7 @@ export const CompStyles = [
 var GEOComp = (function () {
 
   //The events supported
-  const eventDefintions = [
+  const eventDefinitions = [
     {
       label: "onModify",
       value: "modify",
@@ -113,13 +113,23 @@ var GEOComp = (function () {
       description: "Triggers when there is a timeline change",
     },
     {
+      label: "onZoom",
+      value: "map:zoom",
+      description: "Triggers when there is zoom change",
+    },
+    {
+      label: "onSave",
+      value: "save",
+      description: "Triggers when users clicks save button",
+    },
+    {
       label: "onEvent",
       value: "event",
       description: "Triggers when there is no special event handler is triggered",
     },
   ];
 
-  //All properties avaiable in component
+  //All properties available in component
   const childrenMap = {
     autoHeight: withDefault(AutoHeightControl, false),
     styles: styleControl(CompStyles),
@@ -135,8 +145,8 @@ var GEOComp = (function () {
     events: jsonObjectExposingStateControl("events"),
     event: jsonObjectExposingStateControl("event"),
     feature: jsonObjectExposingStateControl("feature"),
-    onEvent: eventHandlerControl(eventDefintions),
-    startDate: stringSimpleControl(), //TODO replace with datepicker
+    onEvent: eventHandlerControl(eventDefinitions),
+    startDate: stringSimpleControl(), //TODO replace with date picker
     endDate: stringSimpleControl(),
     features:
       featureControl({
@@ -242,7 +252,7 @@ var GEOComp = (function () {
         props.event.onChange(eventObj || {})
         var n = name.split(":")[0]
         var eventName = "event"
-        eventDefintions.forEach((k) => { if (k.value == n || k.value == name) { eventName = k.value } })
+        eventDefinitions.forEach((k) => { if (k.value == n || k.value == name) { eventName = k.value } })
         //Double switch will allow fine grained event catching
         switch (name) { //Catch first on name
           case 'map:create':
@@ -402,7 +412,7 @@ GEOComp = withMethodExposing(GEOComp, [
     },
     execute: async (comp: any, params: any) => {
       var map = comp.exposingValues.events['map:create']
-      animate(map, params[0], params?.[1], params?.[2], params?.[3])
+      if (map) animate(map, params[0], params?.[1], params?.[2], params?.[3])
     }
   },
   {
@@ -432,7 +442,7 @@ GEOComp = withMethodExposing(GEOComp, [
     },
     execute: async (comp: any, params: any) => {
       var map = comp.exposingValues.events['map:create']
-      map.getControls().forEach((control: any) => {
+      if (map) map.getControls().forEach((control: any) => {
         if (control instanceof Notification) {
           control.show(params[0], params[1] || 2000)
         }
@@ -458,7 +468,7 @@ GEOComp = withMethodExposing(GEOComp, [
     },
     execute: async (comp: any, params: any) => {
       var map = comp.exposingValues.events['map:create']
-      showPopup(map, params[0], params[1]);
+      if (map) showPopup(map, params[0], params[1]);
     }
   },
   {
@@ -482,7 +492,8 @@ GEOComp = withMethodExposing(GEOComp, [
     },
     execute: async (comp: any, params: any) => {
       var map = comp.exposingValues.events['map:create']
-      return setFeatures(map, params[0], params[1], params[2] == true)
+      if (map) return setFeatures(map, params[0], params[1], params[2] == true)
+      return false
     }
   },
   {
@@ -498,7 +509,8 @@ GEOComp = withMethodExposing(GEOComp, [
     },
     execute: async (comp: any, params: any) => {
       var map = comp.exposingValues.events['map:create']
-      return getFeatures(map, params[0])
+      if (map) return getFeatures(map, params[0])
+      return false
     }
   },
   {
@@ -514,7 +526,8 @@ GEOComp = withMethodExposing(GEOComp, [
     },
     execute: async (comp: any, params: any) => {
       var map = comp.exposingValues.events['map:create']
-      return clearFeatures(map, params[0])
+      if (map) return clearFeatures(map, params[0])
+      return false
     }
   },
   {
@@ -594,6 +607,17 @@ GEOComp = withMethodExposing(GEOComp, [
         console.debug(data)
       //Event config needs to be added
       return data
+    }
+  },
+  {
+    method: {
+      name: "getZoom",
+      description: "Get current zoom position of map",
+      params: []
+    }, execute: async (comp: any, params: any) => {
+      var map = comp.exposingValues.events['map:create']
+      if (map) return map.getView().getZoom()
+      return 0
     }
   }
 ]);

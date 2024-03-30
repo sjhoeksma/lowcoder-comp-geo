@@ -119,6 +119,7 @@ GEOComp exposes events that can be handled in the parent component:
 - `onClick` - Map clicked
 - `onSelect` - Feature clicked
 - `onBbox` - The bbox of the map changed
+- `onZoom` - Fires when the zoom has changed
 - `onEvent` - Eventhandler for all other events
 
 This allows integrating custom popup content, selection logic, etc.

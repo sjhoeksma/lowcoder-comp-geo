@@ -670,11 +670,13 @@ function Geo(props) {
       });
 
       //Handle zoom event
-      /*
+      var zoomTimer
       olMap.getView().on('change:resolution', (event) => {
-        fireEvent('map:zoom',Object.assign({},event,{newValue: olMap.getView().getResolution()}))
+        if (zoomTimer) clearTimeout(zoomTimer)
+        zoomTimer = setTimeout(() => {
+          fireEvent('map:zoom', Object.assign({}, event, { newValue: olMap.getView().getResolution(), zoom: olMap.getView().getZoom() }))
+        }, 200)
       });
-      */
 
       //On move
       olMap.on('moveend', () => {
