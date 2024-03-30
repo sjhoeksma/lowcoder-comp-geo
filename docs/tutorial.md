@@ -39,6 +39,7 @@ return geo1.setFeatures('draw',localStorage.getItem('draw'),true)
 ## Step 4 - Start drawing
 
 <img src="images/tutorial-step4.png" >
+
 Toggle one of the draw buttons and start drawing features on the screen. To stop drawing you need to toggle the button again.
 
 When you would refresh the browser you will see that all features are loaded from the local storage.
