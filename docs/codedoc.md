@@ -16,7 +16,7 @@ Handles rendering the layer options.</p>
 <dd><p>GEOComp Component configuration.
 Defines the styling options exposed in the component properties panel.
 By setting the following items within default you can control behavior
-     center:[] will disable automatich centering
+     center:[] will disable automatic centering
      debug: true will show eventlog to console</p>
 </dd>
 <dt><a href="#GEOComp">GEOComp</a></dt>
@@ -88,7 +88,7 @@ Handles rendering the layer options.
 GEOComp Component configuration.
 Defines the styling options exposed in the component properties panel.
 By setting the following items within default you can control behavior
-     center:[] will disable automatich centering
+     center:[] will disable automatic centering
      debug: true will show eventlog to console
 
 **Kind**: global variable  
