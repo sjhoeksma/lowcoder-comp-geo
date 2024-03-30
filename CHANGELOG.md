@@ -1,3 +1,11 @@
+# [1.3.0-dev.72](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.71...v1.3.0-dev.72) (2024-03-30)
+
+
+### Bug Fixes
+
+* Autoheight to boolean ([62fc85e](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/62fc85e83806011d361ba815728c7029b531787b))
+* removed documentation ([9cab07c](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/9cab07c3b45ed779b874b673b30c63cafc7e1158))
+
 # [1.3.0-dev.71](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.70...v1.3.0-dev.71) (2024-03-30)
 
 
