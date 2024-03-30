@@ -5,8 +5,8 @@ This plugin enables the usage of [Openlayers GEO viewer](https://openlayers.org/
 The ui of the plugin should be more or less self explaining. If you want a basic explination of all switches and settings look at the [README on Github](https://github.com/sjhoeksma/lowcoder-comp-geo)
 
 # Example
-To help you with understanding how you can use this plugin we have added an [example application](https://github.com/sjhoeksma/lowcoder-comp-geo/blob/main/lowcoder-example/lowcoder-comp-geo.json?raw=true). Just download the json application file and import it within lowcoder. 
+To help you with understanding how you can use this plugin we have added an [example application](https://github.com/sjhoeksma/lowcoder-comp-geo/blob/main/docs/lowcoder-example/lowcoder-comp-geo.json?raw=true). Just download the json application file and import it within lowcoder. 
 
 #### Viewer
-![viewer](https://github.com/sjhoeksma/lowcoder-comp-geo/blob/main/images/viewer-example.png?raw=true)
+![viewer](https://github.com/sjhoeksma/lowcoder-comp-geo/blob/main/docs/images/viewer-example.png?raw=true)
 
