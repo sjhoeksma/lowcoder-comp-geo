@@ -8,3 +8,6 @@ Click on `insert` and then select `Extentsions` now click on the `Add npm Plugin
 ![Plugin Available](images/addplugin-2.png)
 
 ## Start using the plugin within your application
+
+
+## Upgrading a plugin
