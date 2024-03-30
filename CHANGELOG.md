@@ -1,3 +1,12 @@
+# [1.3.0-dev.71](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.70...v1.3.0-dev.71) (2024-03-30)
+
+
+### Bug Fixes
+
+* Autoheight by default ([0c64c8e](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/0c64c8ef813c4e69d919d8b540528b6ecc221ae0))
+* remove jsdoc ([946d007](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/946d0079dbc0a9dab0c697e6a816fb4443d77b1b))
+* remove JSDOC full ([3696a4f](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/3696a4fac53a1ff42585cd7f854b1b03fc79696e))
+
 # [1.3.0-dev.70](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.69...v1.3.0-dev.70) (2024-03-29)
 
 
