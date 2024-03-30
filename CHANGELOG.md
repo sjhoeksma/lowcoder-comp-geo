@@ -1,3 +1,10 @@
+# [1.3.0-dev.73](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.72...v1.3.0-dev.73) (2024-03-30)
+
+
+### Bug Fixes
+
+* crash on empty GEOJson in data ([43c0809](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/43c08090a68b1fb2e7c1ae3153e813647ecd604d))
+
 # [1.3.0-dev.72](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.71...v1.3.0-dev.72) (2024-03-30)
 
 
