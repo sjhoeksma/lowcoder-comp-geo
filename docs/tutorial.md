@@ -20,10 +20,12 @@ Now scroll down to behavior section of the properties and toggle the following i
 ## Step 2 - Connect onSave event
 <img align="right" src="images/tutorial-step2.png" >
 
-Add an new interaction by clicking `+Add` on the right side of Event Handlers. Select the `onSave` event and for Action `Run Javascript`. Copy the javascript below into the script field.
+Add an new interaction by clicking `+Add` on the right side of Event Handlers. Select the `onModify` event and for Action `Run Javascript`. Copy the javascript below into the script field.
 
 ```js
-localStorage.setItem(geo1.getFeatures('draw'))
+geo1.getFeatures('draw').then((features)=>{
+localStorage.setItem('draw',features) 
+})
 ```
 <br clear="right"/>
 
@@ -33,7 +35,8 @@ localStorage.setItem(geo1.getFeatures('draw'))
 On the bottom of your screen within the `Data Queries` click on `+New` and select `Run Javascript Code`, change the trigger when to `When the Application (Page) loads` and copy the code below into the code box.
 
 ```js
-return geo1.setFeatures('draw',localStorage.getItem('draw'),true)
+geo1.setFeatures('draw',localStorage.values.draw,true)
+return localStorage.values.draw
 ```
 
 ## Step 4 - Start drawing
