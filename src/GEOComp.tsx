@@ -121,7 +121,7 @@ var GEOComp = (function () {
 
   //All properties avaiable in component
   const childrenMap = {
-    autoHeight: withDefault(AutoHeightControl, "fixed"),
+    autoHeight: withDefault(AutoHeightControl, "auto"),
     styles: styleControl(CompStyles),
     center: ArrayControl,
     layers: layersControl(i18nObjs.defaultData),
@@ -197,7 +197,7 @@ var GEOComp = (function () {
     test: any
   }) => {
     //Default size of component
-    const [dimensions, setDimensions] = useState({ width: 650, height: 400 });
+    const [dimensions, setDimensions] = useState({ width: 650, height: 460 });
     //Catch the resizing of component
 
     const { width, height, ref: conRef } = useResizeDetector({
