@@ -121,7 +121,7 @@ var GEOComp = (function () {
 
   //All properties avaiable in component
   const childrenMap = {
-    autoHeight: withDefault(AutoHeightControl, "auto"),
+    autoHeight: withDefault(AutoHeightControl, false),
     styles: styleControl(CompStyles),
     center: ArrayControl,
     layers: layersControl(i18nObjs.defaultData),
