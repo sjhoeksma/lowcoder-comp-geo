@@ -37,9 +37,10 @@ export function SourceControl() {
         nodata: withDefault(NumberControl, 0),
 
         ratio: withDefault(NumberControl, 1),
+        style: StringOrJSONObjectControl,
     };
 
-    //Class is rebuiled not retuning same class 
+    //Class is rebuild not retuning same class 
     class SourceTemp extends new MultiCompBuilder(childrenMap, (props: any) => props)
         .setPropertyViewFn((children: any) => (<></>))
         .build() {
@@ -86,6 +87,7 @@ export function SourceControl() {
                         return [
                             'url', // Style JSON URL
                             'projection',
+                            'style',
                         ]
                     case 'arcgis-mapserver-tile':
                         return [
@@ -196,7 +198,7 @@ LayerObjectOption = class extends LayerObjectOption {
         })
         return (
             <>  <Divider orientation="left" dashed orientationMargin="0px" style={{ margin: "0px" }}>
-                {trans("layer.map")}</Divider>
+                {trans("layer.layer")}</Divider>
                 {list}
             </>
         );

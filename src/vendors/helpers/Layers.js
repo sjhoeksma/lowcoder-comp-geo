@@ -190,7 +190,7 @@ export function createLayer(layerConfig, map) {
         source: new VectorTileSource({
           projection: layerConfig.source?.projection || 'EPSG:3857',
         }),
-        style: layerConfig.source.style,
+        // style: layerConfig.source.style, //TODO: Fails
       });
       applyStyle(layer, layerConfig.source?.url, '');
       applyBackground(layer, layerConfig.source?.url);

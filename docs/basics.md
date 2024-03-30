@@ -1,4 +1,4 @@
-# A tutorial on how to use the lowcoder-geo-plugin
+# How to start using the lowcoder-geo-plugin
 
 ## Adding the plugin to lowcoder
 Login to the lowcoder website and select or create the application you would like to use the lowcoder-comp-geo.
