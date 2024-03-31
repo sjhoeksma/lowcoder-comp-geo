@@ -1,6 +1,6 @@
 # Configuration options
 
-## Layers on the Map
+## Layers
 
 <img align="right" src="images/config-map2.png">
 <img align="right" src="images/config-map1.png" >
@@ -15,7 +15,7 @@ Be careful not to add to many layers because in some cases all data is loaded be
 There are many places where you can find open data sources serving information GEO data. For a starting point look at this [Wiki Page](https://en.wikipedia.org/wiki/List_of_GIS_data_sources) 
 <br clear="right"/>
 
-### Layer options
+### options
 
 |Level|Option|Description|
 |---|---|---|

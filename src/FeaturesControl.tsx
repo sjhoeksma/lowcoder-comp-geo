@@ -21,7 +21,7 @@ export function featureControl(config?: any) {
     Object.keys(initConfig).forEach((k: string, index: any) => {
         childrenMap[k] = withDefault(BoolPureControl, initConfig[k])
     })
-    //Class is rebuiled not retuning same class 
+    //Class is rebuild not retuning same class 
     class FeatureControlTemp extends new MultiCompBuilder(childrenMap, (props: any) => props)
         .setPropertyViewFn((children: any) => (<></>))
         .build() {

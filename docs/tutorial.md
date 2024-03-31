@@ -29,15 +29,16 @@ localStorage.setItem('draw',features)
 ```
 <br clear="right"/>
 
-## Step 3 - Connect onPage load event
-<img src="images/tutorial-step3.png" >
+## Step 3 - Connect onInit load event
 
-On the bottom of your screen within the `Data Queries` click on `+New` and select `Run Javascript Code`, change the trigger when to `When the Application (Page) loads` and copy the code below into the code box.
+<img align="right" src="images/tutorial-step3.png" >
+
+Add an new interaction by clicking `+Add` on the right side of Event Handlers. Select the `onInit` event and for Action `Run Javascript`. Copy the javascript below into the script field. This javascript load the information stored for the draw value into the layer.
 
 ```js
 geo1.setFeatures('draw',localStorage.values.draw,true)
-return localStorage.values.draw
 ```
+<br clear="right"/>
 
 ## Step 4 - Start drawing
 
