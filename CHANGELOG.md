@@ -1,3 +1,15 @@
+# [1.3.0-dev.74](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.73...v1.3.0-dev.74) (2024-03-31)
+
+
+### Bug Fixes
+
+* added .vscode to ignore ([601280c](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/601280c7d90258b3ad2b097e7c02a6c76d29c31e))
+* default feature object ([cc32a54](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/cc32a54a0d64cd9375652d125898cef8761a56f8))
+* getView ([772a88e](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/772a88e13bbd4b7c9a2c8721045342314cf9f69c))
+* Reduced the number of redraws ([3ee8043](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/3ee804380b9854e900a66e651aaede394aa5e24a))
+* return promise ([7f8e18b](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/7f8e18b4908c2b6921f0a6d878648fceb933defc))
+* upgraded node-modules ([82afb23](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/82afb23f175ce183f732c61eed6f146e85235f6c))
+
 # [1.3.0-dev.73](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.72...v1.3.0-dev.73) (2024-03-30)
 
 
