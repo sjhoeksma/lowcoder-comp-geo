@@ -289,54 +289,58 @@ export function findLayer(map, name) {
  * @param {boolean} clear Whether to clear existing features before adding new ones
  * @returns {boolean} True if the layer was found and updated, false otherwise
 */
-export function setFeatures(map, data, name, clear) {
-  const layer = findLayer(map, name);
-  if (layer) {
-    const source = layer.getSource()
-    const reader = (source.getFormat ? source.getFormat() : null) || new GeoJSON({
-      dataProjection: source.get('projection') || 'EPSG:4326', // Assuming the GeoJSON is in WGS 84,
-      featureProjection: map.getView().getProjection() || 'EPSG:3857' // Assuming the map projection
-    })
+export function setFeatures(map, data, name, clear, merge) {
+  return new Promise((reject, resolve) => {
+    const layer = findLayer(map, name);
+    if (layer) {
+      const source = layer.getSource()
+      const reader = (source.getFormat ? source.getFormat() : null) || new GeoJSON({
+        dataProjection: source.get('projection') || 'EPSG:4326', // Assuming the GeoJSON is in WGS 84,
+        featureProjection: map.getView().getProjection() || 'EPSG:3857' // Assuming the map projection
+      })
 
-    //Check if there is a undo stack connected to this source, if so clear and disable
-    var undos = []
-    //Disable all undo stacks
-    map.getControls().forEach((c) => {
-      if (c instanceof UndoRedo && c.getActive()) {
-        undos.push(c)
-        c.setActive(false)
+      //Check if there is a undo stack connected to this source, if so clear and disable
+      var undos = []
+      //Disable all undo stacks
+      map.getControls().forEach((c) => {
+        if (c instanceof UndoRedo && c.getActive()) {
+          undos.push(c)
+          c.setActive(false)
+        }
+      })
+
+      //Check if we should clear te source
+      if (clear) {
+        source.clear()
+        undos.forEach((c) => { c.clear() })
       }
-    })
 
-    //Check if we should clear te source
-    if (clear) {
-      source.clear()
-      undos.forEach((c) => { c.clear() })
-    }
-    if (reader && data) {
-      //Now add the features based on types
-      if (Array.isArray(data)) {
-        data.forEach((rec) => {
-          if (source.setFeatures) {
-            source.setFeatures(reader.readFeatures(rec))
-          } else {
-            source.addFeatures(reader.readFeatures(rec))
-          }
-        })
-      } else {
-        if (source.setFeatures) {
-          source.setFeatures(reader.readFeatures(data))
+      var features
+      if (reader && data) {
+        //Now add the features based on types
+        if (Array.isArray(data)) {
+          data.forEach((rec) => {
+            if (source.setFeatures) {
+              source.setFeatures(reader.readFeatures(rec))
+            } else {
+              source.addFeatures(reader.readFeatures(rec))
+            }
+          })
         } else {
-          source.addFeatures(reader.readFeatures(data))
+          if (source.setFeatures) {
+            source.setFeatures(reader.readFeatures(data))
+          } else {
+            source.addFeatures(reader.readFeatures(data))
+          }
         }
       }
+      //Enable the undo stack
+      undos.forEach((c) => { c.setActive(true) })
+      //Enable the connected undo check
+      resolve(features)
     }
-    //Enable the undo stack
-    undos.forEach((c) => { c.setActive(true) })
-    //Enable the connected undo check
-    return true//Exit, work is done
-  }
-  return false
+    reject(new Error('Layer (' + name + ') not found'))
+  })
 }
 
 

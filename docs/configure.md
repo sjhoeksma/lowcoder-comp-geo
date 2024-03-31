@@ -158,12 +158,12 @@ Behaviors control the look & feel of the map. Changing them will always regenera
 |Method|Parameters|Description|
 |---|---|---|
 |animate|`coordinates`:array, `duration`:number, `properties`:object,`animation`:string|Perform animation on the specified coordinates and for the duration in milliseconds. properties |
-|map||Return the last `map object`|
+|map|[returns `MapObject`]|Return the last `map`|
 |notify|`message`:string, `duration`:number| Show notify `message` at bottom of map. Duration defaults too 2000ms|
 |showPopup|`coordinates`:array,`message`:string|Show a popup at the Coordinates with message
-|setFeatures|`data`:object/string, `layer`:string,`clear`:boolean|Add one ore more GEOJson features to the given layer, when clear is true all features of layer will be deleted before adding.|
-|getFeatures|`layer`:string|Get all features returning a `GEOJson` for the given layer|
+|setFeatures|`data`:object/string, `layer`:string,`clear`:boolean, `merge`:boolean [returns `promise`]|Add one ore more GEOJson features to the given layer, when clear is true all features of layer will be deleted before adding. When `merge` is true merge will done base on feature type and location. |
+|getFeatures|`layer`:string [returns `promise`]|Get all features returning a `GEOJson` for the given layer|
 |clearFeatures|`layer`:string|Clear all features for the given layer|
-|setConfig|`json`:object,`filter`:string/array |Set configuration of the plugin by json, filter by properties. When filter is empty array[] all items will be update, when null only layers is updateor the specified in filter|
-|getConfig|`filter`:string/array |Get configuration of the plugin by returning `json`, filter by properties. When filter is empty array[] all items will be returned, when null only layers is update, or the specified in filter|
-|getZoom||Get current zoom value|
+|setConfig|`json`:object,`filter`:string/array |Set configuration of the plugin by json, filter by properties. When filter is empty array[] all items will be update, when null only layers is update or the specified in filter|
+|getConfig|`filter`:string/array [returns `object`]|Get configuration of the plugin by returning `json`, filter by properties. When filter is empty array[] all items will be returned, when null only layers is update, or the specified in filter|
+|getZoom|[returns `float`]|Get current zoom value|

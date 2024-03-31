@@ -199,6 +199,11 @@ function Geo(props) {
       geoRef.innerHTML = "<div id='GEO_" + geoId + "' " + (featureEnabled('largeButtons') ? "class='ol-large'" : "") +
         "  style='height:100%;width:100%'></div>"
 
+      //Check if we have an old geo map if so clean out
+      if (map) {
+        fireEvent("destroy", map)
+        map.getLayers().clear();
+      }
       //The real map object
       var olMap = new Map({
         controls: [],

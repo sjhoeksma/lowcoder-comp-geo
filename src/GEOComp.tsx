@@ -255,6 +255,12 @@ var GEOComp = (function () {
         eventDefinitions.forEach((k) => { if (k.value == n || k.value == name) { eventName = k.value } })
         //Double switch will allow fine grained event catching
         switch (name) { //Catch first on name
+          case 'destroy':
+            props.events.onChange({})
+            props.event.onChange({})
+            props.feature.onChange({})
+            _events = {}
+            break;
           case 'map:create':
             return //Internal event only, user should use map:init
           case 'click:feature':
@@ -485,15 +491,20 @@ GEOComp = withMethodExposing(GEOComp, [
           type: "string",
         },
         {
-          name: "clear (optional)",
+          name: "clear",
+          type: "boolean",
+        }
+        ,
+        {
+          name: "merge",
           type: "boolean",
         }
       ]
     },
     execute: async (comp: any, params: any) => {
       var map = comp.exposingValues.events['map:create']
-      if (map) return setFeatures(map, params[0], params[1], params[2] == true)
-      return false
+      if (map) return setFeatures(map, params[0], params[1], params[2] == true, params[3] == true)
+      return Promise.reject(new Error("Map not defined"))
     }
   },
   {
@@ -510,7 +521,7 @@ GEOComp = withMethodExposing(GEOComp, [
     execute: async (comp: any, params: any) => {
       var map = comp.exposingValues.events['map:create']
       if (map) return getFeatures(map, params[0])
-      return false
+      return Promise.reject(new Error("Map not defined"))
     }
   },
   {
