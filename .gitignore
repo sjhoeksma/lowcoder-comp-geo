@@ -4,3 +4,4 @@ lowcoder-comp-bpmn-io-*.tgz
 .DS_Store
 package-lock.json
 jsdoc/
+.vscode/
