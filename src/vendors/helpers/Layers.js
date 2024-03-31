@@ -127,14 +127,17 @@ export function createLayer(layerConfig, map) {
           splitscreen: layerConfig.splitscreen,
           displayInLayerSwitcher: layerConfig.userVisible,
           source: new VectorSource({
-            features: layerConfig.source.data ? new GeoJSON().readFeatures(
-              (typeof layerConfig.source.data == "string") ?
+            features: new GeoJSON().readFeatures(
+              (layerConfig.source.data && typeof layerConfig.source.data == "string") ?
                 layerConfig.source.data :
-                JSON.stringify(layerConfig.source.data || {}), {
+                JSON.stringify(layerConfig.source.data || {
+                  "type": "FeatureCollection",
+                  "features": []
+                }), {
               // Ensure the features are read with the correct projection
               dataProjection: layerConfig.source.projection || 'EPSG:4326', // Assuming the GeoJSON is in WGS 84
               featureProjection: map.getView().getProjection() || 'EPSG:3857' // Assuming the map projection
-            }) : []
+            })
           }),
           // Add this line to apply a generic style to the layer
           style: geoJsonStyleFunction
