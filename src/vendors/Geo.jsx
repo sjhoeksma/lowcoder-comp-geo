@@ -17,6 +17,7 @@ import { LineString, Polygon } from 'ol/geom';
 import { fromLonLat, transformExtent } from 'ol/proj';
 import { FullScreen, Zoom } from 'ol/control';
 import { Draw, Snap, Select } from 'ol/interaction'
+import { defaults as defaultInteractions } from 'ol/interaction/defaults';
 
 //Openlayer Extend imports
 import GeolocationBar from 'ol-ext/control/GeolocationBar'
@@ -199,11 +200,6 @@ function Geo(props) {
       geoRef.innerHTML = "<div id='GEO_" + geoId + "' " + (featureEnabled('largeButtons') ? "class='ol-large'" : "") +
         "  style='height:100%;width:100%'></div>"
 
-      //Check if we have an old geo map if so clean out
-      if (map) {
-        fireEvent("destroy", map)
-        map.getLayers().clear();
-      }
       //The real map object
       var olMap = new Map({
         controls: [],
@@ -218,6 +214,18 @@ function Geo(props) {
         layers: [],
       });
       fireEvent('map:create', olMap);
+      setMap(olMap)
+    }
+  }, [geoRef])
+
+  useEffect(() => {
+    if (map) {
+      fireEvent("map:rebuild", map)
+      //Remove all listeners and layers to prevent memory leakage
+      map.getLayers().clear();
+      map.getControls().forEach((c) => { map.removeControl(c) })
+      map.getInteractions().forEach((c) => { map.removeInteraction(c) })
+      defaultInteractions().forEach((c) => { map.addInteraction(c) })
 
       //Add the buttons contols
       var zoom = new Zoom({
@@ -226,7 +234,7 @@ function Geo(props) {
         zoomOutLabel: '-'
       })
       if (!featureEnabled('menu')) zoom.element.classList.add('nomenu')
-      if (featureEnabled('zoom')) olMap.addControl(zoom)
+      if (featureEnabled('zoom')) map.addControl(zoom)
 
       //Main menubar
       var mainbar = new Bar({ className: "mainbar" });
@@ -239,7 +247,7 @@ function Geo(props) {
           || featureEnabled('modify:delete')))
         || featureEnabled('save')
         || featureEnabled('center'))
-        olMap.addControl(mainbar);
+        map.addControl(mainbar);
 
       //GeoLocation
       var geoLocation = new Button({
@@ -247,13 +255,12 @@ function Geo(props) {
         title: "Center",
         handleClick: function (e) {
           centerMe(true).then((coords) => {
-            animate(olMap, coords, 3000, { zoom: 16, _locDuration: 2000, _pulseCount: 6, _easing: 'bounce' }, "home")
+            animate(map, coords, 3000, { zoom: 16, _locDuration: 2000, _pulseCount: 6, _easing: 'bounce' }, "home")
           })
           notification.show("Searching GPS", 3000)
         }
       })
       if (featureEnabled('center')) mainbar.addControl(geoLocation)
-
 
       if (featureEnabled('modify')) {
         // Edit control bar 
@@ -275,17 +282,17 @@ function Geo(props) {
           html: '<i class="fa fa-up-down-left-right" ></i>',
           title: 'Move',
           onToggle: (active) => {
-            olMap.removeInteraction(snap);
-            olMap.removeInteraction(modify);
+            map.removeInteraction(snap);
+            map.removeInteraction(modify);
             if (active) {
-              olMap.addInteraction(modify);
-              olMap.addInteraction(snap);
+              map.addInteraction(modify);
+              map.addInteraction(snap);
             }
           }
         });
         pmove.on('change:disable', function () {
-          olMap.removeInteraction(snap);
-          olMap.removeInteraction(modify);
+          map.removeInteraction(snap);
+          map.removeInteraction(modify);
         })
         if (featureEnabled('modify:move')) editbar.addControl(pmove);
 
@@ -294,8 +301,8 @@ function Geo(props) {
           html: '<i class="fa fa-map-marker" ></i>',
           title: 'Point',
           onToggle: (active) => {
-            olMap.removeInteraction(snap);
-            olMap.removeInteraction(modify);
+            map.removeInteraction(snap);
+            map.removeInteraction(modify);
           },
           interaction: new Draw({
             type: 'Point',
@@ -309,8 +316,8 @@ function Geo(props) {
           html: '<i class="fa fa-circle" ></i>',
           title: 'Oval',
           onToggle: (active) => {
-            olMap.removeInteraction(snap);
-            olMap.removeInteraction(modify);
+            map.removeInteraction(snap);
+            map.removeInteraction(modify);
           },
           interaction: new DrawRegular({
             source: drawVector.getSource(),
@@ -326,8 +333,8 @@ function Geo(props) {
           html: '<i class="fa fa-share-alt" ></i>',
           title: 'Line',
           onToggle: (active) => {
-            olMap.removeInteraction(snap);
-            olMap.removeInteraction(modify);
+            map.removeInteraction(snap);
+            map.removeInteraction(modify);
           },
           interaction: new Draw({
             type: 'LineString',
@@ -347,8 +354,8 @@ function Geo(props) {
           html: '<i class="fa fa-bookmark fa-rotate-270" ></i>',
           title: 'Polygon',
           onToggle: (active) => {
-            olMap.removeInteraction(snap);
-            olMap.removeInteraction(modify);
+            map.removeInteraction(snap);
+            map.removeInteraction(modify);
           },
           interaction: new Draw({
             type: 'Polygon',
@@ -375,10 +382,10 @@ function Geo(props) {
           title: 'Delete',
           interaction: pSelect,
           onToggle: (active) => {
-            olMap.removeInteraction(snap);
-            olMap.removeInteraction(modify);
+            map.removeInteraction(snap);
+            map.removeInteraction(modify);
             if (active) {
-              olMap.addInteraction(snap);
+              map.addInteraction(snap);
             }
           }
         });
@@ -392,7 +399,7 @@ function Geo(props) {
         undoInteraction.on('stack:remove', function (e) {
           fireEvent("modify:remove")
         })
-        olMap.addInteraction(undoInteraction);
+        map.addInteraction(undoInteraction);
 
         // Add a simple push button to undo features
         var undo = new Button({
@@ -427,13 +434,13 @@ function Geo(props) {
 
       //Fullscreen
       var fullscreen = new FullScreen()
-      if (featureEnabled('fullscreen')) olMap.addControl(fullscreen)
+      if (featureEnabled('fullscreen')) map.addControl(fullscreen)
 
       var secondbar = new Bar({ className: "ol-secondbar" });
       secondbar.setPosition("top-right")
       if ((featureEnabled('splitscreen') && (featureEnabled('splitscreen:horizontal') || featureEnabled('splitscreen:vertical')))
         || (featureEnabled('timeline') && featureEnabled('timeline')))
-        olMap.addControl(secondbar);
+        map.addControl(secondbar);
 
       // Add a simple push button to save features
       // Add control inside the map
@@ -441,7 +448,7 @@ function Geo(props) {
         // collapsed: false,
         // mouseover: true
       });
-      if (featureEnabled('layers')) olMap.addControl(layerCtrl);
+      if (featureEnabled('layers')) map.addControl(layerCtrl);
 
       // Swipe control bar 
       if (featureEnabled('splitscreen')) {
@@ -473,13 +480,13 @@ function Geo(props) {
           title: "Splitscreen Horizontal",
           onToggle: function (active) {
             if (active) {
-              olMap.addControl(swipectrl)
+              map.addControl(swipectrl)
               swipectrl.set('orientation', 'horizontal')
               swipectrl.set('position', 0.5)
               swipectrl.removeLayers();
-              findSplits(olMap.getLayers())
+              findSplits(map.getLayers())
             } else {
-              olMap.removeControl(swipectrl)
+              map.removeControl(swipectrl)
             }
             fireEvent("splitsceen:horizontal", active)
           }
@@ -491,13 +498,13 @@ function Geo(props) {
           title: "Splitscreen Vertical",
           onToggle: function (active) {
             if (active) {
-              olMap.addControl(swipectrl)
+              map.addControl(swipectrl)
               swipectrl.set('orientation', 'vertical')
               swipectrl.set('position', 0.5)
               swipectrl.removeLayers();
-              findSplits(olMap.getLayers())
+              findSplits(map.getLayers())
             } else {
-              olMap.removeControl(swipectrl)
+              map.removeControl(swipectrl)
             }
             fireEvent("splitscreen:vertical", active)
           }
@@ -513,7 +520,7 @@ function Geo(props) {
         <div id="menuContent_`+ geoId + `">${props.menuContent}</div>`
       });
       if (!featureEnabled('menu')) menu.element.classList.add('nomenu')
-      olMap.addControl(menu);
+      map.addControl(menu);
 
       // A toggle control to show/hide the menu
       var toggle = new Toggle({
@@ -525,7 +532,7 @@ function Geo(props) {
           fireEvent("toggle:menu", active)
         }
       });
-      if (featureEnabled('menu')) olMap.addControl(toggle);
+      if (featureEnabled('menu')) map.addControl(toggle);
 
       if (featureEnabled('timeline')) {
         //Timeline
@@ -582,22 +589,22 @@ function Geo(props) {
                 }
               })
             }
-            fillTimeline(olMap.getLayers())
+            fillTimeline(map.getLayers())
             tline.setFeatures(histo)
 
             scaleLineControl.element.classList.add('timeline')
             geoTracker.element.classList.add('timeline')
             geoLocation.element.classList.add('timeline')
-            olMap.addControl(tline);
+            map.addControl(tline);
             fireEvent('timeline:state', true)
           } else {
             scaleLineControl.element.classList.remove('timeline')
             geoTracker.element.classList.remove('timeline')
             geoLocation.element.classList.remove('timeline')
-            olMap.removeControl(tline);
+            map.removeControl(tline);
             //Work arround voor scaleLineControl not moving
-            olMap.removeControl(scaleLineControl);
-            olMap.addControl(scaleLineControl);
+            map.removeControl(scaleLineControl);
+            map.addControl(scaleLineControl);
             fireEvent('timeline:state', false)
           }
         });
@@ -612,7 +619,7 @@ function Geo(props) {
         minAccuracy: 10000
       });
       if (featureEnabled('tracker') && featureEnabled('tracker'))
-        olMap.addControl(geoTracker)
+        map.addControl(geoTracker)
 
       //rotateNorth control
       var rotateNorth = new RotateNorthControl();
@@ -620,19 +627,19 @@ function Geo(props) {
 
       // CanvasScaleLine control
       var scaleLineControl = new CanvasScaleLine();
-      if (featureEnabled('scale')) olMap.addControl(scaleLineControl);
+      if (featureEnabled('scale')) map.addControl(scaleLineControl);
 
       //Handling Events
       const singleClick = function (evt) {
         var _feature = false;
-        olMap.forEachFeatureAtPixel(evt.pixel, function (feature, layer) {
+        map.forEachFeatureAtPixel(evt.pixel, function (feature, layer) {
           // Vector feature click logic
           if (!(featureEnabled('modify') &&
             (pdelete.getActive() || pmove.getActive() || cedit.getActive() ||
               pedit.getActive() || ledit.getActive() || fedit.getActive()))
             && layer && layer.get("selectable") !== false && feature) { //only fire event if we are not drawing
             fireEvent('click:feature', {
-              extent: transformExtent(feature.getGeometry()?.extent_, olMap.getView().getProjection(), 'EPSG:4326') || [],
+              extent: transformExtent(feature.getGeometry()?.extent_, map.getView().getProjection(), 'EPSG:4326') || [],
               properties: feature.getProperties() || {},
               layer: layer.get("name")
             })
@@ -646,17 +653,17 @@ function Geo(props) {
         if (!_feature) fireEvent('click:single', evt)
       }
       // Click event listener for vector features and WMS GetFeatureInfo
-      olMap.on('singleclick', singleClick);
+      map.on('singleclick', singleClick);
 
       // Optional: pointer move logic for changing cursor over WMS layers
-      olMap.on('pointermove', function (evt) {
+      map.on('pointermove', function (evt) {
         if (evt.dragging) return; // skip if the map is being dragged
 
         var cursorStyle = 'default'; // Default cursor style
-        const pixel = olMap.getEventPixel(evt.originalEvent);
+        const pixel = map.getEventPixel(evt.originalEvent);
 
         // Check for features at the current pointer position
-        olMap.forEachFeatureAtPixel(pixel, function (feature, layer) {
+        map.forEachFeatureAtPixel(pixel, function (feature, layer) {
           // If a layer is found and its selectable property is not false
           if (layer && layer.get('selectable') !== false) {
             cursorStyle = 'pointer'; // Change the cursor to pointer
@@ -665,41 +672,42 @@ function Geo(props) {
         });
 
         // Apply the determined cursor style to the map target element
-        olMap.getTargetElement().style.cursor = cursorStyle;
+        map.getTargetElement().style.cursor = cursorStyle;
       });
 
 
       //Handle the loaded event
-      olMap.on('loadend', function (event) {
+      map.on('loadend', function (event) {
         fireEvent('map:loaded', event)
       });
 
       //Handle zoom event
       var zoomTimer
-      olMap.getView().on('change:resolution', (event) => {
+      map.getView().on('change:resolution', (event) => {
         if (zoomTimer) clearTimeout(zoomTimer)
         zoomTimer = setTimeout(() => {
-          fireEvent('map:zoom', Object.assign({}, event, { newValue: olMap.getView().getResolution(), zoom: olMap.getView().getZoom() }))
+          fireEvent('map:zoom', Object.assign({}, event, { newValue: map.getView().getResolution(), zoom: map.getView().getZoom() }))
         }, 200)
       });
 
       //On move
-      olMap.on('moveend', () => {
-        const extent = olMap.getView().calculateExtent(olMap.getSize()); // Get the current extent
-        const transformedExtent = transformExtent(extent, olMap.getView().getProjection(), 'EPSG:4326'); // Transform the extent to WGS 84
+      map.on('moveend', () => {
+        const extent = map.getView().calculateExtent(map.getSize()); // Get the current extent
+        const transformedExtent = transformExtent(extent, map.getView().getProjection(), 'EPSG:4326'); // Transform the extent to WGS 84
         fireEvent('bbox:change', transformedExtent); // Call the callback with the updated bbox
       }
       );
 
       // Notification Control
-      olMap.addControl(notification);
+      map.addControl(notification);
+
+      // Load all layers
+      loadLayers(map)
 
       //Add map init event
-      fireEvent('map:init', olMap);
-
-      setMap(olMap)
+      fireEvent('map:init', map);
     }
-  }, [geoRef, props.features, props.projection, props.startDate, props.endDate]);
+  }, [props.features, props.projection, props.startDate, props.endDate, map]);
 
 
   useEffect(() => {
@@ -760,7 +768,7 @@ function Geo(props) {
   useEffect(() => {
     if (map)
       loadLayers(map)
-  }, [map, props.layers, props.features.modify, props.features.tracker]); // Re-evaluate when layers change
+  }, [props.layers, props.features.modify, props.features.tracker]); // Re-evaluate when layers change
 
   //GPS location
   useEffect(() => {

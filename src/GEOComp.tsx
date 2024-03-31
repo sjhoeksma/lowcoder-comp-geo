@@ -255,7 +255,7 @@ var GEOComp = (function () {
         eventDefinitions.forEach((k) => { if (k.value == n || k.value == name) { eventName = k.value } })
         //Double switch will allow fine grained event catching
         switch (name) { //Catch first on name
-          case 'destroy':
+          case 'map:rebuild':
             props.events.onChange({})
             props.event.onChange({})
             props.feature.onChange({})

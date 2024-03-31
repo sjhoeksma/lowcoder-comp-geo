@@ -26,19 +26,15 @@ export function featureControl(config?: any) {
         .setPropertyViewFn((children: any) => (<></>))
         .build() {
 
+        orgView: any
         getView(): any {
             const p = super.getView()
-            var changed = false
-            Object.keys(p).forEach((k) => {
-                if (initConfig[k] != p[k]) {
-                    initConfig[k] = p[k]
-                    changed = true
-                }
-            })
+            var changed = JSON.stringify(p, null) != JSON.stringify(this.orgView, null)
             if (changed) {
-                return super.getView()
+                this.orgView = p
+                return p
             }
-            return initConfig
+            return this.orgView
         }
         propertyView(params: {
             title: string
