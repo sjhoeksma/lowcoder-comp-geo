@@ -1,3 +1,10 @@
+# [1.3.0-dev.85](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.84...v1.3.0-dev.85) (2024-04-01)
+
+
+### Bug Fixes
+
+* local fix UndoRedo ([cbb605e](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/cbb605e1f1b9020936d98289e6c231c9c9f3d838))
+
 # [1.3.0-dev.84](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.83...v1.3.0-dev.84) (2024-04-01)
 
 
