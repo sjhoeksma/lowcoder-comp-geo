@@ -1,3 +1,10 @@
+# [1.3.0-dev.78](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.77...v1.3.0-dev.78) (2024-04-01)
+
+
+### Bug Fixes
+
+* promise getFeatures ([f3375b5](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/f3375b5ceb6503ffd306b601fab3a533e2586169))
+
 # [1.3.0-dev.77](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.76...v1.3.0-dev.77) (2024-04-01)
 
 
