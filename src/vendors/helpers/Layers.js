@@ -351,7 +351,7 @@ export async function getFeatures(map, name) {
   if (layer) {
     const source = layer.getSource()
     //Check if there is a undo stack connected to this source, if so clear and disable
-    return await new GeoJSON({
+    return new GeoJSON({
       dataProjection: source.get('projection') || 'EPSG:4326',
       featureProjection: map.getView().getProjection() || 'EPSG:3857'
     }).writeFeaturesObject(source.getFeatures())

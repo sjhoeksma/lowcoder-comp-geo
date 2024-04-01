@@ -17,14 +17,13 @@ Now scroll down to behavior section of the properties and toggle the following i
 
 <br clear="right"/>
 
-## Step 2 - Connect onSave event
+## Step 2 - Connect onModify event
 <img align="right" src="images/tutorial-step2.png" >
 
-Add an new interaction by clicking `+Add` on the right side of Event Handlers. Select the `onModify` event and for Action `Run Javascript`. Copy the javascript below into the script field.
+Add an new interaction by clicking `+Add` on the right side of Event Handlers. Select the `onModify` event and for Action `Run Javascript`. Copy the javascript below into the script field. Set the bounce to 0.5s to reduce the number of modify events
 
 ```js
-geo1.getFeatures('draw').then((features)=>{
-localStorage.setItem('draw',features) 
+localStorage.setItem('draw',geo1.getFeatures('draw'))
 })
 ```
 <br clear="right"/>
