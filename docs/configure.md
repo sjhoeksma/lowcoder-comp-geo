@@ -64,7 +64,7 @@ There are many places where you can find open data sources serving information G
 
 GEOComp exposes events that can be used within lowcoder. Just click on the `+Add` to add one of the events below. All events can always use `geo1.event` to access the last event information.
 
-- `onInit` - Is fired when the Map initialized. `Event` variable contains the `map object` **use a bounce 0.1s** when catching this event
+- `onInit` - Is fired when the Map initialized. `Event` variable contains the `map object` **use a bounce 10ms** when catching this event
 - `onLoad` - Is fired when a Layers has finished (partial )loaded data
 - `onModify` - Is fired when a there is a feature added/modified/deleted on the draw layer
 - `onTimeline` - Is fired when user moves the timeline 
