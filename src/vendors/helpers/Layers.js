@@ -356,7 +356,7 @@ export async function getFeatures(map, name) {
       featureProjection: map.getView().getProjection() || 'EPSG:3857'
     }).writeFeaturesObject(source.getFeatures())
   }
-  return null
+  return Promise.reject()
 }
 
 
