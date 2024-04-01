@@ -1,3 +1,10 @@
+# [1.3.0-dev.87](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.86...v1.3.0-dev.87) (2024-04-01)
+
+
+### Bug Fixes
+
+* remove setTimeout ([437f8a5](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/437f8a5de72c79830e948faeb33e32b5e249921d))
+
 # [1.3.0-dev.86](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.85...v1.3.0-dev.86) (2024-04-01)
 
 
