@@ -13,4 +13,4 @@
 [GitHub](https://github.com/sjhoeksma/lowcoder-comp-geo/)
 [Get Started](#Using-the-Lowcoder-GEO-plugin)
 
-![color](#f0f0f0)
+<!-- ![color](#f0f0f0) -->
