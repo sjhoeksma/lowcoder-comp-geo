@@ -1,3 +1,10 @@
+# [1.3.0-dev.75](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.74...v1.3.0-dev.75) (2024-04-01)
+
+
+### Bug Fixes
+
+* wms JSON.stringify params ([3b1993f](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/3b1993f83ed3af058a03cb64d8ed7af8dee25418))
+
 # [1.3.0-dev.74](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.73...v1.3.0-dev.74) (2024-03-31)
 
 
