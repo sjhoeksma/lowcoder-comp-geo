@@ -786,8 +786,6 @@ function Geo(props) {
   useEffect(() => {
     if (map) {
       loadLayers(map)
-      //Add map init event
-      fireEvent('map:init', map)
     }
   }, [props.layers, props.features.modify, props.features.tracker]); // Re-evaluate when layers change
 
