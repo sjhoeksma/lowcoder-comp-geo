@@ -1,3 +1,10 @@
+# [1.3.0-dev.79](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.78...v1.3.0-dev.79) (2024-04-01)
+
+
+### Bug Fixes
+
+* connected init to rendercompleted ([ba8c365](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/ba8c365b4e95ba71650ff3ecbcf9602d8de7f996))
+
 # [1.3.0-dev.78](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.77...v1.3.0-dev.78) (2024-04-01)
 
 
