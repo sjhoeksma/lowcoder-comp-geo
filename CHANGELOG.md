@@ -1,3 +1,10 @@
+# [1.3.0-dev.83](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.82...v1.3.0-dev.83) (2024-04-01)
+
+
+### Bug Fixes
+
+* build version ([602086d](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/602086d585f6b5233bc2fefa2852d0543c188f87))
+
 # [1.3.0-dev.82](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.81...v1.3.0-dev.82) (2024-04-01)
 
 
