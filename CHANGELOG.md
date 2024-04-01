@@ -129,3 +129,5 @@
 
 ### Bugs
 * In Layers stylegl, fails when style is set, needs object creation
+
+* ol-ext/interactions/UndoRedo throws to much console info local work around implemented
