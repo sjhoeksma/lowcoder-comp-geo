@@ -381,12 +381,10 @@ function Geo(props) {
           interaction: pSelect,
           onToggle: (active) => {
             snap.setActive(active);
-            modify.setActive(active)
           }
         });
         pdelete.on('change:disable', function () {
           snap.setActive(false)
-          modify.setActive(false)
         })
 
         if (featureEnabled('modify:delete')) editbar.addControl(pdelete);
