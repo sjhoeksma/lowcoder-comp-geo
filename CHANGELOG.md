@@ -1,3 +1,10 @@
+# [1.3.0-dev.86](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.85...v1.3.0-dev.86) (2024-04-01)
+
+
+### Bug Fixes
+
+* onInit ([075023b](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/075023b3954affc8e1aa19f78175291cd70767a8))
+
 # [1.3.0-dev.85](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.84...v1.3.0-dev.85) (2024-04-01)
 
 
