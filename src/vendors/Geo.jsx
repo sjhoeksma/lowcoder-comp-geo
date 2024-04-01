@@ -722,63 +722,59 @@ function Geo(props) {
       // Load all layers
       loadLayers(map)
 
-      //Add map init event, just delay a bit so render is finished
+      //Add map init event
       map.once('rendercomplete', () => {
-        setTimeout(() => {
-          fireEvent('map:init', map)
-          /* For testing
-          setFeatures(map, 'draw', {
-            "type": "FeatureCollection",
-            "features": [
-              {
-                "type": "Feature",
-                "geometry": {
-                  "type": "Point",
-                  "coordinates": [
-                    4.619280420426408,
-                    52.369718659676096
-                  ]
-                },
-                "properties": null
+        fireEvent('map:init', map)
+        /* For def testing
+        setFeatures(map, 'draw', {
+          "type": "FeatureCollection",
+          "features": [
+            {
+              "type": "Feature",
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  4.619280420426408,
+                  52.36971865967607
+                ]
               },
-              {
-                "type": "Feature",
-                "geometry": {
-                  "type": "Point",
-                  "coordinates": [
-                    4.777228609150011,
-                    52.3128117013695
-                  ]
-                },
-                "properties": null
+              "properties": null
+            },
+            {
+              "type": "Feature",
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  4.777228609150011,
+                  52.31281170136947
+                ]
               },
-              {
-                "type": "Feature",
-                "geometry": {
-                  "type": "Point",
-                  "coordinates": [
-                    4.715578084951174,
-                    52.25237825048336
-                  ]
-                },
-                "properties": null
+              "properties": null
+            },
+            {
+              "type": "Feature",
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  4.715578084951174,
+                  52.25237825048336
+                ]
               },
-              {
-                "type": "Feature",
-                "geometry": {
-                  "type": "Point",
-                  "coordinates": [
-                    4.639832579498036,
-                    52.29509806971279
-                  ]
-                },
-                "properties": null
-              }
-            ]
-          }
-        , true)
-        */
-        }, 350)
+              "properties": null
+            },
+            {
+              "type": "Feature",
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  4.639832579498036,
+                  52.29509806971279
+                ]
+              },
+              "properties": null
+            }
+          ]
+        })*/
       })
     }
   }, [props.features, props.projection, props.startDate, props.endDate, map]);

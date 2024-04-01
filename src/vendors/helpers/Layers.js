@@ -321,14 +321,14 @@ export function setFeatures(map, name, data, clear) {
           if (source.setFeatures) {
             source.setFeatures(reader.readFeatures(rec))
           } else {
-            source.addFeatures(reader.readFeatures(rec))
+            source.addFeaturesInternal(reader.readFeatures(rec))
           }
         })
       } else {
         if (source.setFeatures) {
           source.setFeatures(reader.readFeatures(data))
         } else {
-          source.addFeatures(reader.readFeatures(data))
+          source.addFeaturesInternal(reader.readFeatures(data))
         }
       }
     }
