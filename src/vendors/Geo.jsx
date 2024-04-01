@@ -36,7 +36,7 @@ import DrawRegular from 'ol-ext/interaction/DrawRegular'
 
 ///Local import
 import RotateNorthControl from './RotateNorthControl'
-import { createLayer } from './helpers/Layers'
+import { createLayer, setFeatures } from './helpers/Layers'
 import { animate, geoJsonStyleFunction, useScreenSize } from './helpers'
 
 //WorkArround, undo needs getSource
@@ -723,7 +723,63 @@ function Geo(props) {
       loadLayers(map)
 
       //Add map init event, just delay a bit so render is finished
-      map.once('loadend', () => { fireEvent('map:init', map) })
+      map.once('rendercomplete', () => {
+        setTimeout(() => {
+          fireEvent('map:init', map)
+          /* For testing
+          setFeatures(map, 'draw', {
+            "type": "FeatureCollection",
+            "features": [
+              {
+                "type": "Feature",
+                "geometry": {
+                  "type": "Point",
+                  "coordinates": [
+                    4.619280420426408,
+                    52.369718659676096
+                  ]
+                },
+                "properties": null
+              },
+              {
+                "type": "Feature",
+                "geometry": {
+                  "type": "Point",
+                  "coordinates": [
+                    4.777228609150011,
+                    52.3128117013695
+                  ]
+                },
+                "properties": null
+              },
+              {
+                "type": "Feature",
+                "geometry": {
+                  "type": "Point",
+                  "coordinates": [
+                    4.715578084951174,
+                    52.25237825048336
+                  ]
+                },
+                "properties": null
+              },
+              {
+                "type": "Feature",
+                "geometry": {
+                  "type": "Point",
+                  "coordinates": [
+                    4.639832579498036,
+                    52.29509806971279
+                  ]
+                },
+                "properties": null
+              }
+            ]
+          }
+        , true)
+        */
+        }, 350)
+      })
     }
   }, [props.features, props.projection, props.startDate, props.endDate, map]);
 
