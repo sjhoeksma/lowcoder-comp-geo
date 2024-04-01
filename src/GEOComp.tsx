@@ -515,7 +515,7 @@ GEOComp = withMethodExposing(GEOComp, [
     execute: async (comp: any, params: any) => {
       var map = comp.exposingValues.events['map:init']
       if (map) return getFeatures(map, params[0])
-      return Promise.reject()
+      throw Error('Map not ready')
     }
   },
   {

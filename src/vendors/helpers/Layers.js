@@ -321,14 +321,14 @@ export function setFeatures(map, name, data, clear) {
           if (source.setFeatures) {
             source.setFeatures(reader.readFeatures(rec))
           } else {
-            source.addFeaturesInternal(reader.readFeatures(rec))
+            source.addFeatures(reader.readFeatures(rec))
           }
         })
       } else {
         if (source.setFeatures) {
           source.setFeatures(reader.readFeatures(data))
         } else {
-          source.addFeaturesInternal(reader.readFeatures(data))
+          source.addFeatures(reader.readFeatures(data))
         }
       }
     }
@@ -356,7 +356,7 @@ export async function getFeatures(map, name) {
       featureProjection: map.getView().getProjection() || 'EPSG:3857'
     }).writeFeaturesObject(source.getFeatures())
   }
-  return Promise.reject()
+  throw new Error('Layer ' + name + ' not found')
 }
 
 

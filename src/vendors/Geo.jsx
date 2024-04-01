@@ -725,56 +725,6 @@ function Geo(props) {
       //Add map init event
       map.once('rendercomplete', () => {
         fireEvent('map:init', map)
-        /* For def testing
-        setFeatures(map, 'draw', {
-          "type": "FeatureCollection",
-          "features": [
-            {
-              "type": "Feature",
-              "geometry": {
-                "type": "Point",
-                "coordinates": [
-                  4.619280420426408,
-                  52.36971865967607
-                ]
-              },
-              "properties": null
-            },
-            {
-              "type": "Feature",
-              "geometry": {
-                "type": "Point",
-                "coordinates": [
-                  4.777228609150011,
-                  52.31281170136947
-                ]
-              },
-              "properties": null
-            },
-            {
-              "type": "Feature",
-              "geometry": {
-                "type": "Point",
-                "coordinates": [
-                  4.715578084951174,
-                  52.25237825048336
-                ]
-              },
-              "properties": null
-            },
-            {
-              "type": "Feature",
-              "geometry": {
-                "type": "Point",
-                "coordinates": [
-                  4.639832579498036,
-                  52.29509806971279
-                ]
-              },
-              "properties": null
-            }
-          ]
-        })*/
       })
     }
   }, [props.features, props.projection, props.startDate, props.endDate, map]);
@@ -819,6 +769,7 @@ function Geo(props) {
       }
     }
   }, [props.center, geoLoc]);
+
   //Menu title
   useEffect(() => {
     if (map) {
