@@ -51,7 +51,7 @@ export const en = {
     fullscreen: "Show Fullscreen",
     layers: "Show Layers",
     center: "Show Center on GPS",
-    modify: "Enable modify",
+    modify: "Enable modify (drawing)",
     save: "Show the save button",
     splitscreen: "Enable splitscreen",
     tracker: "Enable tracker",
@@ -69,6 +69,8 @@ export const en = {
     "modify:delete": "Delete feature (Modify)",
     "modify:redo": "Redo feature (Modify)",
     "modify:undo": "Undo feature (Modify)",
+    "modify:clear": "Clear draw layer",
+    "modify:snap": "Enable snapping to draw features",
     "splitscreen:horizontal": "Horizontal (Splitscreen)",
     "splitscreen:vertical": "Vertical (Splitscreen)",
     debug: "Log debug to console"

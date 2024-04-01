@@ -113,11 +113,11 @@ export function SourceControl() {
 
             return (
                 <>
-                    <Divider orientation="left" dashed orientationMargin="0px" style={{ margin: "0px" }} >
+                    <Divider orientation="left" dashed orientationMargin="0px" style={{ margin: "0px" }} key="div-layer-source" >
                         {trans("layer.source")}
                     </Divider>
                     {list}
-                    <Divider orientation="left" dashed orientationMargin="0px" style={{ margin: "0px" }} >
+                    <Divider orientation="left" dashed orientationMargin="0px" style={{ margin: "0px" }} key="div-layer-settings">
                         {trans("layer.settings")}
                     </Divider>
                 </>
@@ -196,12 +196,14 @@ LayerObjectOption = class extends LayerObjectOption {
             if (k == "source") {
                 list.push(this.children[k].propertyView({ label: trans(`layer.${k}`), type: this.children['type'].value }))
             } else {
-                list.push(this.children[k].propertyView({ label: trans(`layer.${k}`), }))
+                list.push(this.children[k].propertyView({ label: trans(`layer.${k}`) }))
             }
         })
         return (
-            <>  <Divider orientation="left" dashed orientationMargin="0px" style={{ margin: "0px" }}>
-                {trans("layer.layer")}</Divider>
+            <>
+                <Divider orientation="left" dashed orientationMargin="0px" style={{ margin: "0px" }} key="div-layer-map">
+                    {trans("layer.layer")}
+                </Divider>
                 {list}
             </>
         );

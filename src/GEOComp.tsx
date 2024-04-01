@@ -90,7 +90,7 @@ var GEOComp = (function () {
     {
       label: "onInit",
       value: "map:init",
-      description: "Triggers when the mapobject is created",
+      description: "Triggers when the map object is created",
     },
     {
       label: "onClick",
@@ -155,7 +155,7 @@ var GEOComp = (function () {
         fullscreen: true,
         layers: true,
         center: true,
-        modify: false,
+        modify: true,
         save: false,
         splitscreen: true,
         tracker: false,
@@ -173,9 +173,11 @@ var GEOComp = (function () {
         "modify:delete": true,
         "modify:redo": true,
         "modify:undo": true,
-        "splitscreen:horizontal": true,
-        "splitscreen:vertical": true,
-        debug: false,
+        "modify:clear": true,
+        "modify:snap": true,
+        "splitscreen:horizontal": false,
+        "splitscreen:vertical": false,
+        debug: geoContext.previewMode,
       }),
   };
 
@@ -261,8 +263,6 @@ var GEOComp = (function () {
             props.feature.onChange({})
             _events = {}
             break;
-          case 'map:create':
-            return //Internal event only, user should use map:init
           case 'click:feature':
             props.feature.onChange(eventObj)
             break;
@@ -417,7 +417,7 @@ GEOComp = withMethodExposing(GEOComp, [
       description: "Perform animation",
     },
     execute: async (comp: any, params: any) => {
-      var map = comp.exposingValues.events['map:create']
+      var map = comp.exposingValues.events['map:init']
       if (map) animate(map, params[0], params?.[1], params?.[2], params?.[3])
     }
   },
@@ -428,7 +428,7 @@ GEOComp = withMethodExposing(GEOComp, [
       description: "Return the last map object",
     },
     execute: async (comp: any, params: any) => {
-      return comp.exposingValues.events['map:create'] || {}
+      return comp.exposingValues.events['map:init'] || {}
     }
   },
   {
@@ -447,7 +447,7 @@ GEOComp = withMethodExposing(GEOComp, [
       ]
     },
     execute: async (comp: any, params: any) => {
-      var map = comp.exposingValues.events['map:create']
+      var map = comp.exposingValues.events['map:init']
       if (map) map.getControls().forEach((control: any) => {
         if (control instanceof Notification) {
           control.show(params[0], params[1] || 2000)
@@ -473,7 +473,7 @@ GEOComp = withMethodExposing(GEOComp, [
       ]
     },
     execute: async (comp: any, params: any) => {
-      var map = comp.exposingValues.events['map:create']
+      var map = comp.exposingValues.events['map:init']
       if (map) showPopup(map, params[0], params[1]);
     }
   },
@@ -483,28 +483,22 @@ GEOComp = withMethodExposing(GEOComp, [
       description: "Add feature to layer",
       params: [
         {
-          name: "data",
-          type: "JSONValue",
-        },
-        {
           name: "layer",
           type: "string",
+        },
+        {
+          name: "data",
+          type: "JSONValue",
         },
         {
           name: "clear",
           type: "boolean",
         }
-        ,
-        {
-          name: "merge",
-          type: "boolean",
-        }
       ]
     },
     execute: async (comp: any, params: any) => {
-      var map = comp.exposingValues.events['map:create']
-      if (map) return setFeatures(map, params[0], params[1], params[2] == true, params[3] == true)
-      return Promise.reject(new Error("Map not defined"))
+      var map = comp.exposingValues.events['map:init']
+      if (map) setFeatures(map, params[0], params[1], params[2] == true)
     }
   },
   {
@@ -519,9 +513,9 @@ GEOComp = withMethodExposing(GEOComp, [
       ]
     },
     execute: async (comp: any, params: any) => {
-      var map = comp.exposingValues.events['map:create']
+      var map = comp.exposingValues.events['map:init']
       if (map) return getFeatures(map, params[0])
-      return Promise.reject(new Error("Map not defined"))
+      return null
     }
   },
   {
@@ -536,7 +530,7 @@ GEOComp = withMethodExposing(GEOComp, [
       ]
     },
     execute: async (comp: any, params: any) => {
-      var map = comp.exposingValues.events['map:create']
+      var map = comp.exposingValues.events['map:init']
       if (map) return clearFeatures(map, params[0])
       return false
     }
@@ -556,7 +550,7 @@ GEOComp = withMethodExposing(GEOComp, [
         },
       ]
     },
-    execute: (comp: any, params: any) => {
+    execute: async (comp: any, params: any) => {
       if (params.length == 0) return
       //Create filter based on param
       const filter = parseFilter(params[1])
@@ -599,7 +593,7 @@ GEOComp = withMethodExposing(GEOComp, [
         },
       ]
     },
-    execute: (comp: any, params: any) => {
+    execute: async (comp: any, params: any) => {
       //Create filter based on param
       const filter = parseFilter(params[0])
       //Get the json config data
@@ -626,7 +620,7 @@ GEOComp = withMethodExposing(GEOComp, [
       description: "Get current zoom position of map",
       params: []
     }, execute: async (comp: any, params: any) => {
-      var map = comp.exposingValues.events['map:create']
+      var map = comp.exposingValues.events['map:init']
       if (map) return map.getView().getZoom()
       return 0
     }

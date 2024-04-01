@@ -213,8 +213,8 @@ function Geo(props) {
         target: 'GEO_' + geoId,
         layers: [],
       });
-      fireEvent('map:create', olMap);
       setMap(olMap)
+      fireEvent('map:create', olMap);
     }
   }, [geoRef])
 
@@ -243,7 +243,7 @@ function Geo(props) {
       if ((featureEnabled('modify')
         && (featureEnabled('modify:move') || featureEnabled('modify:point') || featureEnabled('modify:line')
           || featureEnabled('modify:polygon') || featureEnabled('modify:oval')
-          || featureEnabled('modify:undo') || featureEnabled('modify:redo')
+          || featureEnabled('modify:undo') || featureEnabled('modify:redo') || featureEnabled('modify:clear')
           || featureEnabled('modify:delete')))
         || featureEnabled('save')
         || featureEnabled('center'))
@@ -270,39 +270,39 @@ function Geo(props) {
         });
         if (featureEnabled('modify:move') || featureEnabled('modify:point') || featureEnabled('modify:line')
           || featureEnabled('modify:polygon') || featureEnabled('modify:oval')
-          || featureEnabled('modify:undo') || featureEnabled('modify:redo')
+          || featureEnabled('modify:undo') || featureEnabled('modify:redo') || featureEnabled('modify:clear')
           || featureEnabled('modify:delete'))
           mainbar.addControl(editbar);
 
         //Add modify interaction
         const modify = new ModifyFeature({ source: drawVector.getSource() });
+        if (featureEnabled("modify:move")) map.addInteraction(modify);
+        modify.setActive(false)
+
         const snap = new Snap({ source: drawVector.getSource() });
-        // Add move tools
+        if (featureEnabled("modify:snap")) map.addInteraction(snap);
+        snap.setActive(false)
+
+        // Add move Editing tools
         var pmove = new Toggle({
           html: '<i class="fa fa-up-down-left-right" ></i>',
           title: 'Move',
           onToggle: (active) => {
-            map.removeInteraction(snap);
-            map.removeInteraction(modify);
-            if (active) {
-              map.addInteraction(modify);
-              map.addInteraction(snap);
-            }
+            snap.setActive(active)
+            modify.setActive(active)
           }
         });
         pmove.on('change:disable', function () {
-          map.removeInteraction(snap);
-          map.removeInteraction(modify);
+          snap.setActive(false)
+          modify.setActive(false)
         })
         if (featureEnabled('modify:move')) editbar.addControl(pmove);
 
-        // Add editing tools
+        // Add Point editing
         var pedit = new Toggle({
           html: '<i class="fa fa-map-marker" ></i>',
           title: 'Point',
           onToggle: (active) => {
-            map.removeInteraction(snap);
-            map.removeInteraction(modify);
           },
           interaction: new Draw({
             type: 'Point',
@@ -311,13 +311,11 @@ function Geo(props) {
         });
         if (featureEnabled('modify:point')) editbar.addControl(pedit);
 
-        // Add editing tools
+        // Add Cirle editing 
         var cedit = new Toggle({
           html: '<i class="fa fa-circle" ></i>',
           title: 'Oval',
           onToggle: (active) => {
-            map.removeInteraction(snap);
-            map.removeInteraction(modify);
           },
           interaction: new DrawRegular({
             source: drawVector.getSource(),
@@ -329,12 +327,12 @@ function Geo(props) {
         });
         if (featureEnabled('modify:oval')) editbar.addControl(cedit);
 
+        //Line editing
         var ledit = new Toggle({
           html: '<i class="fa fa-share-alt" ></i>',
           title: 'Line',
           onToggle: (active) => {
-            map.removeInteraction(snap);
-            map.removeInteraction(modify);
+
           },
           interaction: new Draw({
             type: 'LineString',
@@ -350,12 +348,11 @@ function Geo(props) {
         });
         if (featureEnabled('modify:line')) editbar.addControl(ledit);
 
+        //Polygon editing
         var fedit = new Toggle({
           html: '<i class="fa fa-bookmark fa-rotate-270" ></i>',
           title: 'Polygon',
           onToggle: (active) => {
-            map.removeInteraction(snap);
-            map.removeInteraction(modify);
           },
           interaction: new Draw({
             type: 'Polygon',
@@ -382,22 +379,25 @@ function Geo(props) {
           title: 'Delete',
           interaction: pSelect,
           onToggle: (active) => {
-            map.removeInteraction(snap);
-            map.removeInteraction(modify);
-            if (active) {
-              map.addInteraction(snap);
-            }
+            snap.setActive(active);
+            modify.setActive(active)
           }
         });
+        pdelete.on('change:disable', function () {
+          snap.setActive(false)
+          modify.setActive(false)
+        })
+
         if (featureEnabled('modify:delete')) editbar.addControl(pdelete);
 
         // Undo redo interaction
         var undoInteraction = new UndoRedo({ layers: [drawVector] });
         undoInteraction.on('stack:add', function (e) {
-          fireEvent("modify:add")
+          if (e.action.name != "set")
+            fireEvent("modify:add", e)
         })
         undoInteraction.on('stack:remove', function (e) {
-          fireEvent("modify:remove")
+          fireEvent("modify:remove", e)
         })
         map.addInteraction(undoInteraction);
 
@@ -420,7 +420,22 @@ function Geo(props) {
           }
         });
         if (featureEnabled('modify:redo')) mainbar.addControl(redo);
+
+
+        // Add a simple push button to undo features
+        var clear = new Button({
+          html: '<i class="fa fa-trash-arrow-up"></i>',
+          title: "Clear",
+          handleClick: function (e) {
+            undoInteraction.blockStart("clear")
+            undoInteraction._layers.forEach((layer) => { layer.getSource().clear() })
+            undoInteraction.clear();
+            undoInteraction.blockEnd()
+          }
+        });
+        if (featureEnabled('modify:clear')) mainbar.addControl(clear);
       }
+
 
       // Add a simple push button to save features
       var save = new Button({
@@ -649,8 +664,11 @@ function Geo(props) {
 
         });
 
-        //Fire the click event only if not feature
-        if (!_feature) fireEvent('click:single', evt)
+        //Fire the click event only if not feature and not in edit mode
+        if (!_feature && (!(featureEnabled('modify') &&
+          (pdelete.getActive() || pmove.getActive() || cedit.getActive() ||
+            pedit.getActive() || ledit.getActive() || fedit.getActive()))))
+          fireEvent('click:single', evt)
       }
       // Click event listener for vector features and WMS GetFeatureInfo
       map.on('singleclick', singleClick);
@@ -766,8 +784,11 @@ function Geo(props) {
 
   // Dynamic layer updating
   useEffect(() => {
-    if (map)
+    if (map) {
       loadLayers(map)
+      //Add map init event
+      fireEvent('map:init', map)
+    }
   }, [props.layers, props.features.modify, props.features.tracker]); // Re-evaluate when layers change
 
   //GPS location

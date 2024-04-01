@@ -289,58 +289,55 @@ export function findLayer(map, name) {
  * @param {boolean} clear Whether to clear existing features before adding new ones
  * @returns {boolean} True if the layer was found and updated, false otherwise
 */
-export function setFeatures(map, data, name, clear, merge) {
-  return new Promise((reject, resolve) => {
-    const layer = findLayer(map, name);
-    if (layer) {
-      const source = layer.getSource()
-      const reader = (source.getFormat ? source.getFormat() : null) || new GeoJSON({
-        dataProjection: source.get('projection') || 'EPSG:4326', // Assuming the GeoJSON is in WGS 84,
-        featureProjection: map.getView().getProjection() || 'EPSG:3857' // Assuming the map projection
-      })
+export function setFeatures(map, name, data, clear) {
+  const layer = findLayer(map, name);
+  if (layer) {
+    const source = layer.getSource()
+    const reader = (source.getFormat ? source.getFormat() : null) || new GeoJSON({
+      dataProjection: source.get('projection') || 'EPSG:4326', // Assuming the GeoJSON is in WGS 84,
+      featureProjection: map.getView().getProjection() || 'EPSG:3857' // Assuming the map projection
+    })
 
-      //Check if there is a undo stack connected to this source, if so clear and disable
-      var undos = []
-      //Disable all undo stacks
-      map.getControls().forEach((c) => {
-        if (c instanceof UndoRedo && c.getActive()) {
-          undos.push(c)
-          c.setActive(false)
-        }
-      })
-
-      //Check if we should clear te source
-      if (clear) {
-        source.clear()
-        undos.forEach((c) => { c.clear() })
+    //Check if there is a undo stack connected to this source, if so clear and disable
+    var undos = []
+    //Disable all undo stacks
+    map.getInteractions().forEach((c) => {
+      if (c instanceof UndoRedo && c.getActive() && c._layers.includes(layer)) {
+        undos.push(c)
+        c.blockStart("set")
       }
+    })
 
-      var features
-      if (reader && data) {
-        //Now add the features based on types
-        if (Array.isArray(data)) {
-          data.forEach((rec) => {
-            if (source.setFeatures) {
-              source.setFeatures(reader.readFeatures(rec))
-            } else {
-              source.addFeatures(reader.readFeatures(rec))
-            }
-          })
-        } else {
-          if (source.setFeatures) {
-            source.setFeatures(reader.readFeatures(data))
-          } else {
-            source.addFeatures(reader.readFeatures(data))
-          }
-        }
-      }
-      //Enable the undo stack
-      undos.forEach((c) => { c.setActive(true) })
-      //Enable the connected undo check
-      resolve(features)
+    //Check if we should clear te source
+    if (clear) {
+      source.clear()
+      undos.forEach((c) => { c.clear() })
     }
-    reject(new Error('Layer (' + name + ') not found'))
-  })
+
+    if (reader && data) {
+      //Now add the features based on types
+      if (Array.isArray(data)) {
+        data.forEach((rec) => {
+          if (source.setFeatures) {
+            source.setFeatures(reader.readFeatures(rec))
+          } else {
+            source.addFeatures(reader.readFeatures(rec))
+          }
+        })
+      } else {
+        if (source.setFeatures) {
+          source.setFeatures(reader.readFeatures(data))
+        } else {
+          source.addFeatures(reader.readFeatures(data))
+        }
+      }
+    }
+    //Enable the undo stack
+    undos.forEach((c) => {
+      c.blockEnd()
+    })
+    //Enable the connected undo check
+  }
 }
 
 
@@ -349,17 +346,17 @@ export function setFeatures(map, data, name, clear, merge) {
  * Returns the features as a GeoJSON object if the layer is found, 
  * otherwise returns false.
 */
-export function getFeatures(map, name) {
+export async function getFeatures(map, name) {
   const layer = findLayer(map, name);
   if (layer) {
     const source = layer.getSource()
     //Check if there is a undo stack connected to this source, if so clear and disable
-    return new GeoJSON({
+    return await new GeoJSON({
       dataProjection: source.get('projection') || 'EPSG:4326',
       featureProjection: map.getView().getProjection() || 'EPSG:3857'
     }).writeFeaturesObject(source.getFeatures())
   }
-  return Promise.reject(new Error('Layer (' + name + ') not found'))
+  return null
 }
 
 
@@ -370,12 +367,7 @@ export function getFeatures(map, name) {
  * @returns {boolean} True if layer was found and cleared, false otherwise
  */
 export function clearFeatures(map, name) {
-  const layer = findLayer(map, name);
-  if (layer) {
-    layer.getSource().clear()
-    return true
-  }
-  return false
+  return setFeatures(map, name, null, true)
 }
 
 /**

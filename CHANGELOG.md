@@ -1,12 +1,4 @@
-# [1.3.0-dev.75](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.74...v1.3.0-dev.75) (2024-04-01)
-
-
-### Bug Fixes
-
-* wms JSON.stringify params ([3b1993f](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/3b1993f83ed3af058a03cb64d8ed7af8dee25418))
-
 # [1.3.0-dev.74](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.73...v1.3.0-dev.74) (2024-03-31)
-
 
 ### Bug Fixes
 
@@ -62,17 +54,15 @@
   KML (Keyhole Markup Language)
   GPX (GPS Exchange Format)
   Shapefile
-* Update documentation
-* Add removeFeatures to method
-* Block undo/redo stack when performing addFeatures/removeFeatures/clearFeatures
 * Use lowcoder styling template where possible, or add it to styles
 * Simplify the styling of the layer popup
 * Add location point on home, not just a bounce circle
-* Implement timeline function and layer types
 * Hide timeline layers from layer menu, and group the in on layergroup
 * Check if is workable on mobile
-* Problem with changing drawlayer, will not setFeatures
-* Loading of JSON not working
+* Animation for timeline
+* Add the option to add custom buttons to the menubar locations and connect event
+* Install jsdoc in dev, run jsdocs, copy create md files of it under docs, remove jdocs
+
 
 ### Bugs
 * In Layers stylegl, fails when style is set, needs object creation
