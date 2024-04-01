@@ -1,3 +1,10 @@
+# [1.3.0-dev.80](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.79...v1.3.0-dev.80) (2024-04-01)
+
+
+### Bug Fixes
+
+* remove init event from layer ([4c33944](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/4c33944bd90aea2a92f78bc54bcf299d96704d53))
+
 # [1.3.0-dev.79](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.78...v1.3.0-dev.79) (2024-04-01)
 
 
