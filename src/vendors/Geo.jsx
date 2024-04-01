@@ -723,7 +723,7 @@ function Geo(props) {
       loadLayers(map)
 
       //Add map init event
-      fireEvent('map:init', map);
+      map.once('rendercomplete', () => { fireEvent('map:init', map) })
     }
   }, [props.features, props.projection, props.startDate, props.endDate, map]);
 

@@ -23,7 +23,8 @@ Now scroll down to behavior section of the properties and toggle the following i
 Add an new interaction by clicking `+Add` on the right side of Event Handlers. Select the `onModify` event and for Action `Run Javascript`. Copy the javascript below into the script field. Set the bounce to 0.5s to reduce the number of modify events
 
 ```js
-localStorage.setItem('draw',geo1.getFeatures('draw'))
+geo1.getFeatures('draw').then((features)=>{
+localStorage.setItem('draw',features)})
 })
 ```
 <br clear="right"/>
