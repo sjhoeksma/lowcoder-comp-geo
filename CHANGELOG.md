@@ -1,3 +1,10 @@
+# [1.3.0-dev.77](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.76...v1.3.0-dev.77) (2024-04-01)
+
+
+### Bug Fixes
+
+* added await ([966e466](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/966e466d884e23865e9d01dd45cefc26587c7b5b))
+
 # [1.3.0-dev.76](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.75...v1.3.0-dev.76) (2024-04-01)
 
 
