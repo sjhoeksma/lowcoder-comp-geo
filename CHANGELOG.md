@@ -1,3 +1,10 @@
+# [1.3.0-dev.81](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.80...v1.3.0-dev.81) (2024-04-01)
+
+
+### Bug Fixes
+
+* conected init to loadend ([fccfaa8](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/fccfaa8a055f52c052895c856839fd9adae4293c))
+
 # [1.3.0-dev.80](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.79...v1.3.0-dev.80) (2024-04-01)
 
 
