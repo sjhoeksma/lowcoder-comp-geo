@@ -1,3 +1,10 @@
+# [1.3.0-dev.82](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.81...v1.3.0-dev.82) (2024-04-01)
+
+
+### Bug Fixes
+
+* init delay ([e1c1154](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/e1c11541aa6e24f8d53c3bd36f18a9a8516841c9))
+
 # [1.3.0-dev.81](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.80...v1.3.0-dev.81) (2024-04-01)
 
 
