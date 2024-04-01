@@ -26,7 +26,7 @@ export function SourceControl() {
         url: stringSimpleControl(),
         attributions: withDefault(StringControl, ''),
 
-        params: StringControl,
+        params: StringOrJSONObjectControl,
         serverType: stringSimpleControl(),
         crossOrigin: stringSimpleControl(),
 
@@ -138,15 +138,15 @@ var LayerObjectOption = new MultiCompBuilder(
         label: StringControl,
         title: StringControl,
         type: dropdownControl([
-            { label: "mvt", value: "mvt" },
-            { label: "wms", value: "wms" },
-            { label: "wfs", value: "wfs" },
-            { label: "xyz", value: "xyz" },
-            { label: "geojson", value: "geojson" },
-            { label: "cog", value: "cog" },
-            { label: "stylegl", value: "stylegl" },
-            { label: "arcgis-mapserver-tile", value: "arcgis mapserver tile" },
-            { label: "arcgis-mapserver-image", value: "arcgis mapserver image" }
+            { label: "MVT", value: "mvt" },
+            { label: "WMS", value: "wms" },
+            { label: "WFS", value: "wfs" },
+            { label: "XYZ", value: "xyz" },
+            { label: "GeoJSON", value: "geojson" },
+            { label: "COG", value: "cog" },
+            { label: "Mapbox StyleGL", value: "stylegl" },
+            { label: "ArcGIS Mapserver Tile", value: "arcgis mapserver tile" },
+            { label: "ArcGIS Mapserver Image", value: "arcgis mapserver image" }
         ]),
         source: SourceControl(),
         visible: withDefault(BoolPureControl, true),
@@ -183,6 +183,9 @@ LayerObjectOption = class extends LayerObjectOption {
             }
             if (obj.value.source && obj.value.source.data && typeof obj.value.source.data != "string") {
                 obj.value.source.data = JSON.stringify(obj.value.source.data, null)
+            }
+            if (obj.value.source && obj.value.source.params && typeof obj.value.source.params != "string") {
+                obj.value.source.params = JSON.stringify(obj.value.source.params, null)
             }
         }
         super(obj)
