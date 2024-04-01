@@ -722,8 +722,8 @@ function Geo(props) {
       // Load all layers
       loadLayers(map)
 
-      //Add map init event
-      map.once('rendercomplete', () => { fireEvent('map:init', map) })
+      //Add map init event, just delay a bit so render is finished
+      setTimeout(() => { fireEvent('map:init', map) }, 250)
     }
   }, [props.features, props.projection, props.startDate, props.endDate, map]);
 
