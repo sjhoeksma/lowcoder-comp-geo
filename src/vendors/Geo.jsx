@@ -725,8 +725,7 @@ function Geo(props) {
 
       //Add map init event
       map.once('rendercomplete', () => {
-        //Detach from event
-        setTimeout(() => { fireEvent('map:init', map) }, 100)
+        fireEvent('map:init', map)
       })
     }
   }, [props.features, props.projection, props.startDate, props.endDate, map]);
