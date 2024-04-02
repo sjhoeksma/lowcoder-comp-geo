@@ -106,6 +106,7 @@ export const en = {
     layer: 'Layer ',
     settings: 'Settings',
     pmtilesType: 'PMTiles Type',
+    mapServerType: 'Map Server Type',
 
   }
 };
