@@ -9,8 +9,10 @@
  */
 import { Vector as VectorLayer, VectorTile as VectorTileLayer, Image as ImageLayer } from 'ol/layer';
 import { XYZ, TileWMS, Vector as VectorSource, VectorTile as VectorTileSource, TileArcGISRest, ImageArcGISRest } from 'ol/source';
+import { PMTilesVectorSource, PMTilesRasterSource } from "ol-pmtiles";
 import GeoTIFF from 'ol/source/GeoTIFF.js';
 import TileLayer from 'ol/layer/WebGLTile.js';
+import WebGLTile from "ol/layer/WebGLTile";
 import MVT from 'ol/format/MVT';
 import GeoJSON from 'ol/format/GeoJSON';
 import { geoJsonStyleFunction } from './Styles'
@@ -161,7 +163,7 @@ export function createLayer(layerConfig, map) {
             sources: [
               {
                 url: layerConfig.source.url,
-                tileSize: 512,
+                tileSize: layerConfig.source.url || [512, 512],
                 nodata: 0,
               },
             ],
@@ -240,7 +242,47 @@ export function createLayer(layerConfig, map) {
             crossOrigin: layerConfig.source.crossOrigin,
           }),
         });
-
+      case 'pmtiles':
+        if (layerConfig.source.pmtilesType === 'raster') {
+          return new WebGLTile({
+            name: layerConfig.label,
+            title: layerConfig.title || layerConfig.name,
+            minZoom: layerConfig.minZoom,
+            maxZoom: layerConfig.maxZoom,
+            visible: layerConfig.visible,
+            opacity: layerConfig.opacity,
+            selectable: layerConfig.selectable,
+            groups: layerConfig.groups,
+            extra: layerConfig.extra,
+            order: layerConfig.order,
+            splitscreen: layerConfig.splitscreen,
+            displayInLayerSwitcher: layerConfig.userVisible,
+            source: new PMTilesRasterSource({
+              url: layerConfig.source?.url,
+              tileSize: layerConfig.source?.tileSize,
+            })
+          });
+        }
+        else if (layerConfig.source.pmtilesType === 'vector') {
+          return new VectorTileLayer({
+            declutter: true,
+            name: layerConfig.label,
+            title: layerConfig.title || layerConfig.name,
+            minZoom: layerConfig.minZoom,
+            maxZoom: layerConfig.maxZoom,
+            visible: layerConfig.visible,
+            opacity: layerConfig.opacity,
+            selectable: layerConfig.selectable,
+            groups: layerConfig.groups,
+            extra: layerConfig.extra,
+            order: layerConfig.order,
+            splitscreen: layerConfig.splitscreen,
+            displayInLayerSwitcher: layerConfig.userVisible,
+            source: new PMTilesVectorSource({
+              url: layerConfig.source?.url,
+            })
+          });
+        }
       /* History ? 
       new ol.layer.Geoportail({ 
         name: '1970',

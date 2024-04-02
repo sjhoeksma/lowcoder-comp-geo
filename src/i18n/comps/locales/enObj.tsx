@@ -3,6 +3,35 @@ import { I18nObjects } from "./types";
 export const enObj: I18nObjects = {
   defaultData: [
     {
+      "label": "PMTiles - Raster",
+      "title": "PMTiles - Raster",
+      "type": "pmtiles",
+      "order": 9,
+      "minZoom": 0,
+      "maxZoom": 30,
+      "visible": false,
+      "selectable": false,
+      "source": {
+        "pmtilesType": "raster",
+        "url": "https://r2-public.protomaps.com/protomaps-sample-datasets/terrarium_z9.pmtiles",
+        "tileSize": [512, 512],
+      }
+    },
+    {
+      "label": "PMTiles - Vector",
+      "title": "PMTiles - Vector",
+      "type": "pmtiles",
+      "order": 8,
+      "minZoom": 0,
+      "maxZoom": 30,
+      "visible": false,
+      "selectable": false,
+      "source": {
+        "pmtilesType": "vector",
+        "url": "https://link.storjshare.io/raw/jxqj5ixgrdniigc7f23mogdzeirq/truemaps-public%2Fpublic-datasets%2Foverturemaps%2F2024-01-17-alpha.0%2Ftheme%3Dbuildings%2Fegypt_buildings_vt.pmtiles",
+      }
+    },
+    {
       "label": "GeoJson",
       "title": "GeoJson with Style and Image src",
       "type": "geojson",

@@ -9,6 +9,7 @@ import {
     dropdownControl,
     StringOrJSONObjectControl,
     manualOptionsControl,
+    ArrayControl,
 } from 'lowcoder-sdk'
 import { trans } from "./i18n/comps";
 import { Divider } from "antd"
@@ -27,18 +28,29 @@ export function SourceControl() {
         attributions: withDefault(StringControl, ''),
 
         params: StringOrJSONObjectControl,
-        serverType: stringSimpleControl(),
+        serverType: withDefault(dropdownControl([
+            { label: "Geoserver", value: "geoserver" },
+            { label: "Mapserer", value: "mapserver" },
+            { label: "Carmentaserver", value: "carmentaserver" },
+            { label: "QGIS Server", value: "qgis" },
+        ]), 'geoserver'),
         crossOrigin: stringSimpleControl(),
 
         data: StringOrJSONObjectControl, // This could be a URL or a GeoJSON object ?
         projection: stringSimpleControl(),
 
-        tileSize: withDefault(NumberControl, 512),
+        tileSize: withDefault(ArrayControl, [256, 256]),
         nodata: withDefault(NumberControl, 0),
 
         ratio: withDefault(NumberControl, 1),
         style: StringOrJSONObjectControl,
+
+        pmtilesType: withDefault(dropdownControl([
+            { label: "Raster", value: "raster" },
+            { label: "Vector", value: "vector" },
+        ]), 'vector'),
     };
+
 
     //Class is rebuild not retuning same class 
     class SourceTemp extends new MultiCompBuilder(childrenMap, (props: any) => props)
@@ -102,6 +114,12 @@ export function SourceControl() {
                             'ratio',
                             'crossOrigin',
                         ]
+                    case 'pmtiles':
+                        return [
+                            'pmtilesType',
+                            'url',
+                            'tileSize',
+                        ]
                     default:
                         return [] // Empty configuration for unsupported types
                 }
@@ -146,7 +164,8 @@ var LayerObjectOption = new MultiCompBuilder(
             { label: "COG", value: "cog" },
             { label: "Mapbox StyleGL", value: "stylegl" },
             { label: "ArcGIS Mapserver Tile", value: "arcgis mapserver tile" },
-            { label: "ArcGIS Mapserver Image", value: "arcgis mapserver image" }
+            { label: "ArcGIS Mapserver Image", value: "arcgis mapserver image" },
+            { label: "PMTiles", value: "pmtiles" }
         ]),
         source: SourceControl(),
         visible: withDefault(BoolPureControl, true),
@@ -186,6 +205,9 @@ LayerObjectOption = class extends LayerObjectOption {
             }
             if (obj.value.source && obj.value.source.params && typeof obj.value.source.params != "string") {
                 obj.value.source.params = JSON.stringify(obj.value.source.params, null)
+            }
+            if (obj.value.source && obj.value.source.tileSize && typeof obj.value.source.tileSize != "string") {
+                obj.value.source.tileSize = JSON.stringify(obj.value.source.tileSize, null);
             }
         }
         super(obj)
