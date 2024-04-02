@@ -195,14 +195,14 @@ function Geo(props) {
     }
   }
 
-  //Configuration of Map component, changing watch props will rebuild map object
+
   useEffect(() => {
     if (geoRef) {
       geoRef.innerHTML = "<div id='GEO_" + geoId + "' " + (featureEnabled('largeButtons') ? "class='ol-large'" : "") +
         "  style='height:100%;width:100%'></div>"
 
       //The real map object
-      var olMap = new Map({
+      var map = new Map({
         controls: [],
         view: new View({
           center: fromLonLat(props.center.length == 2 ? props.center : geoLoc),
@@ -214,19 +214,8 @@ function Geo(props) {
         target: 'GEO_' + geoId,
         layers: [],
       });
-      setMap(olMap)
-      fireEvent('map:create', olMap);
-    }
-  }, [geoRef])
-
-  useEffect(() => {
-    if (map) {
-      fireEvent("map:rebuild", map)
-      //Remove all listeners and layers to prevent memory leakage
-      map.getLayers().clear();
-      map.getControls().forEach((c) => { map.removeControl(c) })
-      map.getInteractions().forEach((c) => { map.removeInteraction(c) })
-      defaultInteractions().forEach((c) => { map.addInteraction(c) })
+      setMap(map)
+      fireEvent('map:create', map);
 
       //Add the buttons contols
       var zoom = new Zoom({
@@ -726,7 +715,7 @@ function Geo(props) {
         fireEvent('map:init', map)
       })
     }
-  }, [props.features, props.projection, props.startDate, props.endDate, map]);
+  }, [props.features, props.projection, props.startDate, props.endDate, geoRef]);
 
 
   useEffect(() => {
