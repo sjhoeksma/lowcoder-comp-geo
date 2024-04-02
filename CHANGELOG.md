@@ -1,3 +1,16 @@
+# [1.3.0-dev.89](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.88...v1.3.0-dev.89) (2024-04-02)
+
+
+### Bug Fixes
+
+* arcgis-mapserver ([b821e27](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/b821e2739fc310ece9a4631aaa73ed6a61108076))
+* mapServerType i18n ([d1b0b0d](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/d1b0b0d715819907b08923a96b48700b998a0287))
+
+
+### Features
+
+* PMTiles layer type ([05b8be5](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/05b8be5082dc334dd87402e7ccec83cf620a356a))
+
 # [1.3.0-dev.88](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.87...v1.3.0-dev.88) (2024-04-01)
 
 
