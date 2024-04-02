@@ -87,7 +87,6 @@ var ol_interaction_UndoRedo = class olinteractionUndoRedo extends ol_interaction
      * @param {string} action the action key name
      * @param {function} undoFn function called when undoing
      * @param {function} redoFn function called when redoing
-     * @api
      */
     define(action, undoFn, redoFn) {
         this._defs[action] = { undo: undoFn, redo: redoFn }
@@ -186,7 +185,6 @@ var ol_interaction_UndoRedo = class olinteractionUndoRedo extends ol_interaction
     }
     /** Activate or deactivate the interaction, ie. records or not events on the map.
      * @param {boolean} active
-     * @api stable
      */
     setActive(active) {
         super.setActive(active)
@@ -196,7 +194,6 @@ var ol_interaction_UndoRedo = class olinteractionUndoRedo extends ol_interaction
      * Remove the interaction from its current map, if any, and attach it to a new
      * map, if any. Pass `null` to just remove the interaction from the current map.
      * @param {ol.Map} map Map.
-     * @api stable
      */
     setMap(map) {
         if (this._mapListener) {
@@ -308,7 +305,6 @@ var ol_interaction_UndoRedo = class olinteractionUndoRedo extends ol_interaction
     }
     /** Start an undo block
      * @param {string} [name] name f the action
-     * @api
      */
     blockStart(name) {
         this._redoStack.clear()
@@ -320,7 +316,6 @@ var ol_interaction_UndoRedo = class olinteractionUndoRedo extends ol_interaction
         this._level++
     }
     /** End an undo block
-     * @api
      */
     blockEnd() {
         this._undoStack.push({ type: 'blockend' })
@@ -412,7 +407,6 @@ var ol_interaction_UndoRedo = class olinteractionUndoRedo extends ol_interaction
         })
     }
     /** Undo last operation
-     * @api
      */
     undo() {
         var e = this._undoStack.item(this._undoStack.getLength() - 1)
@@ -423,7 +417,6 @@ var ol_interaction_UndoRedo = class olinteractionUndoRedo extends ol_interaction
         this._handleDo(e, true)
     }
     /** Redo last operation
-     * @api
      */
     redo() {
         var e = this._redoStack.item(this._redoStack.getLength() - 1)
@@ -434,7 +427,6 @@ var ol_interaction_UndoRedo = class olinteractionUndoRedo extends ol_interaction
         this._handleDo(e, false)
     }
     /** Clear undo stack
-     * @api
      */
     clear() {
         this._doClear = true
@@ -446,14 +438,12 @@ var ol_interaction_UndoRedo = class olinteractionUndoRedo extends ol_interaction
     }
     /** Check if undo is avaliable
      * @return {number} the number of undo
-     * @api
      */
     hasUndo() {
         return this._undoStack.getLength()
     }
     /** Check if redo is avaliable
      * @return {number} the number of redo
-     * @api
      */
     hasRedo() {
         return this._redoStack.getLength()

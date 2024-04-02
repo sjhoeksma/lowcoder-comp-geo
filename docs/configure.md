@@ -15,7 +15,7 @@ Be careful not to add to many layers because in some cases all data is loaded be
 There are many places where you can find open data sources serving information GEO data. For a starting point look at this [Wiki Page](https://en.wikipedia.org/wiki/List_of_GIS_data_sources) 
 <br clear="right"/>
 
-### options
+## Layer options
 
 |Level|Option|Description|
 |---|---|---|

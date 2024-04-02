@@ -31,3 +31,11 @@ When you want to see the result locally use the following command to start servi
 # Serving documentation
 yarn docs 
 ```
+
+## JsDoc
+We also provide an option to generate a full JsDoc of the code within the jsdoc directory. You can use this documentation when you are developing 
+
+```bash
+# Creating jsdoc documentation
+yarn jsdoc
+```
