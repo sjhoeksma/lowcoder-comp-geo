@@ -49,6 +49,10 @@ export function SourceControl() {
             { label: "Raster", value: "raster" },
             { label: "Vector", value: "vector" },
         ]), 'vector'),
+        mapServerType: withDefault(dropdownControl([
+            { label: "Image", value: "image" },
+            { label: "Tile", value: "tile" },
+        ]), 'tile'),
     };
 
 
@@ -101,14 +105,9 @@ export function SourceControl() {
                             'projection',
                             'style',
                         ]
-                    case 'arcgis-mapserver-tile':
+                    case 'arcgis-mapserver':
                         return [
-                            'url',
-                            'params', // Optional: parameters for the ArcGIS service
-                            'crossOrigin',
-                        ]
-                    case 'arcgis-mapserver-image':
-                        return [
+                            'mapServerType',
                             'url',
                             'params', // Optional: parameters for the ArcGIS service
                             'ratio',
@@ -163,8 +162,7 @@ var LayerObjectOption = new MultiCompBuilder(
             { label: "GeoJSON", value: "geojson" },
             { label: "COG", value: "cog" },
             { label: "Mapbox StyleGL", value: "stylegl" },
-            { label: "ArcGIS Mapserver Tile", value: "arcgis mapserver tile" },
-            { label: "ArcGIS Mapserver Image", value: "arcgis mapserver image" },
+            { label: "ArcGIS Mapserver", value: "arcgis-mapserver" },
             { label: "PMTiles", value: "pmtiles" }
         ]),
         source: SourceControl(),

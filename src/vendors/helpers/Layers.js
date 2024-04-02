@@ -200,48 +200,50 @@ export function createLayer(layerConfig, map) {
         applyBackground(layer, layerConfig.source?.url);
         return layer;
 
-      case 'arcgis-mapserver-tile':
-        return new TileLayer({
-          name: layerConfig.label,
-          title: layerConfig.title || layerConfig.name,
-          minZoom: layerConfig.minZoom,
-          maxZoom: layerConfig.maxZoom,
-          visible: layerConfig.visible,
-          opacity: layerConfig.opacity,
-          selectable: layerConfig.selectable,
-          groups: layerConfig.groups,
-          extra: layerConfig.extra,
-          order: layerConfig.order,
-          splitscreen: layerConfig.splitscreen,
-          displayInLayerSwitcher: layerConfig.userVisible,
-          source: new TileArcGISRest({
-            url: layerConfig.source?.url,
-            params: layerConfig.source.params || {},
-            crossOrigin: layerConfig.source.crossOrigin,
-          }),
-        });
-
-      case 'arcgis-mapserver-image':
-        return new ImageLayer({
-          name: layerConfig.label,
-          title: layerConfig.title || layerConfig.name,
-          minZoom: layerConfig.minZoom,
-          maxZoom: layerConfig.maxZoom,
-          visible: layerConfig.visible,
-          opacity: layerConfig.opacity,
-          selectable: layerConfig.selectable,
-          groups: layerConfig.groups,
-          extra: layerConfig.extra,
-          order: layerConfig.order,
-          splitscreen: layerConfig.splitscreen,
-          displayInLayerSwitcher: layerConfig.userVisible,
-          source: new ImageArcGISRest({
-            url: layerConfig.source?.url,
-            ratio: layerConfig.source.ratio || 1,
-            params: layerConfig.source.params || {},
-            crossOrigin: layerConfig.source.crossOrigin,
-          }),
-        });
+      case 'arcgis-mapserver':
+        if (layerConfig.source.mapServerType === 'tile') {
+          return new TileLayer({
+            name: layerConfig.label,
+            title: layerConfig.title || layerConfig.name,
+            minZoom: layerConfig.minZoom,
+            maxZoom: layerConfig.maxZoom,
+            visible: layerConfig.visible,
+            opacity: layerConfig.opacity,
+            selectable: layerConfig.selectable,
+            groups: layerConfig.groups,
+            extra: layerConfig.extra,
+            order: layerConfig.order,
+            splitscreen: layerConfig.splitscreen,
+            displayInLayerSwitcher: layerConfig.userVisible,
+            source: new TileArcGISRest({
+              url: layerConfig.source?.url,
+              params: layerConfig.source.params || {},
+              crossOrigin: layerConfig.source.crossOrigin,
+            }),
+          });
+        }
+        else if (layerConfig.source.mapServerType === 'image') {
+          return new ImageLayer({
+            name: layerConfig.label,
+            title: layerConfig.title || layerConfig.name,
+            minZoom: layerConfig.minZoom,
+            maxZoom: layerConfig.maxZoom,
+            visible: layerConfig.visible,
+            opacity: layerConfig.opacity,
+            selectable: layerConfig.selectable,
+            groups: layerConfig.groups,
+            extra: layerConfig.extra,
+            order: layerConfig.order,
+            splitscreen: layerConfig.splitscreen,
+            displayInLayerSwitcher: layerConfig.userVisible,
+            source: new ImageArcGISRest({
+              url: layerConfig.source?.url,
+              ratio: layerConfig.source.ratio || 1,
+              params: layerConfig.source.params || {},
+              crossOrigin: layerConfig.source.crossOrigin,
+            }),
+          });
+        }
       case 'pmtiles':
         if (layerConfig.source.pmtilesType === 'raster') {
           return new WebGLTile({
