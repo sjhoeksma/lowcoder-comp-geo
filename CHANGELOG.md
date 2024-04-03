@@ -1,3 +1,10 @@
+# [1.3.0-dev.90](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.89...v1.3.0-dev.90) (2024-04-03)
+
+
+### Bug Fixes
+
+* buttons redraw ([943888a](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/943888a6080395729e4278aef9ec59ca5c6a6eb9))
+
 # [1.3.0-dev.89](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.88...v1.3.0-dev.89) (2024-04-02)
 
 
