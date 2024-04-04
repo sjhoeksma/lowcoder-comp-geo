@@ -359,14 +359,14 @@ export function createLayer(layerConfig, map) {
                   ',"ymax":' +
                   extent[3] +
                   ',"spatialReference":{"wkid":' +
-                  srid || '3857' +
+                  srid +
                   '}}',
                 ) +
                 '&geometryType=esriGeometryEnvelope&inSR=' +
-                srid || '3857' +
+                srid +
                 '&outFields=*' +
                 '&outSR=' +
-                srid || '3857';
+                srid;
 
               return url;
             },
