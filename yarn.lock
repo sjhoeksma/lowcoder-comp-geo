@@ -1694,6 +1694,13 @@ anymatch@~3.1.2:
   resolved "https://registry.npmjs.org/aproba/-/aproba-2.0.0.tgz#52520b8ae5b569215b354efc0caa3fe1e45a8adc"
   integrity sha512-lYe4Gx7QT+MKGbDsA+Z+he/Wtef0BiwDOlK/XkBrdfsh9J/jPPXbX0tE9x9cl27Tmu5gg3QUbUrQYa/y+KOHPQ==
 
+arcgis-pbf-parser@^0.0.4:
+  version "0.0.4"
+  resolved "https://registry.npmjs.org/arcgis-pbf-parser/-/arcgis-pbf-parser-0.0.4.tgz#0aa0cb5648e400cb20cb06911a649063c20993ea"
+  integrity sha512-ngieRsLNct1dPyH85DnASiierr+hYO+9ow3zC22lYvNcKtFxVrtd1jbfizwWs9Kp3NpKP4iNnPAONp3acCcceA==
+  dependencies:
+    pbf "^3.2.1"
+
 archy@~1.0.0:
   version "1.0.0"
   resolved "https://registry.npmjs.org/archy/-/archy-1.0.0.tgz#f9c8c13757cc1dd7bc379ac77b2c62a5c2868c40"
@@ -4916,12 +4923,19 @@ object-assign@^4.0.1, object-assign@^4.1.0, object-assign@^4.1.1:
   resolved "https://registry.npmjs.org/object-assign/-/object-assign-4.1.1.tgz#2109adc7965887cfc05cbbd442cac8bfbb360863"
   integrity sha512-rJgTQnkUnH1sFw8yT6VSU3zD3sWmu6sZhIseY8VX+GRu3P6F7Fu+JNDoXfklElbLJSnc3FUQHVe4cU5hj+BcUg==
 
+ol-esri-styles@^0.0.1:
+  version "0.0.1"
+  resolved "https://registry.npmjs.org/ol-esri-styles/-/ol-esri-styles-0.0.1.tgz#8b9a099813cfa59bde582f5be3fee32c4d81d8ba"
+  integrity sha512-p9LsbBHOS4QHb8+KCy9yy0e+5nIxeOUSDsca/bIhzZuP5IfGUlrZw3TAIR8ESR0cQ6xvk+bOJ39jCGSxasc4IA==
+  dependencies:
+    ol "^9.1.0"
+
 ol-ext@^4.0.15:
   version "4.0.17"
   resolved "https://registry.npmjs.org/ol-ext/-/ol-ext-4.0.17.tgz#9f9d7cbc86718897af8439c5fb69f6b8acdc9236"
   integrity sha512-o3D+x7dzUIRyVDshmNceGgcNKX0N+Xf/vgQ1QwEIsBDeRJgraAeKtREGOPP0upnI8ldehoLMsCIiZgnsWxWAVw==
 
-ol-mapbox-style@^12.2.1:
+ol-mapbox-style@^12.3.0:
   version "12.3.0"
   resolved "https://registry.npmjs.org/ol-mapbox-style/-/ol-mapbox-style-12.3.0.tgz#46984378e13584bc532694868e7192f92915f0b4"
   integrity sha512-DPGWcEeC/XNejo0N10DpVOkMr2pRSzxOYWpe9RoOPiC9Ph34jiuyRpFQsLzlnJPrRo7pdQOYSYoM+mL8QF/HBA==
@@ -5277,7 +5291,7 @@ path-type@^5.0.0:
   resolved "https://registry.npmjs.org/path-type/-/path-type-5.0.0.tgz#14b01ed7aea7ddf9c7c3f46181d4d04f9c785bb8"
   integrity sha512-5HviZNaZcfqP95rwpv+1HDgUamezbqdSYTyzjTvwtJSnIH+3vnbmWsItli8OFEndS984VT55M3jduxZbX351gg==
 
-pbf@3.2.1:
+pbf@3.2.1, pbf@^3.2.1:
   version "3.2.1"
   resolved "https://registry.npmjs.org/pbf/-/pbf-3.2.1.tgz#b4c1b9e72af966cd82c6531691115cc0409ffe2a"
   integrity sha512-ClrV7pNOn7rtmoQVF4TS1vyU0WhYRnP92fzbfF75jAIwpnzdJXf8iTd4CMEqO4yUenH6NDqLiwjqlh6QgZzgLQ==
