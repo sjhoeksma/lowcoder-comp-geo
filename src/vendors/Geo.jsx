@@ -671,9 +671,10 @@ function Geo(props) {
         // Check for features at the current pointer position
         map.forEachFeatureAtPixel(pixel, function (feature, layer) {
           // If a layer is found and its selectable property is not false
+          console.debug('Hover feature on layer:', layer);
           if (layer && layer.get('selectable') !== false) {
             cursorStyle = 'pointer'; // Change the cursor to pointer
-            return true; // Stop iterating through the features
+            return false; // Stop iterating through the features
           }
         });
 
