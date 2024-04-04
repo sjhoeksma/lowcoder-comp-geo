@@ -1,3 +1,10 @@
+# [1.3.0-dev.92](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.91...v1.3.0-dev.92) (2024-04-04)
+
+
+### Bug Fixes
+
+* remove default srid ([e05f282](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/e05f2826f9c39adb85f510b9ae31cdbd31c1cf68))
+
 # [1.3.0-dev.91](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.90...v1.3.0-dev.91) (2024-04-04)
 
 
