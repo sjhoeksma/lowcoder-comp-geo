@@ -671,7 +671,7 @@ function Geo(props) {
         // Check for features at the current pointer position
         map.forEachFeatureAtPixel(pixel, function (feature, layer) {
           // If a layer is found and its selectable property is not false
-          console.debug('Hover feature on layer:', layer);
+          //console.debug('Hover feature on layer:', layer);
           if (layer && layer.get('selectable') !== false) {
             cursorStyle = 'pointer'; // Change the cursor to pointer
             return false; // Stop iterating through the features
@@ -712,9 +712,7 @@ function Geo(props) {
       loadLayers(map)
 
       //Add map init event
-      map.once('rendercomplete', () => {
-        fireEvent('map:init', map)
-      })
+      fireEvent('map:init', map)
     }
   }, [props.features, props.projection, props.startDate, props.endDate, geoRef]);
 

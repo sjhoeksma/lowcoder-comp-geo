@@ -20,7 +20,7 @@ import styles from "./styles.module.css";
 import { i18nObjs, trans } from "./i18n/comps";
 import { Geo } from "./vendors";
 import { version } from '../package.json';
-import { animate, showPopup, getFeatures, setFeatures, clearFeatures, deepMerge, parseFilter } from './vendors/helpers'
+import { animate, showPopup, featurePopup, getFeatures, setFeatures, clearFeatures, deepMerge, parseFilter } from './vendors/helpers'
 import { useResizeDetector } from "react-resize-detector";
 import { featureControl } from './FeaturesControl';
 import { geoContext } from './GEOContext';
@@ -461,20 +461,33 @@ GEOComp = withMethodExposing(GEOComp, [
       description: "Displays a popup at the specified coordinates with a given message",
       params: [
         {
-          name: "coordinates",
-          type: "JSONValue", // Assuming [longitude, latitude]
-          description: "Coordinates where the popup should appear",
+          name: "coordinates/featureEvent",
+          type: "JSONValue", // Assuming [longitude, latitude] can also be an featureEvent
+          description: "Coordinates or featureEvent object where the popup should appear",
         },
         {
           name: "message",
           type: "string",
           description: "Message to display in the popup",
-        }
+        },
+        {
+          name: "style",
+          type: "string",
+          description: "Style of popup (optional)",
+        },
       ]
     },
     execute: async (comp: any, params: any) => {
       var map = comp.exposingValues.events['map:init']
-      if (map) showPopup(map, params[0], params[1]);
+      if (map) {
+        switch (params[2]) {
+          case 'features':
+            featurePopup(map, params[0], params[1])
+            break;
+          default:
+            showPopup(map, params[0], params[1]);
+        }
+      }
     }
   },
   {
