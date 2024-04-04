@@ -123,7 +123,11 @@ export function SourceControl() {
                         return [
                             'url',
                             'projection',
-                            // Add other relevant source parameters for arcgis-vector-tiles here
+                        ];
+                    case 'arcgis-feature-service':
+                        return [
+                            'url',
+                            'projection',
                         ];
                     default:
                         return [] // Empty configuration for unsupported types
@@ -169,6 +173,7 @@ var LayerObjectOption = new MultiCompBuilder(
             { label: "MVT", value: "mvt" },
             { label: "Mapbox StyleGL", value: "stylegl" },
             { label: "ArcGIS Mapserver", value: "arcgis-mapserver" },
+            { label: "ArcGIS Feature Service", value: "arcgis-feature-service" },
             { label: "ArcGIS Vector Tiles", value: "arcgis-vector-tiles" },
             { label: "PMTiles", value: "pmtiles" },
         ]),

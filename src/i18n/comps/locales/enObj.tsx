@@ -3,6 +3,19 @@ import { I18nObjects } from "./types";
 export const enObj: I18nObjects = {
   defaultData: [
     {
+      "label": "ArcGIS Feature Servies",
+      "title": "ArcGIS Feature Servies",
+      "type": "arcgis-feature-service",
+      "order": 11,
+      "minZoom": 0,
+      "maxZoom": 22,
+      "visible": true,
+      "selectable": true,
+      "source": {
+        "url": "https://services-eu1.arcgis.com/NPIbx47lsIiu2pqz/ArcGIS/rest/services/Neptune_Coastline_Campaign_Open_Data_Land_Use_2014/FeatureServer/0",
+      }
+    },
+    {
       "label": "ArcGIS - Vector Tile PBF",
       "title": "ArcGIS - Vector Tile PBF",
       "type": "arcgis-vector-tiles",

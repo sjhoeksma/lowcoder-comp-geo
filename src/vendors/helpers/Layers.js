@@ -19,7 +19,10 @@ import { geoJsonStyleFunction } from './Styles'
 import { applyBackground, applyStyle } from 'ol-mapbox-style';
 import UndoRedo from 'ol-ext/interaction/UndoRedo'
 import EsriPBF from "./EsriPBF.js";
+import EsriJSON from 'ol/format/EsriJSON.js';
 import { createStyleFunctionFromUrl } from 'ol-esri-styles';
+import { tile as tileStrategy } from 'ol/loadingstrategy.js';
+import { createXYZ } from 'ol/tilegrid.js';
 
 /**
  * Creates and returns an OpenLayers layer instance for the given layer configuration object.
@@ -308,13 +311,78 @@ export function createLayer(layerConfig, map) {
               ) +
               '&geometryType=esriGeometryEnvelope&inSR=3857&outFields=*&resultType=tile' +
               '&outSR=3857',
+            strategy: tileStrategy(
+              createXYZ({
+                tileSize: [512, 512],
+              }),
+            ),
           }),
         })
         createStyleFunctionFromUrl(layerConfig.source.url, map.getView().getProjection() || 'EPSG:3857').then(styleFunction => {
-          esriVectorTiles.setStyle(styleFunction)
-          console.log(styleFunction);
+          esriVectorTiles.setStyle(styleFunction);
         });
         return esriVectorTiles;
+      case 'arcgis-feature-service':
+        const esriFeatureService = new VectorLayer({
+          name: layerConfig.label,
+          title: layerConfig.title || layerConfig.name,
+          minZoom: layerConfig.minZoom,
+          maxZoom: layerConfig.maxZoom,
+          visible: layerConfig.visible,
+          opacity: layerConfig.opacity,
+          selectable: layerConfig.selectable,
+          groups: layerConfig.groups,
+          extra: layerConfig.extra,
+          order: layerConfig.order,
+          splitscreen: layerConfig.splitscreen,
+          displayInLayerSwitcher: layerConfig.userVisible,
+          source: new VectorSource({
+            format: new EsriJSON(),
+            url: function (extent, resolution, projection) {
+              // ArcGIS Server only wants the numeric portion of the projection ID.
+              const srid = projection
+                .getCode()
+                .split(/:(?=\d+$)/)
+                .pop();
+
+              const url =
+                layerConfig.source.url +
+                '/query/?f=json&' +
+                'returnGeometry=true&spatialRel=esriSpatialRelIntersects&geometry=' +
+                encodeURIComponent(
+                  '{"xmin":' +
+                  extent[0] +
+                  ',"ymin":' +
+                  extent[1] +
+                  ',"xmax":' +
+                  extent[2] +
+                  ',"ymax":' +
+                  extent[3] +
+                  ',"spatialReference":{"wkid":' +
+                  srid || '3857' +
+                  '}}',
+                ) +
+                '&geometryType=esriGeometryEnvelope&inSR=' +
+                srid || '3857' +
+                '&outFields=*' +
+                '&outSR=' +
+                srid || '3857';
+
+              return url;
+            },
+            strategy: tileStrategy(
+              createXYZ({
+                tileSize: [512, 512],
+              }),
+            ),
+          })
+        });
+        createStyleFunctionFromUrl("https://services-eu1.arcgis.com/NPIbx47lsIiu2pqz/ArcGIS/rest/services/Neptune_Coastline_Campaign_Open_Data_Land_Use_2014/FeatureServer/0", map.getView().getProjection() || 'EPSG:3857').then(styleFunction => {
+          esriFeatureService.setStyle(styleFunction);
+        });
+
+        return esriFeatureService;
+
 
       /* History ? 
       new ol.layer.Geoportail({ 
