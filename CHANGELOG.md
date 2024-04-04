@@ -1,3 +1,16 @@
+# [1.3.0-dev.91](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.90...v1.3.0-dev.91) (2024-04-04)
+
+
+### Bug Fixes
+
+* hover feature style glitch ([b0a7c4f](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/b0a7c4fef41746049976d49c7b89bbe1914d4382))
+
+
+### Features
+
+* Add support for ArcGIS Feature Service ([924a2e7](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/924a2e79e82f607d79cc31d59d4dd8cd1b269e0b))
+* ArcGIS Vector Tiles PBF Layer Support ([fa7e2f9](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/fa7e2f911a35a3ae20e02800b24981e73d55a6d3))
+
 # [1.3.0-dev.90](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.89...v1.3.0-dev.90) (2024-04-03)
 
 
