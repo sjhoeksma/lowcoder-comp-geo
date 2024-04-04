@@ -18,6 +18,8 @@ import GeoJSON from 'ol/format/GeoJSON';
 import { geoJsonStyleFunction } from './Styles'
 import { applyBackground, applyStyle } from 'ol-mapbox-style';
 import UndoRedo from 'ol-ext/interaction/UndoRedo'
+import EsriPBF from "./EsriPBF.js";
+import { createStyleFunctionFromUrl } from 'ol-esri-styles';
 
 /**
  * Creates and returns an OpenLayers layer instance for the given layer configuration object.
@@ -285,6 +287,35 @@ export function createLayer(layerConfig, map) {
             })
           });
         }
+      case 'arcgis-vector-tiles':
+        const esriVectorTiles = new VectorLayer({
+          source: new VectorSource({
+            format: new EsriPBF({ dataProjection: layerConfig.source.projection || 'EPSG:3857' }),
+            url:
+              layerConfig.source.url +
+              '/query/?f=pbf&' +
+              'returnGeometry=true&spatialRel=esriSpatialRelIntersects&geometry=' +
+              encodeURIComponent(
+                '{"xmin":' +
+                -20037508.342789244 +
+                ',"ymin":' +
+                -20037508.342789244 +
+                ',"xmax":' +
+                20037508.342789244 +
+                ',"ymax":' +
+                20037508.342789244 +
+                '}'
+              ) +
+              '&geometryType=esriGeometryEnvelope&inSR=3857&outFields=*&resultType=tile' +
+              '&outSR=3857',
+          }),
+        })
+        createStyleFunctionFromUrl(layerConfig.source.url, map.getView().getProjection() || 'EPSG:3857').then(styleFunction => {
+          esriVectorTiles.setStyle(styleFunction)
+          console.log(styleFunction);
+        });
+        return esriVectorTiles;
+
       /* History ? 
       new ol.layer.Geoportail({ 
         name: '1970',

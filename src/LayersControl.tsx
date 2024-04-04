@@ -119,6 +119,12 @@ export function SourceControl() {
                             'url',
                             'tileSize',
                         ]
+                    case 'arcgis-vector-tiles':
+                        return [
+                            'url',
+                            'projection',
+                            // Add other relevant source parameters for arcgis-vector-tiles here
+                        ];
                     default:
                         return [] // Empty configuration for unsupported types
                 }
@@ -155,15 +161,16 @@ var LayerObjectOption = new MultiCompBuilder(
         label: StringControl,
         title: StringControl,
         type: dropdownControl([
-            { label: "MVT", value: "mvt" },
+            { label: "XYZ", value: "xyz" },
             { label: "WMS", value: "wms" },
             { label: "WFS", value: "wfs" },
-            { label: "XYZ", value: "xyz" },
             { label: "GeoJSON", value: "geojson" },
-            { label: "COG", value: "cog" },
+            { label: "COG / GeoTIFF", value: "cog" },
+            { label: "MVT", value: "mvt" },
             { label: "Mapbox StyleGL", value: "stylegl" },
             { label: "ArcGIS Mapserver", value: "arcgis-mapserver" },
-            { label: "PMTiles", value: "pmtiles" }
+            { label: "ArcGIS Vector Tiles", value: "arcgis-vector-tiles" },
+            { label: "PMTiles", value: "pmtiles" },
         ]),
         source: SourceControl(),
         visible: withDefault(BoolPureControl, true),
