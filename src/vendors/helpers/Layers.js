@@ -377,7 +377,7 @@ export function createLayer(layerConfig, map) {
             ),
           })
         });
-        createStyleFunctionFromUrl("https://services-eu1.arcgis.com/NPIbx47lsIiu2pqz/ArcGIS/rest/services/Neptune_Coastline_Campaign_Open_Data_Land_Use_2014/FeatureServer/0", map.getView().getProjection() || 'EPSG:3857').then(styleFunction => {
+        createStyleFunctionFromUrl(layerConfig.source.url, map.getView().getProjection() || 'EPSG:3857').then(styleFunction => {
           esriFeatureService.setStyle(styleFunction);
         });
 
