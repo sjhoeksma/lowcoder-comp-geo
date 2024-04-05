@@ -1,0 +1,282 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title> vendors/helpers/Animate.js</title>
+
+  <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="./build/entry.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,400,700|Inconsolata,700" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+  <link type="text/css" rel="stylesheet" href="https://jmblog.github.io/color-themes-for-google-code-prettify/themes/tomorrow-night.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/app.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/iframe.css">
+  <link type="text/css" rel="stylesheet" href="">
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+  
+</head>
+
+
+
+<body class="layout small-header">
+    <div id="stickyNavbarOverlay"></div>
+    
+
+<div class="top-nav">
+    <div class="inner">
+        <a id="hamburger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+        <div class="logo">
+            
+            
+        </div>
+        <div class="menu">
+            
+            <div class="navigation">
+                <a
+                    href="index.html"
+                    class="link"
+                >
+                    Documentation
+                </a>
+                
+                
+                
+            </div>
+        </div>
+    </div>
+</div>
+    <div id="main">
+        <div
+            class="sidebar "
+            id="sidebarNav"
+        >
+            
+            <nav>
+                
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="EsriPBF.html">EsriPBF</a></li><li><a href="global.html#LayerObjectOption">LayerObjectOption</a></li><li><a href="module.html#.exports">exports</a></li><li><a href="ol_interaction_UndoRedo.html">ol_interaction_UndoRedo</a></li></ul><h3>Global</h3><ul><li><a href="global.html#CompStyles">CompStyles</a></li><li><a href="global.html#GEOComp">GEOComp</a></li><li><a href="global.html#Geo">Geo</a></li><li><a href="global.html#SourceControl">SourceControl</a></li><li><a href="global.html#animate">animate</a></li><li><a href="global.html#animateHome">animateHome</a></li><li><a href="global.html#animatePulse">animatePulse</a></li><li><a href="global.html#animateToExtent">animateToExtent</a></li><li><a href="global.html#animateToLocation">animateToLocation</a></li><li><a href="global.html#animations">animations</a></li><li><a href="global.html#clearFeatures">clearFeatures</a></li><li><a href="global.html#createLayer">createLayer</a></li><li><a href="global.html#darkStroke">darkStroke</a></li><li><a href="global.html#deepMerge">deepMerge</a></li><li><a href="global.html#featureControl">featureControl</a></li><li><a href="global.html#featurePopup">featurePopup</a></li><li><a href="global.html#findLayer">findLayer</a></li><li><a href="global.html#geoContext">geoContext</a></li><li><a href="global.html#geoJsonStyleFunction">geoJsonStyleFunction</a></li><li><a href="global.html#getFeatures">getFeatures</a></li><li><a href="global.html#layersControl">layersControl</a></li><li><a href="global.html#lightStroke">lightStroke</a></li><li><a href="global.html#parseCoords">parseCoords</a></li><li><a href="global.html#parseFilter">parseFilter</a></li><li><a href="global.html#pulseFeature">pulseFeature</a></li><li><a href="global.html#selectedStyle">selectedStyle</a></li><li><a href="global.html#setFeatures">setFeatures</a></li><li><a href="global.html#showPopup">showPopup</a></li><li><a href="global.html#useScreenSize">useScreenSize</a></li></ul></div>
+                
+            </nav>
+        </div>
+        <div class="core" id="main-content-wrapper">
+            <div class="content">
+                <header class="page-title">
+                    <p>Source</p>
+                    <h1>vendors/helpers/Animate.js</h1>
+                </header>
+                
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { fromLonLat, transform } from 'ol/proj';
+import { getCenter } from 'ol/extent';
+import { Stroke, Style, Fill } from 'ol/style'
+import * as style from 'ol/style'
+import { Feature } from 'ol';
+import Zoom from 'ol-ext/featureanimation/Zoom'
+import { Point } from 'ol/geom'
+import * as easing from 'ol/easing';
+
+const emptyCallback = function () { }
+
+/**
+ * Parses a coordinate value and returns an array of [longitude, latitude].
+ * Handles stringified JSON, array, and object coordinate formats.
+ * @param {array/string/json} coords The coords to parse.
+ * Returns empty array if unable to parse coordinates.
+ */
+export function parseCoords(coords) {
+  if (!coords) return []
+  try {
+    if (typeof coords === 'string') coords = JSON.parse(coords)
+  } catch (e) { }
+  try {
+    if (typeof coords === 'string') coords = JSON.parse("[" + coords + "]")
+  } catch (e) { }
+  if (Array.isArray(coords)) return coords
+  if (coords.longitude) return [coords.longitude, coords.latitude]
+  return coords
+}
+
+/**
+ * Animates the map view to the given coordinates.
+ * 
+ * @param {ol.Map} map The map to animate.
+ * @param {number[]} coords The longitude and latitude of the location to animate to. 
+ * @param {number} [duration=2000] Duration of the animation in milliseconds.
+ * @param {Object} [props] Additional properties for the view animation.
+ */
+export function animateToLocation(map, coords, duration, props = {}) {
+  const location = fromLonLat(coords);
+  return map.getView().animate(Object.assign({ zoom: 15 }, {
+    center: location,
+    duration: duration,
+  }, props), props.callback || emptyCallback);
+}
+
+/**
+ * Animates the map view to center on the given extent. 
+ * 
+ * @param {ol.Map} map The map to animate
+ * @param {number[]} coords The extent to animate to as [minx, miny, maxx, maxy]
+ * @param {number} [duration=2000] Duration of animation in milliseconds
+ * @param {Object} [props] Additional properties for the view animation
+ */
+export function animateToExtent(map, coords, duration, props = {}) {
+  const geographicCenter = getCenter(coords);
+  const location = fromLonLat(geographicCenter);
+  map.getView().animate(Object.assign({ zoom: 15 }, {
+    center: location || fromLonLat(coords),
+    duration: duration,
+  }, props));
+}
+
+
+
+/**
+ * Animates a pulsing effect on the provided feature coordinate.
+ * 
+ * @param {ol.Map} map The map to animate on.
+ * @param {number[]} coords The longitude and latitude of the feature to pulse.
+ * @param {number} [duration=3000] Duration of the pulse animation in milliseconds.
+ * @param {Object} [props] Additional properties for the animation.
+ */
+export function pulseFeature(map, coords, duration, props = {}) {
+  props = Object.assign({ _easing: "upAndDown", _style: "Circle", _color: "red" }, props)
+  //const location = fromLonLat(coords);
+  const location = transform(coords, 'EPSG:4326', map.getView().getProjection())
+  //Bounce
+  var bounce = 5;
+  var a = (2 * bounce + 1) * Math.PI / 2;
+  var b = -0.01;
+  var c = -Math.cos(a) * Math.pow(2, b);
+
+  const _bounce = function (t) {
+    t = 1 - Math.cos(t * Math.PI / 2);
+    return (1 + Math.abs(Math.cos(a * t)) * Math.pow(2, b * t) + c * t) / 2;
+  }
+
+  var f = new Feature(new Point(location));
+  f.setStyle(new Style({
+    image: new style[props._style]({
+      radius: 40,
+      points: 4,
+      src: props.image || "../../../assets/Marker.svg",
+      //fill: new Fill({ color: 'white' }),
+      stroke: new Stroke({ color: props._color, width: 2 })
+    })
+  }));
+
+  map.animateFeature(f, new Zoom({
+    zoomOut: false,
+    fade: easing.easeOut,
+    duration: duration || 3000,
+    easing: props._easing == "bounce" ? bounce : easing[props._easing]
+  }))
+}
+
+/**
+ * Animates a pulsing effect by calling pulseFeature multiple 
+ * times with a delay between each call.
+ * 
+ * @param {ol.Map} map - The map to animate on.
+ * @param {number[]} coords - The longitude and latitude to pulse. 
+ * @param {number} [duration=3000] - Duration of each pulse.
+ * @param {Object} [props] - Additional properties for the animation.
+ */
+export function animatePulse(map, coords, duration, props = {}) {
+  var count = props._pulseCount ? props._pulseCount : props._easing == "bounce" ? 1 : 3;
+  for (var i = 0; i &lt; count; i++) {
+    setTimeout(function () {
+      pulseFeature(map, coords, duration, props);
+    }, i * 500);
+  };
+}
+
+/**
+ * Animates panning to a location, then animates a pulse effect.
+ * 
+ * @param {ol.Map} map - The map to animate on.
+ * @param {number[]} coords - The longitude and latitude to pan and pulse to.
+ * @param {number} duration - Duration of the pulse animation.  
+ * @param {Object} [props] - Additional properties for the animations.
+ */
+export function animateHome(map, coords, duration, props = {}) {
+  animateToLocation(map, coords, props.locDuration || duration,
+    Object.assign(props, {
+      'callback': () => {
+        animatePulse(map, coords, duration, props)
+      }
+    })
+  )
+}
+
+/**
+ * Object containing animation helper functions that can be called to 
+ * animate the map in different ways.
+ */
+export const animations = {
+  'toLocation': animateToLocation,
+  'toExtent': animateToExtent,
+  'pulse': animatePulse,
+  'home': animateHome,
+}
+
+/**
+ * Animates the map view in some way by calling one of the animation helper functions.
+ * @param {ol.Map} map - The map to animate
+ * @param {number[]} coords - The map coordinates (longitude, latitude) to animate to
+ * @param {number} [duration=2000] - Duration of the animation in milliseconds 
+ * @param {Object} [props] - Additional properties to pass to the animation function
+ * @param {string} [name] - Name of the animation function to call (default 'toLocation')
+ */
+export function animate(map, coords, duration = 2000, props = {}, name) {
+  var func = animations[name || 'toLocation']
+  if (func) func(map, parseCoords(coords), duration, props)
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+            </div>
+            
+            <footer class="footer">
+                <div class="content has-text-centered">
+                    <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.2</a></p>
+                    <p class="sidebar-created-by">
+                        <a href="https://github.com/SoftwareBrothers/better-docs" target="_blank">BetterDocs theme</a> provided with <i class="fas fa-heart"></i> by
+                        <a href="http://softwarebrothers.co" target="_blank">SoftwareBrothers - JavaScript Development Agency</a>
+                    </p>
+                </div>
+            </footer>
+            
+        </div>
+        <div id="side-nav" class="side-nav">
+        </div>
+    </div>
+<script src="scripts/app.min.js"></script>
+<script>PR.prettyPrint();</script>
+<script src="scripts/linenumber.js"> </script>
+
+
+</body>
+</html>

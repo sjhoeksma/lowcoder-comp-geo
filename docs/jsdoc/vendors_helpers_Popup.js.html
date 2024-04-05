@@ -1,0 +1,210 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title> vendors/helpers/Popup.js</title>
+
+  <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="./build/entry.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,400,700|Inconsolata,700" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+  <link type="text/css" rel="stylesheet" href="https://jmblog.github.io/color-themes-for-google-code-prettify/themes/tomorrow-night.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/app.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/iframe.css">
+  <link type="text/css" rel="stylesheet" href="">
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+  
+</head>
+
+
+
+<body class="layout small-header">
+    <div id="stickyNavbarOverlay"></div>
+    
+
+<div class="top-nav">
+    <div class="inner">
+        <a id="hamburger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+        <div class="logo">
+            
+            
+        </div>
+        <div class="menu">
+            
+            <div class="navigation">
+                <a
+                    href="index.html"
+                    class="link"
+                >
+                    Documentation
+                </a>
+                
+                
+                
+            </div>
+        </div>
+    </div>
+</div>
+    <div id="main">
+        <div
+            class="sidebar "
+            id="sidebarNav"
+        >
+            
+            <nav>
+                
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="EsriPBF.html">EsriPBF</a></li><li><a href="global.html#LayerObjectOption">LayerObjectOption</a></li><li><a href="module.html#.exports">exports</a></li><li><a href="ol_interaction_UndoRedo.html">ol_interaction_UndoRedo</a></li></ul><h3>Global</h3><ul><li><a href="global.html#CompStyles">CompStyles</a></li><li><a href="global.html#GEOComp">GEOComp</a></li><li><a href="global.html#Geo">Geo</a></li><li><a href="global.html#SourceControl">SourceControl</a></li><li><a href="global.html#animate">animate</a></li><li><a href="global.html#animateHome">animateHome</a></li><li><a href="global.html#animatePulse">animatePulse</a></li><li><a href="global.html#animateToExtent">animateToExtent</a></li><li><a href="global.html#animateToLocation">animateToLocation</a></li><li><a href="global.html#animations">animations</a></li><li><a href="global.html#clearFeatures">clearFeatures</a></li><li><a href="global.html#createLayer">createLayer</a></li><li><a href="global.html#darkStroke">darkStroke</a></li><li><a href="global.html#deepMerge">deepMerge</a></li><li><a href="global.html#featureControl">featureControl</a></li><li><a href="global.html#featurePopup">featurePopup</a></li><li><a href="global.html#findLayer">findLayer</a></li><li><a href="global.html#geoContext">geoContext</a></li><li><a href="global.html#geoJsonStyleFunction">geoJsonStyleFunction</a></li><li><a href="global.html#getFeatures">getFeatures</a></li><li><a href="global.html#layersControl">layersControl</a></li><li><a href="global.html#lightStroke">lightStroke</a></li><li><a href="global.html#parseCoords">parseCoords</a></li><li><a href="global.html#parseFilter">parseFilter</a></li><li><a href="global.html#pulseFeature">pulseFeature</a></li><li><a href="global.html#selectedStyle">selectedStyle</a></li><li><a href="global.html#setFeatures">setFeatures</a></li><li><a href="global.html#showPopup">showPopup</a></li><li><a href="global.html#useScreenSize">useScreenSize</a></li></ul></div>
+                
+            </nav>
+        </div>
+        <div class="core" id="main-content-wrapper">
+            <div class="content">
+                <header class="page-title">
+                    <p>Source</p>
+                    <h1>vendors/helpers/Popup.js</h1>
+                </header>
+                
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Shows a popup overlay on the provided map at the given coordinates 
+ * with the specified content message. Creates the popup if it does not 
+ * already exist.
+ */
+import Overlay from 'ol/Overlay';
+import { getCenter } from 'ol/extent';
+import { fromLonLat, transformExtent } from 'ol/proj';
+import { object } from 'prop-types';
+
+
+function getMapPopup(map, name) {
+    let popup = map.getOverlayById(name);
+    if (!popup) {
+        // Create popup overlay logic
+        let popupElement = document.createElement('div');
+        popupElement.className = 'ol-popup';
+
+        let closer = document.createElement('a');
+        closer.className = 'ol-popup-closer';
+        closer.href = '#';
+        popupElement.appendChild(closer);
+
+        let content = document.createElement('div');
+        content.className = 'ol-popup-content';
+        popupElement.appendChild(content);
+
+        closer.onclick = function () {
+            popup.setPosition(undefined);
+            closer.blur();
+            return false;
+        };
+
+        popup = new Overlay({
+            element: popupElement,
+            autoPan: true,
+            autoPanAnimation: { duration: 250 },
+            id: name
+        });
+
+        map.addOverlay(popup);
+    }
+    return popup
+}
+/**
+ * Shows a popup overlay on the provided map at the given coordinates
+ * with the specified content message. Creates the popup if it does not
+ * already exist.
+ * 
+ * @param {ol.Map} map The map to show the popup on.
+ * @param {ol.Coordinate|ol.Extent} coordinates The popup location as a coordinate pair or extent.
+ * @param {string} message The HTML content for the popup.
+ */
+export function showPopup(map, coordinates, message) {
+    let popup = getMapPopup(map, 'infoPopup');
+
+    if (coordinates &amp;&amp; !Array.isArray(coordinates) &amp;&amp; coordinates.extent) {
+        coordinates = coordinates.extent
+    }
+    if (Array.isArray(coordinates)) {
+        // If coordinates have more than two values, assume it's an extent and calculate its center.
+        if (coordinates.length > 2) {
+            coordinates = getCenter(transformExtent(coordinates, 'EPSG:4326', map.getView().getProjection()));
+        }
+        else if (coordinates.length &lt; 3) {
+            coordinates = fromLonLat(coordinates);
+        }
+        // Now coordinates will always be a pair here, suitable for setPosition.
+        let content = popup.getElement().querySelector('.ol-popup-content');
+        content.innerHTML = message;
+        popup.setPosition(coordinates);
+    }
+}
+
+
+/**
+ * Shows a popup with feature properties in a table. 
+ * Called on map click events. Checks for feature at click location, 
+ * gets its properties, formats them in a table, 
+ * and shows in a popup at the click location.
+ * 
+ * @param  map The map to show the popup on.
+ * @param  event The feature click event
+*/
+export function featurePopup(map, evtObj, title) {
+    let tableHTML = '&lt;tr>&lt;th>Property&lt;/th>&lt;th>Value&lt;/th>&lt;/tr>';
+    // Exclude the geometry property and iterate over the remaining properties
+    delete evtObj.properties.geometry; // Remove geometry property
+    for (const [key, value] of Object.entries(evtObj.properties)) {
+        tableHTML += `&lt;tr>&lt;td>${key}&lt;/td>&lt;td>${value}&lt;/td>&lt;/tr>`;
+    }
+    // Now coordinates will always be a pair here, suitable for setPosition.
+    showPopup(map, evtObj, `${title}&lt;table style="border:1">${tableHTML}&lt;/table>`)
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+            </div>
+            
+            <footer class="footer">
+                <div class="content has-text-centered">
+                    <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.2</a></p>
+                    <p class="sidebar-created-by">
+                        <a href="https://github.com/SoftwareBrothers/better-docs" target="_blank">BetterDocs theme</a> provided with <i class="fas fa-heart"></i> by
+                        <a href="http://softwarebrothers.co" target="_blank">SoftwareBrothers - JavaScript Development Agency</a>
+                    </p>
+                </div>
+            </footer>
+            
+        </div>
+        <div id="side-nav" class="side-nav">
+        </div>
+    </div>
+<script src="scripts/app.min.js"></script>
+<script>PR.prettyPrint();</script>
+<script src="scripts/linenumber.js"> </script>
+
+
+</body>
+</html>

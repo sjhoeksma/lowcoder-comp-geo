@@ -1,9 +1,8 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState } from 'react';
 import {
   UICompBuilder,
   NameConfig,
   stringSimpleControl,
-  JSONObjectControl,
   NumberControl,
   ArrayControl,
   Section,
@@ -15,17 +14,24 @@ import {
   arrayStringExposingStateControl,
   withMethodExposing,
   AutoHeightControl,
+  changeValueAction,
 } from "lowcoder-sdk";
 import styles from "./styles.module.css";
 import { i18nObjs, trans } from "./i18n/comps";
 import { Geo } from "./vendors";
 import { version } from '../package.json';
-import { animate, showPopup, addFeatures } from './vendors/helpers'
+import { animate, showPopup, featurePopup, getFeatures, setFeatures, clearFeatures, deepMerge, parseFilter } from './vendors/helpers'
 import { useResizeDetector } from "react-resize-detector";
+import { featureControl } from './FeaturesControl';
+import { geoContext } from './GEOContext';
+import { layersControl } from './LayersControl';
 // @ts-ignore
 import Notification from 'ol-ext/control/Notification'
 
-
+/**
+ * Array of style configuration objects for styling the component.
+ * Each object has a name, label, and style property key.
+ */
 export const CompStyles = [
   {
     name: "padding",
@@ -66,42 +72,15 @@ export const CompStyles = [
  * By setting the following items within default you can control behavior
      center:[] will disable automatich centering
      debug: true will show eventlog to console
-     buttons: { //All buttons are shown by default
-        menu: false,
-        zoom: false,
-        draw: false, //Will disable all draw buttons
-        draw:select : false,
-        draw:point : false,
-        draw:line: false,
-        draw:polygon: false,
-        draw:delete: false
-        draw:redo: false,
-        draw:undo: false,
-        tracker:save:false,
-        scale:false,
-        fullscreen:false,
-        layers:false,
-        swipeVertical: false,
-        swipeHorizontal: false,
-        timeline: false,
-        location:false,
-        tracker :false,
-        rotateNorth: false,
-      }
  */
 var GEOComp = (function () {
 
   //The events supported
-  const events = [
+  const eventDefinitions = [
     {
-      label: "onDraw",
-      value: "draw",
+      label: "onModify",
+      value: "modify",
       description: "Triggers when drawLayer data changes",
-    },
-    {
-      label: "onTracker",
-      value: "tracker",
-      description: "Triggers when trackerLayer data changes",
     },
     {
       label: "onLoad",
@@ -111,7 +90,7 @@ var GEOComp = (function () {
     {
       label: "onInit",
       value: "map:init",
-      description: "Triggers when the mapobject is created",
+      description: "Triggers when the map object is created",
     },
     {
       label: "onClick",
@@ -129,76 +108,78 @@ var GEOComp = (function () {
       description: "Triggers when there is a bbox change",
     },
     {
+      label: "onTimeline",
+      value: "timeline",
+      description: "Triggers when there is a timeline change",
+    },
+    {
+      label: "onZoom",
+      value: "map:zoom",
+      description: "Triggers when there is zoom change",
+    },
+    {
+      label: "onSave",
+      value: "save",
+      description: "Triggers when users clicks save button",
+    },
+    {
       label: "onEvent",
       value: "event",
       description: "Triggers when there is no special event handler is triggered",
     },
   ];
 
-  //All properties avaiable in component
+  //All properties available in component
   const childrenMap = {
-    autoHeight: withDefault(AutoHeightControl, "fixed"),
+    autoHeight: withDefault(AutoHeightControl, false),
     styles: styleControl(CompStyles),
-    defaults: withDefault(
-      JSONObjectControl,
-      `{
-      zoom:10,
-      maxZoom:30,
-      menuTitle: "Menu",
-      menuContent: "No Content",
-      buttons: { 
-        draw: true
-      },
-      debug:true
-    }`
-    ),
     center: ArrayControl,
-    layers: withDefault(
-      ArrayControl,
-      `${JSON.stringify(i18nObjs.defaultData, null, 2)}`
-    ),
-    zoom: NumberControl,
-    maxZoom: NumberControl,
-    rotation: NumberControl,
+    layers: layersControl(i18nObjs.defaultData),
+    zoom: withDefault(NumberControl, 10),
+    maxZoom: withDefault(NumberControl, 30),
+    rotation: withDefault(NumberControl, 0),
+    projection: stringSimpleControl("EPSG:3857"),
     bbox: arrayStringExposingStateControl("bbox", [0, 0, 0, 0]),
-    menuTitle: stringSimpleControl(""),
-    menuContent: stringSimpleControl(""),
-    drawLayer: jsonObjectExposingStateControl("drawLayer", {
-      type: "FeatureCollection",
-      features: [
-        {
-          type: "Feature",
-          geometry: {
-            type: "LineString",
-            coordinates: [
-              [514138.9757700867, 6865494.523372142],
-              [528910.431486197, 6856739.497812072],
-            ],
-          },
-          properties: null,
-        },
-      ],
-    }),
-    trackerLayer: jsonObjectExposingStateControl("trackerLayer"),
+    menuTitle: stringSimpleControl(),
+    menuContent: stringSimpleControl(),
+    events: jsonObjectExposingStateControl("events"),
     event: jsonObjectExposingStateControl("event"),
-    buttons: withDefault(JSONObjectControl, "{menu:false}"),
-    features: withDefault(
-      JSONObjectControl,
-      "{draw:true,swipe:false,tracker:false,timeline:false,gpsCentered:true,largeButtons:false}"
-    ),
-    onEvent: eventHandlerControl(events),
+    feature: jsonObjectExposingStateControl("feature"),
+    onEvent: eventHandlerControl(eventDefinitions),
+    startDate: stringSimpleControl(), //TODO replace with date picker
+    endDate: stringSimpleControl(),
+    features:
+      featureControl({
+        menu: false,
+        zoom: true,
+        fullscreen: true,
+        layers: true,
+        center: true,
+        modify: true,
+        save: false,
+        splitscreen: true,
+        tracker: false,
+        timeline: false,
+        gpsCentered: true,
+        north: false,
+        scale: true,
+        largeButtons: true,
+        scaleToBottom: false,
+        "modify:move": true,
+        "modify:point": true,
+        "modify:line": true,
+        "modify:oval": true,
+        "modify:polygon": true,
+        "modify:delete": true,
+        "modify:redo": true,
+        "modify:undo": true,
+        "modify:clear": true,
+        "modify:snap": true,
+        "splitscreen:horizontal": false,
+        "splitscreen:vertical": false,
+        debug: geoContext.previewMode,
+      }),
   };
-
-  //ignoreUpdate function
-  const _ignoreUpdate: any = {}
-  const setIgnoreUpdate = function (name: string) {
-    _ignoreUpdate[name] = true
-  }
-  const ignoreUpdate = function (name: string) {
-    var ret = _ignoreUpdate[name] || false
-    _ignoreUpdate[name] = false
-    return ret
-  }
 
 
   //The Builder function creating the real component
@@ -212,62 +193,25 @@ var GEOComp = (function () {
     zoom: number;
     maxZoom: number;
     rotation: number;
-    drawLayer: any;
     layers: any;
     bbox: any;
-    trackerLayer: any;
-    defaults: any;
-    buttons: any;
+    feature: any;
     features: any;
     menuTitle: string;
     menuContent: string;
     autoHeight: boolean;
+    events: any;
     event: any;
-    map: any;
+    projection: string;
+    startDate: string;
+    endDate: string;
+
+    test: any
   }) => {
-    const doDebug = function () { return props.defaults && props.defaults.debug === true }
-    //Cache for all events
-    var _event = {}
     //Default size of component
-    const [dimensions, setDimensions] = useState({ width: 650, height: 400 });
-    //The event handler will also sent the event value to use
-    const handleEvent = function (name: string, eventObj: any) {
-      return new Promise((resolve) => {
-        //Always create new Event object
-        _event = Object.assign({}, _event, props.event.value, {
-          [name]: eventObj,
-          current: name
-        })
-
-        props.event.onChange(_event)
-        var n = name.split(":")[0]
-        var eventName = "event"
-        events.forEach((k) => { if (k.value == n || k.value == name) { eventName = k.value } })
-        //Double switch will allow fine grained event catching
-        switch (name) { //Catch first on name
-          case 'map:create':
-            return //Internal event only, user should use map:init
-          default:
-            switch (eventName) {
-              case 'draw':
-                setIgnoreUpdate('drawLayer')
-                props.drawLayer.onChange(eventObj);
-                break; //Set the drawLayer object
-              case 'bbox':
-                props.bbox.onChange(eventObj)
-                break;
-            }
-        }
-        //Fire the event to lowcoder
-        props.onEvent(eventName, eventObj);
-        //Send debug information to console
-        if (doDebug())
-          console.debug("handleEvent", name, eventObj)
-        resolve(_event)
-      })
-    }
-
+    const [dimensions, setDimensions] = useState({ width: 650, height: 460 });
     //Catch the resizing of component
+
     const { width, height, ref: conRef } = useResizeDetector({
       onResize: () => {
         const container = conRef.current;
@@ -288,6 +232,66 @@ var GEOComp = (function () {
         })
       }
     });
+
+
+    //Check if feature is Enabled
+    const featureEnabled = function (name: any) {
+      return props.features[name] == true
+    }
+
+    //Cache for all events
+    var _events = {}
+    //The event handler will also sent the event value to use
+    const handleEvent = function (name: string, eventObj: any) {
+      return new Promise((resolve) => {
+        //Always create new Event object 
+        _events = Object.assign({}, _events, props.events.value, {
+          [name]: eventObj,
+          current: name
+        })
+
+        props.events.onChange(_events)
+        props.event.onChange(eventObj || {})
+        var n = name.split(":")[0]
+        var eventName = "event"
+        eventDefinitions.forEach((k) => { if (k.value == n || k.value == name) { eventName = k.value } })
+        //Double switch will allow fine grained event catching
+        switch (name) { //Catch first on name
+          case 'map:rebuild':
+            props.events.onChange({})
+            props.event.onChange({})
+            props.feature.onChange({})
+            _events = {}
+            break;
+          case 'click:feature':
+            props.feature.onChange(eventObj)
+            break;
+          case 'window:resize':
+            if (featureEnabled('scaleToBottom') && props.autoHeight) {
+              const pads = props.styles.padding.split(' ');
+              const bottom = (parseFloat(pads[pads.length == 4 ? 3 : 0].replace("px", "")) * 2) + 2
+              var newHeight = dimensions.height + (eventObj.windowSize.height - eventObj.bounds.bottom - bottom)
+              eventObj.element.style.height = `${newHeight}px`
+              setDimensions({ width: dimensions.width, height: newHeight })
+              if (featureEnabled("debug"))
+                console.debug("Resized done", newHeight)
+            }
+            break
+          default:
+            switch (eventName) {
+              case 'bbox':
+                props.bbox.onChange(eventObj)
+                break;
+            }
+        }
+        //Fire the event to lowcoder
+        props.onEvent(eventName, eventObj);
+        //Send debug information to console
+        if (featureEnabled('debug'))
+          console.debug("handleEvent", name, eventObj)
+        resolve(_events)
+      })
+    }
 
     //Create the container for the component
     return (
@@ -314,18 +318,17 @@ var GEOComp = (function () {
             height={dimensions.height}
             width={dimensions.width}
             center={props.center}
-            drawLayer={props.drawLayer.value}
             zoom={props.zoom}
             maxZoom={props.maxZoom}
             rotation={props.rotation}
-            buttons={props.buttons}
             menuContent={props.menuContent}
             menuTitle={props.menuTitle}
-            defaults={props.defaults}
-            features={props.features}
-            layers={props.layers}
+            layers={props.layers.data}
             onEvent={handleEvent}
-            ignoreUpdate={ignoreUpdate}
+            features={props.features}
+            projection={props.projection}
+            startDate={props.startDate}
+            endDate={props.endDate}
           />
         </div>
       </div>
@@ -336,30 +339,30 @@ var GEOComp = (function () {
       return (
         <>
           <Section name="Map">
-            {children.layers.propertyView({ label: "layers" })}
-            {children.drawLayer.propertyView({ label: "drawing" })}
-          </Section>
-          <Section name="View">
+            {children.layers.propertyView({ title: "layers" })}
             {children.center.propertyView({ label: "center" })}
             {children.zoom.propertyView({ label: "zoom" })}
             {children.maxZoom.propertyView({ label: "maxZoom" })}
             {children.rotation.propertyView({ label: "rotation" })}
+            {children.projection.propertyView({ label: "projection" })}
           </Section>
           <Section name="Interaction">
             {children.onEvent.propertyView()}
           </Section>
-          <Section name="Behavior">
-            {children.features.propertyView({ label: "Enabled features" })}
-            {children.buttons.propertyView({ label: "Visible buttons" })}
-            {children.menuTitle.propertyView({ label: "Menu title" })}
-            {children.menuContent.propertyView({ label: "Menu content" })}
+          <Section name="Menu">
+            {children.menuTitle.propertyView({ label: "Title" })}
+            {children.menuContent.propertyView({ label: "Content" })}
+          </Section>
+          <Section name="Timeline">
+            {children.startDate.propertyView({ label: "Start Date" })}
+            {children.endDate.propertyView({ label: "End Date" })}
           </Section>
           <Section name="Styles">
             {children.autoHeight.getPropertyView()}
             {children.styles.getPropertyView()}
           </Section>
-          <Section name="Advanced">
-            {children.defaults.propertyView({ label: "defaults" })}
+          <Section name="Behavior" open="false">
+            {children.features.propertyView({ title: trans("features.title") })}
           </Section>
           <div >
             <div style={{ "float": "right", "marginRight": "15px" }}>Version :  {version}</div>
@@ -369,6 +372,7 @@ var GEOComp = (function () {
     })
     .build();
 })();
+
 
 //Add autoheight to component
 GEOComp = class extends GEOComp {
@@ -380,20 +384,22 @@ GEOComp = class extends GEOComp {
 
 /**
  * Exposes methods on GEOComp component to allow calling from parent component.
- * Includes:
- * - animate: Perform animation on map 
- * - map: Get OpenLayers map instance  
- * - notify: Display notification message
- * - showPopup: Show popup at coordinates with message
-*/
-const GEOCompWithMethodExpose = withMethodExposing(GEOComp, [
+ * Includes animate, notify, showPopup, addFeatures, and readFeatures methods.
+ * 
+ * animate: Perform animation on map.
+ * notify: Display notification message. 
+ * showPopup: Show popup at coordinates with message.
+ * addFeatures: Add feature to layer.
+ * readFeatures: Read feature from layer.
+ */
+GEOComp = withMethodExposing(GEOComp, [
   {
     method: {
       name: "animate",
       params: [
         {
           name: "coords",
-          type: "array",
+          type: "JSONValue",
         },
         {
           name: "duration",
@@ -401,7 +407,7 @@ const GEOCompWithMethodExpose = withMethodExposing(GEOComp, [
         },
         {
           name: "properties",
-          type: "JSONValue",
+          type: "JSON",
         },
         {
           name: "animation",
@@ -411,9 +417,19 @@ const GEOCompWithMethodExpose = withMethodExposing(GEOComp, [
       description: "Perform animation",
     },
     execute: async (comp: any, params: any) => {
-      var map = comp.exposingValues.event['map:create']
-      animate(map.getView(), params[0], params?.[1], params?.[2], params?.[3])
+      var map = comp.exposingValues.events['map:init']
+      if (map) animate(map, params[0], params?.[1], params?.[2], params?.[3])
+    }
+  },
+  {
+    method: {
+      name: "map",
+      params: [],
+      description: "Return the last map object",
     },
+    execute: async (comp: any, params: any) => {
+      return comp.exposingValues.events['map:init'] || {}
+    }
   },
   {
     method: {
@@ -431,13 +447,13 @@ const GEOCompWithMethodExpose = withMethodExposing(GEOComp, [
       ]
     },
     execute: async (comp: any, params: any) => {
-      var map = comp.exposingValues.event['map:create']
-      map.getControls().forEach((control: any) => {
+      var map = comp.exposingValues.events['map:init']
+      if (map) map.getControls().forEach((control: any) => {
         if (control instanceof Notification) {
           control.show(params[0], params[1] || 2000)
         }
       })
-    },
+    }
   },
   {
     method: {
@@ -445,52 +461,190 @@ const GEOCompWithMethodExpose = withMethodExposing(GEOComp, [
       description: "Displays a popup at the specified coordinates with a given message",
       params: [
         {
-          name: "coordinates",
-          type: "array", // Assuming [longitude, latitude]
-          description: "Coordinates where the popup should appear",
+          name: "coordinates/featureEvent",
+          type: "JSONValue", // Assuming [longitude, latitude] can also be an featureEvent
+          description: "Coordinates or featureEvent object where the popup should appear",
         },
         {
           name: "message",
           type: "string",
           description: "Message to display in the popup",
-        }
+        },
+        {
+          name: "style",
+          type: "string",
+          description: "Style of popup (optional)",
+        },
       ]
     },
     execute: async (comp: any, params: any) => {
-      var map = comp.exposingValues.event['map:create']
-      showPopup(map, params[0], params[1]);
-    },
+      var map = comp.exposingValues.events['map:init']
+      if (map) {
+        switch (params[2]) {
+          case 'features':
+            featurePopup(map, params[0], params[1])
+            break;
+          default:
+            showPopup(map, params[0], params[1]);
+        }
+      }
+    }
   },
   {
     method: {
-      name: "addFeatures",
+      name: "setFeatures",
       description: "Add feature to layer",
       params: [
-        {
-          name: "data",
-          type: "any",
-        },
         {
           name: "layer",
           type: "string",
         },
         {
-          name: "clear (optional)",
+          name: "data",
+          type: "JSONValue",
+        },
+        {
+          name: "clear",
           type: "boolean",
         }
       ]
     },
     execute: async (comp: any, params: any) => {
-      var map = comp.exposingValues.event['map:create']
-      return addFeatures(map, params[0], params[1], params[2])
-    },
+      var map = comp.exposingValues.events['map:init']
+      if (map) setFeatures(map, params[0], params[1], params[2] == true)
+    }
   },
+  {
+    method: {
+      name: "getFeatures",
+      description: "Get features from layer",
+      params: [
+        {
+          name: "layer",
+          type: "string",
+        }
+      ]
+    },
+    execute: async (comp: any, params: any) => {
+      var map = comp.exposingValues.events['map:init']
+      if (map) return getFeatures(map, params[0])
+      throw Error('Map not ready')
+    }
+  },
+  {
+    method: {
+      name: "clearFeatures",
+      description: "Clear features from layer",
+      params: [
+        {
+          name: "layer",
+          type: "string",
+        }
+      ]
+    },
+    execute: async (comp: any, params: any) => {
+      var map = comp.exposingValues.events['map:init']
+      if (map) return clearFeatures(map, params[0])
+      return false
+    }
+  },
+  {
+    method: {
+      name: "setConfig",
+      description: "Set configuration the plugin by json",
+      params: [
+        {
+          name: "json",
+          type: "JSONValue",
+        },
+        {
+          name: "filter",
+          type: "JSONValue",
+        },
+      ]
+    },
+    execute: async (comp: any, params: any) => {
+      if (params.length == 0) return
+      //Create filter based on param
+      const filter = parseFilter(params[1])
+      try {
+        var data = params[0]
+        if (typeof data === 'string' || data instanceof String) {
+          // @ts-ignore
+          data = JSON.parse(data)
+        }
+        //Filter out data not needed
+        if (filter.length != 0) {
+          for (const [key, value] of Object.entries(data)) {
+            if (!filter.includes(key)) {
+              delete data[key]
+            }
+          }
+        }
+        //Load the new values by dispatching them, 
+        //First merging the current values with the new values
+        comp.dispatch(changeValueAction(deepMerge(comp.toJsonValue(), data), true))
+        return true
+      } catch (e) {
+        console.error("Failed to parse config data", e)
+        return false
+      }
+    }
+  },
+  {
+    method: {
+      name: "getConfig",
+      description: "Get configuration the plugin by json",
+      params: [
+        {
+          name: "filter",
+          type: "JSONValue",
+        },
+        {
+          name: "asString",
+          type: "boolean",
+        },
+      ]
+    },
+    execute: async (comp: any, params: any) => {
+      //Create filter based on param
+      const filter = parseFilter(params[0])
+      //Get the json config data
+      var data = comp.toJsonValue();
+      //Filter out data not needed
+      if (filter.length != 0) {
+        for (const [key, value] of Object.entries(data)) {
+          if (!filter.includes(key)) {
+            delete data[key]
+          }
+        }
+      }
+      //Should we convert the data into string
+      data = params[1] !== true ? data : JSON.stringify(data, null)
+      if (geoContext.previewMode)
+        console.debug(data)
+      //Event config needs to be added
+      return data
+    }
+  },
+  {
+    method: {
+      name: "getZoom",
+      description: "Get current zoom position of map",
+      params: []
+    }, execute: async (comp: any, params: any) => {
+      var map = comp.exposingValues.events['map:init']
+      if (map) return map.getView().getZoom()
+      return 0
+    }
+  }
 ]);
 
+
 //Expose all methods
-export default withExposingConfigs(GEOCompWithMethodExpose, [
-  new NameConfig("drawLayer", trans("component.drawLayer")),
-  new NameConfig("trackerLayer", trans("component.trackerLayer")),
+export default withExposingConfigs(GEOComp, [
+  new NameConfig("events", trans("component.events")),
   new NameConfig("event", trans("component.event")),
   new NameConfig("bbox", trans("component.bbox")),
+  new NameConfig("feature", trans("component.feature")),
 ]);

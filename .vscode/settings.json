@@ -12,5 +12,16 @@
   },
   "[typescriptreact]": {
     "editor.defaultFormatter": "vscode.typescript-language-features"
-  }
+  },
+  "cSpell.words": [
+    "coverpage",
+    "docsify",
+    "eventlog",
+    "geospatial",
+    "lowcoder",
+    "lowcoderdev",
+    "npmjs",
+    "Openlayers",
+    "sjhoeksma"
+  ]
 }

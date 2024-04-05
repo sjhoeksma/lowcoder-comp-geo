@@ -1,0 +1,34 @@
+{
+    "readme": {
+        "description": "Readme for current dir",
+        "prompt": "Write a detailed README.md file to document the code located in the same directory as my current selection. Summarize what the code in this directory is meant to accomplish. Explain the key files, functions, classes, and features. Use Markdown formatting for headings, code blocks, lists, etc. to make the it organized and readable. Aim for a beginner-friendly explanation that gives a developer unfamiliar with the code a good starting point to understand it. Make sure to include: - Overview of directory purpose - Functionality explanations - Relevant diagrams or visuals if helpful. Write the README content clearly and concisely using complete sentences and paragraphs based on the shared context. Use proper spelling, grammar, and punctuation throughout. Surround your full README text with triple backticks so it renders properly as a code block. Do not make assumptions or fabricating additional details.",
+        "context": {
+            "currentDir": true,
+            "selection": true
+        }
+    },
+    "childrenmap": {
+        "description": "Markdown for all Childrenmap",
+        "prompt": "Write a markdown list for the childrenMap in the selected code. Summarize what it is meant to accomplish.Use markdown formating to make the it organized and readable.",
+        "context": {
+            "selection": true,
+            "currentFile": true
+        }
+    },
+    "smellcode": {
+        "description": "Find code smells",
+        "prompt": "Find code smells, potential bugs, and unhandled errors in my selected code. Create a list with the top five errors you can find, and include a short informative description and suggestion for each. Please only respond with the list of errors and nothing else.",
+        "context": {
+            "selection": true,
+            "currentFile": true
+        }
+    },
+    "methodexposed": {
+        "description": "Markdown for all Methods",
+        "prompt": "Write code assigning a variable with for all exposed methods within withMethodExposing of the selection a markdown. Summarize what it is meant to accomplish including all parameters.Use markdown formating to make the it organized and readable.",
+        "context": {
+            "selection": true,
+            "currentFile": true
+        }
+    }
+}

@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title> Home</title>
+
+  <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="./build/entry.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,400,700|Inconsolata,700" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+  <link type="text/css" rel="stylesheet" href="https://jmblog.github.io/color-themes-for-google-code-prettify/themes/tomorrow-night.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/app.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/iframe.css">
+  <link type="text/css" rel="stylesheet" href="">
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+  
+</head>
+
+
+
+<body class="layout small-header">
+    <div id="stickyNavbarOverlay"></div>
+    
+
+<div class="top-nav">
+    <div class="inner">
+        <a id="hamburger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+        <div class="logo">
+            
+            
+        </div>
+        <div class="menu">
+            
+            <div class="navigation">
+                <a
+                    href="index.html"
+                    class="link"
+                >
+                    Documentation
+                </a>
+                
+                
+                
+            </div>
+        </div>
+    </div>
+</div>
+    <div id="main">
+        <div
+            class="sidebar "
+            id="sidebarNav"
+        >
+            
+            <nav>
+                
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="EsriPBF.html">EsriPBF</a></li><li><a href="global.html#LayerObjectOption">LayerObjectOption</a></li><li><a href="module.html#.exports">exports</a></li><li><a href="ol_interaction_UndoRedo.html">ol_interaction_UndoRedo</a></li></ul><h3>Global</h3><ul><li><a href="global.html#CompStyles">CompStyles</a></li><li><a href="global.html#GEOComp">GEOComp</a></li><li><a href="global.html#Geo">Geo</a></li><li><a href="global.html#SourceControl">SourceControl</a></li><li><a href="global.html#animate">animate</a></li><li><a href="global.html#animateHome">animateHome</a></li><li><a href="global.html#animatePulse">animatePulse</a></li><li><a href="global.html#animateToExtent">animateToExtent</a></li><li><a href="global.html#animateToLocation">animateToLocation</a></li><li><a href="global.html#animations">animations</a></li><li><a href="global.html#clearFeatures">clearFeatures</a></li><li><a href="global.html#createLayer">createLayer</a></li><li><a href="global.html#darkStroke">darkStroke</a></li><li><a href="global.html#deepMerge">deepMerge</a></li><li><a href="global.html#featureControl">featureControl</a></li><li><a href="global.html#featurePopup">featurePopup</a></li><li><a href="global.html#findLayer">findLayer</a></li><li><a href="global.html#geoContext">geoContext</a></li><li><a href="global.html#geoJsonStyleFunction">geoJsonStyleFunction</a></li><li><a href="global.html#getFeatures">getFeatures</a></li><li><a href="global.html#layersControl">layersControl</a></li><li><a href="global.html#lightStroke">lightStroke</a></li><li><a href="global.html#parseCoords">parseCoords</a></li><li><a href="global.html#parseFilter">parseFilter</a></li><li><a href="global.html#pulseFeature">pulseFeature</a></li><li><a href="global.html#selectedStyle">selectedStyle</a></li><li><a href="global.html#setFeatures">setFeatures</a></li><li><a href="global.html#showPopup">showPopup</a></li><li><a href="global.html#useScreenSize">useScreenSize</a></li></ul></div>
+                
+            </nav>
+        </div>
+        <div class="core" id="main-content-wrapper">
+            <div class="content">
+                <header class="page-title">
+                    <p></p>
+                    <h1>Home</h1>
+                </header>
+                
+
+
+
+    
+
+
+    <h3> </h3>
+
+
+
+
+
+
+
+
+
+
+    
+
+
+
+
+    <section>
+        <article><h1>GEOComp Component</h1>
+<p>The <code>src</code> directory contains the source code for the GEOComp react component creating the Lowcoder plugin. GEOComp providers configuration features for the GEO react component which renders an interactive geographic map using the OpenLayers library.</p>
+<h2>Overview</h2>
+<p>GEOComp is a reusable map component that can be configured and integrated into other applications. It allows displaying geographic data layers, interactivity through popups and drawing, and exposes events for integrating custom functionality.</p>
+<p>Some key capabilities provided by GEOComp:</p>
+<ul>
+<li>Configurable base map layers</li>
+<li>Overlay vector data layers from files or API sources</li>
+<li>Interaction through popups, selection, and drawing tools</li>
+<li>Expose map events and selected features</li>
+<li>Timeline animation of temporal data</li>
+<li>Customizable styling</li>
+</ul>
+<h2>Key Files</h2>
+<p>Within the main directory you will find the following files creating the lowcoder plugin</p>
+<ul>
+<li><code>GEOComp.tsx</code> - Main component definition and configuration</li>
+<li><code>LayersControl.tsx</code> - Builds layer configuration UI</li>
+<li><code>FeaturesControl.tsx</code> - Feature flags configuration</li>
+<li><code>vendors/Geo.jsx</code> - The implementation of the GEO react component</li>
+<li><code>styles.module.css</code> - Component styling</li>
+</ul>
+<h2>Component Configuration</h2>
+<p>GEOComp is configured through React props that control the map options and layers. Some key configuration props:</p>
+<p>Map</p>
+<ul>
+<li><code>layers</code> - Array of layer configuration objects
+<ul>
+<li><code>label</code> - Display label for layer</li>
+<li><code>title</code> - Layer menu text</li>
+<li><code>type</code> - Layer type dropdown (mvt, wms, etc)</li>
+<li><code>source</code> - Layer source settings
+<ul>
+<li><code>url</code>: The URL of the tile or image service</li>
+<li><code>attributions</code>: Attribution text for the layer</li>
+<li><code>params</code>: Additional parameters for the service request</li>
+<li><code>serverType</code>: The type of WMS server (geoserver, mapserver, etc)</li>
+<li><code>crossOrigin</code>: Whether to request cross-origin access when fetching the layer</li>
+<li><code>data</code>: The GeoJSON data object for a vector layer</li>
+<li><code>projection</code>: The projection of the vector data</li>
+<li><code>tileSize</code>: Tile size for COG layers</li>
+<li><code>nodata</code>: Nodata value to use for COG layers</li>
+<li><code>ratio</code>: Scaling ratio for ArcGIS MapServer images</li>
+</ul>
+</li>
+<li><code>visible</code> - Is layer visible initially</li>
+<li><code>selectable</code> - Can layer be toggled on/off</li>
+<li><code>userVisible</code> - Is layer visible to user</li>
+<li><code>order</code> - Display order in layers list</li>
+<li><code>minZoom</code> - Minimum zoom level to show layer</li>
+<li><code>maxZoom</code> - Maximum zoom level to show layer</li>
+<li><code>opacity</code> - Layer opacity</li>
+<li><code>groups</code> - Layer groups</li>
+<li><code>splitscreen</code> - Split screen position (no, left, right)</li>
+<li><code>timeline</code> - Timeline year/date of layer</li>
+</ul>
+</li>
+<li><code>center</code> - Initial center point [lon, lat]</li>
+<li><code>zoom</code> - Initial zoom level</li>
+<li><code>maxZoom</code> - Initial maximum zoom level</li>
+<li><code>minZoom</code> - Initial minimum zoom level</li>
+</ul>
+<p>Interaction</p>
+<ul>
+<li><code>events</code> - Object mapping event names to handlers</li>
+</ul>
+<p>Menu</p>
+<ul>
+<li><code>title</code> - Title used within menu</li>
+<li><code>content</code> - Content of the menu used</li>
+<li><code>feature</code> - Selected/edited feature state</li>
+</ul>
+<p>Timeline</p>
+<ul>
+<li><code>Start Date</code> - Start Year/Date of the timeline</li>
+<li><code>End Date</code> - End Year/Date of the timeline</li>
+</ul>
+<p>Style</p>
+<ul>
+<li>Padding</li>
+<li>Text sizing</li>
+<li>Background color</li>
+<li>Borders</li>
+<li>Border radius</li>
+</ul>
+<p>Behavior</p>
+<ul>
+<li><code>menu</code> - Whether to show the menu icon.</li>
+<li><code>zoom</code> - Show zoom buttons.</li>
+<li><code>fullscreen</code> - Show fullscreen toggle.</li>
+<li><code>layers</code> - Show layer visibility toggles.</li>
+<li><code>center</code> - Show map center button.</li>
+<li><code>modify</code> - Allow geometry editing.</li>
+<li><code>save</code> - Show save button.</li>
+<li><code>splitscreen</code> - Allow split screen.</li>
+<li><code>tracker</code> - Show tracker options.</li>
+<li><code>timeline</code> - Show timeline slider.</li>
+<li><code>gpsCentered</code> - Center map on user's location.</li>
+<li><code>north</code> - Show north button to reset bearing.</li>
+<li><code>scale</code> - Show map scale display.</li>
+<li><code>largeButtons</code> - Use large toolbar icons.</li>
+<li><code>scaleToBottom</code> - Put scale on bottom of toolbar.</li>
+<li><code>&quot;modify:move&quot;</code> - Allow moving geometries.</li>
+<li><code>&quot;modify:point&quot;</code> - Allow editing points.</li>
+<li><code>&quot;modify:line&quot;</code> - Allow editing lines.</li>
+<li><code>&quot;modify:oval&quot;</code> - Allow editing ovals.</li>
+<li><code>&quot;modify:polygon&quot;</code> - Allow editing polygons.</li>
+<li><code>&quot;modify:delete&quot;</code> - Show delete geometry button.</li>
+<li><code>&quot;modify:redo&quot;</code> - Show redo button.</li>
+<li><code>&quot;modify:undo&quot;</code> - Show undo button.</li>
+<li><code>&quot;splitscreen:horizontal&quot;</code> - Allow horizontal split screen.</li>
+<li><code>&quot;splitscreen:vertical&quot;</code> - Allow vertical split screen.</li>
+<li><code>debug</code> - Enable debug messages.</li>
+</ul>
+<h2>Events and Interactivity</h2>
+<p>GEOComp exposes events that can be handled in the parent component:</p>
+<ul>
+<li><code>onInit</code> - Map initialized</li>
+<li><code>onLoad</code> - Layers loaded</li>
+<li><code>onModify</code> - User modifies feature on map</li>
+<li><code>onTimeline</code> - User interacts with timeline</li>
+<li><code>onClick</code> - Map clicked</li>
+<li><code>onSelect</code> - Feature clicked</li>
+<li><code>onBbox</code> - The bbox of the map changed</li>
+<li><code>onZoom</code> - Fires when the zoom has changed</li>
+<li><code>onEvent</code> - Eventhandler for all other events</li>
+</ul>
+<p>This allows integrating custom popup content, selection logic, etc.</p>
+<h2>Exposed Methods</h2>
+<h3>animate</h3>
+<p>Perform animation</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>coords</code> (JSONValue): Coordinates for animation</li>
+<li><code>duration</code> (number): Duration of animation</li>
+<li><code>properties</code> (JSON): Properties for feature</li>
+<li><code>animation</code> (string): Type of animation (toLocation,toExtent,pulse,home)</li>
+</ul>
+<h3>map</h3>
+<p>Return the last map object</p>
+<p><strong>Parameters:</strong></p>
+<p>None</p>
+<h3>notify</h3>
+<p>Notify message</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>message</code> (string): Notification message</li>
+<li><code>duration</code> (number): Display duration</li>
+</ul>
+<h3>showPopup</h3>
+<p>Displays a popup at the specified coordinates with a given message</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>coordinates</code> (JSONValue): Coordinates where the popup should appear</li>
+<li><code>message</code> (string): Message to display in the popup</li>
+</ul>
+<h3>setFeatures</h3>
+<p>Add feature to layer</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>data</code> (JSONValue): GeoJSON feature(s) to add</li>
+<li><code>layer</code> (string): Layer name</li>
+<li><code>clear</code> (boolean, optional): Clear layer first if true</li>
+</ul>
+<h3>getFeatures</h3>
+<p>Get features from layer</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>layer</code> (string): Layer name</li>
+</ul>
+<h3>clearFeatures</h3>
+<p>Clear features from layer</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>layer</code> (string): Layer name</li>
+</ul>
+<h3>setConfig</h3>
+<p>Set configuration the plugin by json</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>json</code> (JSONValue): Config object</li>
+<li><code>filter</code> (JSONValue): Layer Filter to apply</li>
+</ul>
+<h3>getConfig</h3>
+<p>Get configuration the plugin by json</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>filter</code> (JSONValue): Layer Filter to apply</li>
+</ul></article>
+    </section>
+
+
+
+
+
+
+            </div>
+            
+            <footer class="footer">
+                <div class="content has-text-centered">
+                    <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.2</a></p>
+                    <p class="sidebar-created-by">
+                        <a href="https://github.com/SoftwareBrothers/better-docs" target="_blank">BetterDocs theme</a> provided with <i class="fas fa-heart"></i> by
+                        <a href="http://softwarebrothers.co" target="_blank">SoftwareBrothers - JavaScript Development Agency</a>
+                    </p>
+                </div>
+            </footer>
+            
+        </div>
+        <div id="side-nav" class="side-nav">
+        </div>
+    </div>
+<script src="scripts/app.min.js"></script>
+<script>PR.prettyPrint();</script>
+<script src="scripts/linenumber.js"> </script>
+
+
+</body>
+</html>
