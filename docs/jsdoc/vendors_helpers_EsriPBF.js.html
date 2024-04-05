@@ -7,7 +7,7 @@
   
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title> FeaturesControl.tsx</title>
+  <title> vendors/helpers/EsriPBF.js</title>
 
   <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -76,7 +76,7 @@
             <div class="content">
                 <header class="page-title">
                     <p>Source</p>
-                    <h1>FeaturesControl.tsx</h1>
+                    <h1>vendors/helpers/EsriPBF.js</h1>
                 </header>
                 
 
@@ -85,62 +85,32 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import { ReactNode } from 'react'
-import {
-    MultiCompBuilder,
-    BoolPureControl,
-    withDefault,
-} from 'lowcoder-sdk'
-import { trans } from "./i18n/comps";
-
+            <pre class="prettyprint source linenums"><code>import arcgisPbfDecode from 'arcgis-pbf-parser';
+import GeoJSON from 'ol/format/GeoJSON';
 
 /**
- * Generates a feature control component by mapping feature flag keys 
- * to boolean controls.
- * 
- * Accepts a config object with feature flag keys mapped to their default 
- * enabled values. Renders boolean controls for each feature flag, with 
- * getView() returning the current enabled state of each flag.
+ * Represents a class for working with Esri PBF data.
+ * Extends the GeoJSON class.
  */
-export function featureControl(config?: any) {
-    const childrenMap: any = new Object();
-    const initConfig = Object.assign({}, config)
-    Object.keys(initConfig).forEach((k: string, index: any) => {
-        childrenMap[k] = withDefault(BoolPureControl, initConfig[k])
-    })
-    //Class is rebuild not retuning same class 
-    class FeatureControlTemp extends new MultiCompBuilder(childrenMap, (props: any) => props)
-        .setPropertyViewFn((children: any) => (&lt;>&lt;/>))
-        .build() {
-
-        orgView: any
-        getView(): any {
-            const p = super.getView()
-            var changed = JSON.stringify(p, null) != JSON.stringify(this.orgView, null)
-            if (changed) {
-                this.orgView = p
-                return p
-            }
-            return this.orgView
-        }
-        propertyView(params: {
-            title: string
-        }): ReactNode {
-            var list: any = []
-            Object.keys(this.children).forEach((k, index) => {
-                list.push(this.children[k].propertyView({ label: trans(`features.${k}`) }))
-            })
-
-            return (
-                &lt;>
-                    {params.title}
-                    {list}
-                &lt;/>
-            );
-        }
+class EsriPBF extends GeoJSON {
+    getType() {
+        return 'arraybuffer';
     }
-    return FeatureControlTemp;
-}</code></pre>
+    readFeature(source, options) {
+        return super.readFeature(
+            arcgisPbfDecode(new Uint8Array(source)).featureCollection,
+            options
+        );
+    }
+    readFeatures(source, options) {
+        return super.readFeatures(
+            arcgisPbfDecode(new Uint8Array(source)).featureCollection,
+            options
+        );
+    }
+}
+
+export default EsriPBF;</code></pre>
         </article>
     </section>
 

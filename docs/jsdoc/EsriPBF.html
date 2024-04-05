@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -7,7 +5,7 @@
   
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title> FeaturesControl.tsx</title>
+  <title> EsriPBF</title>
 
   <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -75,74 +73,157 @@
         <div class="core" id="main-content-wrapper">
             <div class="content">
                 <header class="page-title">
-                    <p>Source</p>
-                    <h1>FeaturesControl.tsx</h1>
+                    <p>Class</p>
+                    <h1>EsriPBF</h1>
                 </header>
                 
 
 
 
+
+<section>
+
+<header>
     
-    <section>
-        <article>
-            <pre class="prettyprint source linenums"><code>import { ReactNode } from 'react'
-import {
-    MultiCompBuilder,
-    BoolPureControl,
-    withDefault,
-} from 'lowcoder-sdk'
-import { trans } from "./i18n/comps";
+        <h2><span class="attribs"><span class="type-signature"></span></span>EsriPBF<span class="signature">()</span><span class="type-signature"></span></h2>
+        
+            <div class="class-description">Represents a class for working with Esri PBF data.
+Extends the GeoJSON class.</div>
+        
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+            <div class='vertical-section'>
+                <div class="members">
+                    <div class="member">
+                        <div class=name>
+                            <span class="tag">Constructor</span>
+                        </div>
+                        
 
 
-/**
- * Generates a feature control component by mapping feature flag keys 
- * to boolean controls.
- * 
- * Accepts a config object with feature flag keys mapped to their default 
- * enabled values. Renders boolean controls for each feature flag, with 
- * getView() returning the current enabled state of each flag.
- */
-export function featureControl(config?: any) {
-    const childrenMap: any = new Object();
-    const initConfig = Object.assign({}, config)
-    Object.keys(initConfig).forEach((k: string, index: any) => {
-        childrenMap[k] = withDefault(BoolPureControl, initConfig[k])
-    })
-    //Class is rebuild not retuning same class 
-    class FeatureControlTemp extends new MultiCompBuilder(childrenMap, (props: any) => props)
-        .setPropertyViewFn((children: any) => (&lt;>&lt;/>))
-        .build() {
+    
+    <h4 class="name" id="EsriPBF">
+        <a class="href-link" href="#EsriPBF">#</a>
+        
+        <span class="code-name">
+            
+                new EsriPBF<span class="signature">()</span><span class="type-signature"></span>
+            
+        </span>
+    </h4>
+    
 
-        orgView: any
-        getView(): any {
-            const p = super.getView()
-            var changed = JSON.stringify(p, null) != JSON.stringify(this.orgView, null)
-            if (changed) {
-                this.orgView = p
-                return p
-            }
-            return this.orgView
-        }
-        propertyView(params: {
-            title: string
-        }): ReactNode {
-            var list: any = []
-            Object.keys(this.children).forEach((k, index) => {
-                list.push(this.children[k].propertyView({ label: trans(`features.${k}`) }))
-            })
+    
+    
 
-            return (
-                &lt;>
-                    {params.title}
-                    {list}
-                &lt;/>
-            );
-        }
-    }
-    return FeatureControlTemp;
-}</code></pre>
-        </article>
-    </section>
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="vendors_helpers_EsriPBF.js.html" class="button">View Source</a>
+            <span>
+                <a href="vendors_helpers_EsriPBF.js.html">vendors/helpers/EsriPBF.js</a>, <a href="vendors_helpers_EsriPBF.js.html#line8">line 8</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    </div>
+                </div>
+            </div>
+        
+    
+    </div>
+    
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
 
 
 

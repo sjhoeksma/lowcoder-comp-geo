@@ -68,7 +68,7 @@
             
             <nav>
                 
-                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="global.html#LayerObjectOption">LayerObjectOption</a></li><li><a href="module.html#.exports">exports</a></li><li><a href="ol_interaction_UndoRedo.html">ol_interaction_UndoRedo</a></li></ul><h3>Global</h3><ul><li><a href="global.html#CompStyles">CompStyles</a></li><li><a href="global.html#GEOComp">GEOComp</a></li><li><a href="global.html#Geo">Geo</a></li><li><a href="global.html#SourceControl">SourceControl</a></li><li><a href="global.html#animate">animate</a></li><li><a href="global.html#animateHome">animateHome</a></li><li><a href="global.html#animatePulse">animatePulse</a></li><li><a href="global.html#animateToExtent">animateToExtent</a></li><li><a href="global.html#animateToLocation">animateToLocation</a></li><li><a href="global.html#animations">animations</a></li><li><a href="global.html#clearFeatures">clearFeatures</a></li><li><a href="global.html#createLayer">createLayer</a></li><li><a href="global.html#darkStroke">darkStroke</a></li><li><a href="global.html#deepMerge">deepMerge</a></li><li><a href="global.html#featureControl">featureControl</a></li><li><a href="global.html#findLayer">findLayer</a></li><li><a href="global.html#geoContext">geoContext</a></li><li><a href="global.html#geoJsonStyleFunction">geoJsonStyleFunction</a></li><li><a href="global.html#getFeatures">getFeatures</a></li><li><a href="global.html#layersControl">layersControl</a></li><li><a href="global.html#lightStroke">lightStroke</a></li><li><a href="global.html#parseCoords">parseCoords</a></li><li><a href="global.html#parseFilter">parseFilter</a></li><li><a href="global.html#pulseFeature">pulseFeature</a></li><li><a href="global.html#selectedStyle">selectedStyle</a></li><li><a href="global.html#setFeatures">setFeatures</a></li><li><a href="global.html#showPopup">showPopup</a></li><li><a href="global.html#useScreenSize">useScreenSize</a></li></ul></div>
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="EsriPBF.html">EsriPBF</a></li><li><a href="global.html#LayerObjectOption">LayerObjectOption</a></li><li><a href="module.html#.exports">exports</a></li><li><a href="ol_interaction_UndoRedo.html">ol_interaction_UndoRedo</a></li></ul><h3>Global</h3><ul><li><a href="global.html#CompStyles">CompStyles</a></li><li><a href="global.html#GEOComp">GEOComp</a></li><li><a href="global.html#Geo">Geo</a></li><li><a href="global.html#SourceControl">SourceControl</a></li><li><a href="global.html#animate">animate</a></li><li><a href="global.html#animateHome">animateHome</a></li><li><a href="global.html#animatePulse">animatePulse</a></li><li><a href="global.html#animateToExtent">animateToExtent</a></li><li><a href="global.html#animateToLocation">animateToLocation</a></li><li><a href="global.html#animations">animations</a></li><li><a href="global.html#clearFeatures">clearFeatures</a></li><li><a href="global.html#createLayer">createLayer</a></li><li><a href="global.html#darkStroke">darkStroke</a></li><li><a href="global.html#deepMerge">deepMerge</a></li><li><a href="global.html#featureControl">featureControl</a></li><li><a href="global.html#featurePopup">featurePopup</a></li><li><a href="global.html#findLayer">findLayer</a></li><li><a href="global.html#geoContext">geoContext</a></li><li><a href="global.html#geoJsonStyleFunction">geoJsonStyleFunction</a></li><li><a href="global.html#getFeatures">getFeatures</a></li><li><a href="global.html#layersControl">layersControl</a></li><li><a href="global.html#lightStroke">lightStroke</a></li><li><a href="global.html#parseCoords">parseCoords</a></li><li><a href="global.html#parseFilter">parseFilter</a></li><li><a href="global.html#pulseFeature">pulseFeature</a></li><li><a href="global.html#selectedStyle">selectedStyle</a></li><li><a href="global.html#setFeatures">setFeatures</a></li><li><a href="global.html#showPopup">showPopup</a></li><li><a href="global.html#useScreenSize">useScreenSize</a></li></ul></div>
                 
             </nav>
         </div>
@@ -93,19 +93,11 @@
 import Overlay from 'ol/Overlay';
 import { getCenter } from 'ol/extent';
 import { fromLonLat, transformExtent } from 'ol/proj';
+import { object } from 'prop-types';
 
 
-/**
- * Shows a popup overlay on the provided map at the given coordinates
- * with the specified content message. Creates the popup if it does not
- * already exist.
- * 
- * @param {ol.Map} map The map to show the popup on.
- * @param {ol.Coordinate|ol.Extent} coordinates The popup location as a coordinate pair or extent.
- * @param {string} message The HTML content for the popup.
- */
-export function showPopup(map, coordinates, message) {
-    let popup = map.getOverlayById('infoPopup');
+function getMapPopup(map, name) {
+    let popup = map.getOverlayById(name);
     if (!popup) {
         // Create popup overlay logic
         let popupElement = document.createElement('div');
@@ -130,12 +122,28 @@ export function showPopup(map, coordinates, message) {
             element: popupElement,
             autoPan: true,
             autoPanAnimation: { duration: 250 },
-            id: 'infoPopup'
+            id: name
         });
 
         map.addOverlay(popup);
     }
+    return popup
+}
+/**
+ * Shows a popup overlay on the provided map at the given coordinates
+ * with the specified content message. Creates the popup if it does not
+ * already exist.
+ * 
+ * @param {ol.Map} map The map to show the popup on.
+ * @param {ol.Coordinate|ol.Extent} coordinates The popup location as a coordinate pair or extent.
+ * @param {string} message The HTML content for the popup.
+ */
+export function showPopup(map, coordinates, message) {
+    let popup = getMapPopup(map, 'infoPopup');
 
+    if (coordinates &amp;&amp; !Array.isArray(coordinates) &amp;&amp; coordinates.extent) {
+        coordinates = coordinates.extent
+    }
     if (Array.isArray(coordinates)) {
         // If coordinates have more than two values, assume it's an extent and calculate its center.
         if (coordinates.length > 2) {
@@ -150,7 +158,27 @@ export function showPopup(map, coordinates, message) {
         popup.setPosition(coordinates);
     }
 }
-</code></pre>
+
+
+/**
+ * Shows a popup with feature properties in a table. 
+ * Called on map click events. Checks for feature at click location, 
+ * gets its properties, formats them in a table, 
+ * and shows in a popup at the click location.
+ * 
+ * @param  map The map to show the popup on.
+ * @param  event The feature click event
+*/
+export function featurePopup(map, evtObj, title) {
+    let tableHTML = '&lt;tr>&lt;th>Property&lt;/th>&lt;th>Value&lt;/th>&lt;/tr>';
+    // Exclude the geometry property and iterate over the remaining properties
+    delete evtObj.properties.geometry; // Remove geometry property
+    for (const [key, value] of Object.entries(evtObj.properties)) {
+        tableHTML += `&lt;tr>&lt;td>${key}&lt;/td>&lt;td>${value}&lt;/td>&lt;/tr>`;
+    }
+    // Now coordinates will always be a pair here, suitable for setPosition.
+    showPopup(map, evtObj, `${title}&lt;table style="border:1">${tableHTML}&lt;/table>`)
+}</code></pre>
         </article>
     </section>
 
