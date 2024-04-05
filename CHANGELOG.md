@@ -207,7 +207,9 @@
 * Check if is workable on mobile
 * Animation for timeline
 * Add the option to add custom buttons to the menubar locations and connect event
-* Install jsdoc in dev, run jsdocs, copy create md files of it under docs, remove jdocs
+* UI components behavior should also be connected to the properties, ex: Date Hide when timeline in active
+* Make a dynamic load layer, also for invisible layer or with a min zoom size set or linked to bbox
+* Add control over the default behaviors
 
 
 ### Bugs
