@@ -210,6 +210,7 @@
 * UI components behavior should also be connected to the properties, ex: Date Hide when timeline in active
 * Make a dynamic load layer, also for invisible layer or with a min zoom size set or linked to bbox
 * Add control over the default behaviors
+* Make timeline example with https://service.pdok.nl/hwh/luchtfotocir/wms/v1_0?request=GetCapabilities&service=wms
 
 
 ### Bugs
