@@ -292,6 +292,18 @@ export function createLayer(layerConfig, map) {
         }
       case 'arcgis-vector-tiles':
         const esriVectorTiles = new VectorLayer({
+          name: layerConfig.label,
+          title: layerConfig.title || layerConfig.name,
+          minZoom: layerConfig.minZoom,
+          maxZoom: layerConfig.maxZoom,
+          visible: layerConfig.visible,
+          opacity: layerConfig.opacity,
+          selectable: layerConfig.selectable,
+          groups: layerConfig.groups,
+          extra: layerConfig.extra,
+          order: layerConfig.order,
+          splitscreen: layerConfig.splitscreen,
+          displayInLayerSwitcher: layerConfig.userVisible,
           source: new VectorSource({
             format: new EsriPBF({ dataProjection: layerConfig.source.projection || 'EPSG:3857' }),
             url:
