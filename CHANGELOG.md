@@ -1,3 +1,10 @@
+# [1.3.0-dev.94](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.93...v1.3.0-dev.94) (2024-04-05)
+
+
+### Bug Fixes
+
+* Esri Vector Tiles Control options ([0414abd](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/0414abd3d434be212bc4e39c100d73cd90ed9297))
+
 # [1.3.0-dev.93](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.92...v1.3.0-dev.93) (2024-04-05)
 
 
