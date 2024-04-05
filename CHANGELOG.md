@@ -1,3 +1,11 @@
+# [1.3.0-dev.93](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.92...v1.3.0-dev.93) (2024-04-05)
+
+
+### Bug Fixes
+
+* featurePopup add ([29a14a8](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/29a14a8a81cab8b2d7c77fbc71755a48d9095332))
+* layer source URL in Layers.js ([f5f9ed6](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/f5f9ed6e8eb8097e5e71f91632783424e8804534))
+
 # [1.3.0-dev.92](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0-dev.91...v1.3.0-dev.92) (2024-04-04)
 
 
