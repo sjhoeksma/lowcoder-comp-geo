@@ -4,11 +4,11 @@ This plugin enables the usage of [Openlayers](https://openlayers.org/) within lo
 
 1. Open your lowcoder environment >> go to the app >> Select insert tab click on extentions.
 
-![insert](images/steps/1.png)
+![insert](https://github.com/sjhoeksma/lowcoder-comp-geo/blob/dev/docs/images/steps/1.png)
 
 2. write the name of the npm package, for the our extentions will be : `lowcoder-comp-geo` or the full url of the package `https://www.npmjs.com/package/lowcoder-comp-geo`
 
-![insert](images/steps/2.png)
+![insert](https://github.com/sjhoeksma/lowcoder-comp-geo/blob/dev/docs/images/steps/2.png)
 
 3. Drag and drop the `geo` component, Start using the plugin adding different type of layers like :
    - GeoJSON
@@ -25,7 +25,7 @@ This plugin enables the usage of [Openlayers](https://openlayers.org/) within lo
    - ArcGIS TileServer
    - ArcGIS VectorTileServer (with Esri Style)
 
-![insert](images/steps/3.gif)
+![insert](https://github.com/sjhoeksma/lowcoder-comp-geo/blob/dev/docs/images/steps/3.gif)
 
 # Documentation
 
