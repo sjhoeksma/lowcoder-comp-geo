@@ -202,7 +202,10 @@ function Geo(props) {
           zoom: props.zoom,
           maxZoom: props.maxZoom,
           rotation: props.rotation,
-          projection: props.projection
+          projection: props.projection,
+          extent: props.extent && props.extent.length == 4 ?
+            transformExtent(props.extent, 'EPSG:4326', props.projection) :
+            [-Infinity, -Infinity, Infinity, Infinity]
         }),
         target: 'GEO_' + geoId,
         layers: [],
@@ -707,7 +710,7 @@ function Geo(props) {
       //Add map init event
       fireEvent('map:init', map)
     }
-  }, [props.features, props.projection, props.startDate, props.endDate, geoRef]);
+  }, [props.features, props.extent, props.projection, props.startDate, props.endDate, geoRef]);
 
 
   useEffect(() => {
@@ -817,6 +820,7 @@ Geo.propTypes = {
   projection: PropTypes.string,
   startDate: PropTypes.string,
   endDate: PropTypes.string,
+  extent: PropTypes.array,
 }
 
 export default Geo;

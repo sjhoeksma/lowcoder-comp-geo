@@ -148,6 +148,7 @@ var GEOComp = (function () {
     onEvent: eventHandlerControl(eventDefinitions),
     startDate: stringSimpleControl(), //TODO replace with date picker
     endDate: stringSimpleControl(),
+    extent: ArrayControl,
     features:
       featureControl({
         menu: false,
@@ -205,6 +206,7 @@ var GEOComp = (function () {
     projection: string;
     startDate: string;
     endDate: string;
+    extent: any;
 
     test: any
   }) => {
@@ -329,6 +331,7 @@ var GEOComp = (function () {
             projection={props.projection}
             startDate={props.startDate}
             endDate={props.endDate}
+            extent={props.extent}
           />
         </div>
       </div>
@@ -345,6 +348,7 @@ var GEOComp = (function () {
             {children.maxZoom.propertyView({ label: "maxZoom" })}
             {children.rotation.propertyView({ label: "rotation" })}
             {children.projection.propertyView({ label: "projection" })}
+            {children.extent.propertyView({ label: "extent" })}
           </Section>
           <Section name="Interaction">
             {children.onEvent.propertyView()}
