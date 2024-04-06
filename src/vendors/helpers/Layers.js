@@ -173,7 +173,7 @@ export function geoPbfLoader(map, layerConfig) {
         const curExtent = getIntersection(_extent, extent)
         // console.log("Loader Cur", curExtent, "Ext", extent)
         const url = layerConfig.source.url +
-          'query/?f=pbf&' +
+          '/query/?f=pbf&' +
           'returnGeometry=true&spatialRel=esriSpatialRelIntersects&geometry={' +
           encodeURIComponent(
             '"xmin":' +
