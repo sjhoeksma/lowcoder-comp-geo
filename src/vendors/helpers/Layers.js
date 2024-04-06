@@ -23,6 +23,215 @@ import EsriJSON from 'ol/format/EsriJSON.js';
 import { createStyleFunctionFromUrl } from 'ol-esri-styles';
 import { tile as tileStrategy } from 'ol/loadingstrategy.js';
 import { createXYZ } from 'ol/tilegrid.js';
+import { transformExtent } from 'ol/proj';
+import { getIntersection } from 'ol/extent';
+
+
+/**
+ * Finds a layer in the given map by name.
+ * 
+ * @param {ol.Map} map - The map to search for the layer.
+ * @param {string} name - The name of the layer to find.
+ * @returns {ol.layer.Base|null} The layer with the given name, or null if not found.
+ */
+export function findLayer(map, name) {
+  if (!map) return null
+  const layers = map.getLayers().getArray();
+  for (var i = 0; i < layers.length; i++) {
+    const layer = layers[i]
+    if (layer.get('name') == name) {
+      return layer
+    }
+  }
+  return null
+}
+
+/**
+ * Finds a layer by name on the given map and sets its features, optionally clearing existing features first.
+ * 
+ * @param {ol.Map} map The OpenLayers map instance
+ * @param {Object|Array} data The GeoJSON feature(s) to add to the layer 
+ * @param {string} name The name of the layer to update 
+ * @param {boolean} clear Whether to clear existing features before adding new ones
+ * @returns {boolean} True if the layer was found and updated, false otherwise
+*/
+export function setFeatures(map, name, data, clear) {
+  const layer = findLayer(map, name);
+  if (layer) {
+    const source = layer.getSource()
+    const reader = (source.getFormat ? source.getFormat() : null) || new GeoJSON({
+      dataProjection: source.get('projection') || 'EPSG:4326', // Assuming the GeoJSON is in WGS 84,
+      featureProjection: map.getView().getProjection() || 'EPSG:3857' // Assuming the map projection
+    })
+
+    //Check if there is a undo stack connected to this source, if so clear and disable
+    var undos = []
+    //Disable all undo stacks
+    map.getInteractions().forEach((c) => {
+      if (c instanceof UndoRedo && c.getActive() && c._layers.includes(layer)) {
+        undos.push(c)
+        c.blockStart("set")
+      }
+    })
+
+    //Check if we should clear te source
+    if (clear) {
+      source.clear()
+      undos.forEach((c) => { c.clear() })
+    }
+
+    if (reader && data) {
+      //Now add the features based on types
+      if (Array.isArray(data)) {
+        data.forEach((rec) => {
+          if (source.setFeatures) {
+            source.setFeatures(reader.readFeatures(rec))
+          } else {
+            source.addFeatures(reader.readFeatures(rec))
+          }
+        })
+      } else {
+        if (source.setFeatures) {
+          source.setFeatures(reader.readFeatures(data))
+        } else {
+          source.addFeatures(reader.readFeatures(data))
+        }
+      }
+    }
+    //Enable the undo stack
+    undos.forEach((c) => {
+      c.blockEnd()
+    })
+    //Enable the connected undo check
+  }
+}
+
+
+/**
+ * Gets the features from the layer with the given name.
+ * Returns the features as a GeoJSON object if the layer is found, 
+ * otherwise returns false.
+*/
+export async function getFeatures(map, name) {
+  const layer = findLayer(map, name);
+  if (layer) {
+    const source = layer.getSource()
+    //Check if there is a undo stack connected to this source, if so clear and disable
+    return new GeoJSON({
+      dataProjection: source.get('projection') || 'EPSG:4326',
+      featureProjection: map.getView().getProjection() || 'EPSG:3857'
+    }).writeFeaturesObject(source.getFeatures())
+  }
+  throw new Error('Layer ' + name + ' not found')
+}
+
+
+/**
+ * Clears all features from the layer with the given name.
+ * @param {ol.Map} map OpenLayers map instance
+ * @param {string} name Name of the layer to clear
+ * @returns {boolean} True if layer was found and cleared, false otherwise
+ */
+export function clearFeatures(map, name) {
+  return setFeatures(map, name, null, true)
+}
+
+/**
+ * Parses a filter value, ensuring it is an array.
+ * 
+ * Accepts a filter value which may be an array, stringified array, 
+ * or scalar value. Always returns an array, defaulting to ['layers'].
+ * Handles invalid JSON strings by falling back to the default.
+*/
+export const parseFilter = function (data, defFilter = ['layers']) {
+  var filter = data || defFilter
+  if (!Array.isArray(filter)) {
+    try {
+      filter = JSON.parse("[" + filter + "]")
+    } catch (e) {
+      try {
+        filter = JSON.parse('["' + filter + '"]')
+      } catch (ee) {
+        filter = defFilter
+      }
+    }
+  }
+  return filter
+}
+
+const _invalidExtent = [-Number.MAX_VALUE, -Number.MAX_VALUE, -Number.MAX_VALUE, -Number.MAX_VALUE];
+
+export function geoPbfLoader(map, layerConfig) {
+  const _extent = layerConfig.bbox ?
+    transformExtent(layerConfig.bbox, 'EPSG:4326', map.getView().getProjection()) :
+    [-Number.MAX_VALUE, -Number.MAX_VALUE, Number.MAX_VALUE, Number.MAX_VALUE]
+  return (
+    function (extent, resolution, projection) {
+      const layer = findLayer(map, layerConfig?.label)
+      if (layer && (layer.isVisible() ||
+        map.getView().getZoomForResolution(resolution) >= layer.getMinZoom())) {
+        const curExtent = getIntersection(_extent, extent)
+        // console.log("Loader Cur", curExtent, "Ext", extent)
+        const url = layerConfig.source.url +
+          'query/?f=pbf&' +
+          'returnGeometry=true&spatialRel=esriSpatialRelIntersects&geometry={' +
+          encodeURIComponent(
+            '"xmin":' +
+            curExtent[0] +
+            ',"ymin":' +
+            curExtent[1] +
+            ',"xmax":' +
+            curExtent[2] +
+            ',"ymax":' +
+            curExtent[3]
+          ) +
+          '}&geometryType=esriGeometryEnvelope&inSR=3857&outFields=*&resultType=tile' +
+          '&outSR=3857'
+        fetch(url)
+          .then(response => response.arrayBuffer())
+          .then((response) => {
+            layer.getSource().addFeatures(new EsriPBF().readFeatures(response))
+            // console.log("Reading features", url, new EsriPBF().readFeatures(response).length)
+          })
+      }
+    }
+  )
+}
+
+/**
+ * Generates a loading strategy function for a map layer based on the layer's configuration.
+ *
+ * The returned function takes the current extent and resolution as arguments and returns an array of extents to load tiles for. The strategy is based on the layer's bounding box, and will only return a valid extent if the layer is visible and the current zoom level is within the layer's min/max zoom range.
+ *
+ * @param {ol.Map} map - The OpenLayers map instance.
+ * @param {Object} layerConfig - The configuration object for the layer.
+ * @param {Array<number>} layerConfig.bbox - The bounding box of the layer in EPSG:4326 coordinates.
+ * @param {string} layerConfig.name - The name of the layer.
+ * @returns {function(ol.Extent, number): ol.Extent[]} - A function that implements the loading strategy for the layer.
+ */
+export function geoStrategy(map, layerConfig) {
+  const _extent = layerConfig.bbox ?
+    transformExtent(layerConfig.bbox, 'EPSG:4326', map.getView().getProjection()) :
+    [-Number.MAX_VALUE, -Number.MAX_VALUE, Number.MAX_VALUE, Number.MAX_VALUE]
+  return (
+    /** 
+     * The geoStrategy is based on the bbox, 
+     * Will only return a valid bbox if visible and on the correct zoom level
+     * and will return an visible interaction
+    */
+    function (extent, resolution) {
+      const layer = findLayer(map, layerConfig?.label)
+      if (layer && (layer.isVisible() ||
+        map.getView().getZoomForResolution(resolution) >= layer.getMinZoom())) {
+        const curExtent = getIntersection(_extent, extent)
+        //console.log("Strategy Cur", curExtent, "Ext", extent)
+        return [curExtent]
+      }
+      return [_invalidExtent]
+
+    }
+  );
+}
 
 /**
  * Creates and returns an OpenLayers layer instance for the given layer configuration object.
@@ -294,6 +503,7 @@ export function createLayer(layerConfig, map) {
           displayInLayerSwitcher: layerConfig.userVisible,
           source: new VectorSource({
             format: new EsriPBF({ dataProjection: layerConfig.source.projection || 'EPSG:3857' }),
+            /*
             url:
               layerConfig.source.url +
               '/query/?f=pbf&' +
@@ -315,7 +525,10 @@ export function createLayer(layerConfig, map) {
               createXYZ({
                 tileSize: [512, 512],
               }),
-            ),
+            ),*/
+
+            strategy: geoStrategy(map, layerConfig),
+            loader: geoPbfLoader(map, layerConfig)
           }),
         })
         createStyleFunctionFromUrl(layerConfig.source.url, map.getView().getProjection() || 'EPSG:3857').then(styleFunction => {
@@ -403,134 +616,3 @@ export function createLayer(layerConfig, map) {
   }
 };
 
-/**
- * Finds a layer in the given map by name.
- * 
- * @param {ol.Map} map - The map to search for the layer.
- * @param {string} name - The name of the layer to find.
- * @returns {ol.layer.Base|null} The layer with the given name, or null if not found.
- */
-export function findLayer(map, name) {
-  if (!map) return null
-  const layers = map.getLayers().getArray();
-  for (var i = 0; i < layers.length; i++) {
-    const layer = layers[i]
-    if (layer.get('name') == name) {
-      return layer
-    }
-  }
-  return null
-}
-
-/**
- * Finds a layer by name on the given map and sets its features, optionally clearing existing features first.
- * 
- * @param {ol.Map} map The OpenLayers map instance
- * @param {Object|Array} data The GeoJSON feature(s) to add to the layer 
- * @param {string} name The name of the layer to update 
- * @param {boolean} clear Whether to clear existing features before adding new ones
- * @returns {boolean} True if the layer was found and updated, false otherwise
-*/
-export function setFeatures(map, name, data, clear) {
-  const layer = findLayer(map, name);
-  if (layer) {
-    const source = layer.getSource()
-    const reader = (source.getFormat ? source.getFormat() : null) || new GeoJSON({
-      dataProjection: source.get('projection') || 'EPSG:4326', // Assuming the GeoJSON is in WGS 84,
-      featureProjection: map.getView().getProjection() || 'EPSG:3857' // Assuming the map projection
-    })
-
-    //Check if there is a undo stack connected to this source, if so clear and disable
-    var undos = []
-    //Disable all undo stacks
-    map.getInteractions().forEach((c) => {
-      if (c instanceof UndoRedo && c.getActive() && c._layers.includes(layer)) {
-        undos.push(c)
-        c.blockStart("set")
-      }
-    })
-
-    //Check if we should clear te source
-    if (clear) {
-      source.clear()
-      undos.forEach((c) => { c.clear() })
-    }
-
-    if (reader && data) {
-      //Now add the features based on types
-      if (Array.isArray(data)) {
-        data.forEach((rec) => {
-          if (source.setFeatures) {
-            source.setFeatures(reader.readFeatures(rec))
-          } else {
-            source.addFeatures(reader.readFeatures(rec))
-          }
-        })
-      } else {
-        if (source.setFeatures) {
-          source.setFeatures(reader.readFeatures(data))
-        } else {
-          source.addFeatures(reader.readFeatures(data))
-        }
-      }
-    }
-    //Enable the undo stack
-    undos.forEach((c) => {
-      c.blockEnd()
-    })
-    //Enable the connected undo check
-  }
-}
-
-
-/**
- * Gets the features from the layer with the given name.
- * Returns the features as a GeoJSON object if the layer is found, 
- * otherwise returns false.
-*/
-export async function getFeatures(map, name) {
-  const layer = findLayer(map, name);
-  if (layer) {
-    const source = layer.getSource()
-    //Check if there is a undo stack connected to this source, if so clear and disable
-    return new GeoJSON({
-      dataProjection: source.get('projection') || 'EPSG:4326',
-      featureProjection: map.getView().getProjection() || 'EPSG:3857'
-    }).writeFeaturesObject(source.getFeatures())
-  }
-  throw new Error('Layer ' + name + ' not found')
-}
-
-
-/**
- * Clears all features from the layer with the given name.
- * @param {ol.Map} map OpenLayers map instance
- * @param {string} name Name of the layer to clear
- * @returns {boolean} True if layer was found and cleared, false otherwise
- */
-export function clearFeatures(map, name) {
-  return setFeatures(map, name, null, true)
-}
-
-/**
- * Parses a filter value, ensuring it is an array.
- * 
- * Accepts a filter value which may be an array, stringified array, 
- * or scalar value. Always returns an array, defaulting to ['layers'].
- * Handles invalid JSON strings by falling back to the default.
-*/
-export const parseFilter = function (data, defFilter = ['layers']) {
-  var filter = data || defFilter
-  if (!Array.isArray(filter)) {
-    try {
-      filter = JSON.parse("[" + filter + "]")
-    } catch (e) {
-      try {
-        filter = JSON.parse('["' + filter + '"]')
-      } catch (ee) {
-        filter = defFilter
-      }
-    }
-  }
-  return filter
-}
