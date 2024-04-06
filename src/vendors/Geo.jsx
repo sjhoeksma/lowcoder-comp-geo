@@ -129,59 +129,52 @@ function Geo(props) {
     if (map) {
       //Remove the current layers
       map.getLayers().clear();
-      const sortFn = function (a, b) {
-        const av = (a.get('order') || 0)
-        const bv = (b.get('order') || 0)
-        if (av < bv) {
-          return -1;
-        } else if (av > bv) {
-          return 1;
-        }
-        return 0;
-      }
+
       const layers = (Array.isArray(props.layers) ? props.layers : [])
         .map(layerConfig => createLayer(layerConfig, map))
         .filter(layer => layer !== null && layer !== undefined)
-        .sort(sortFn);
       var workinglayers = [...layers]
       //Sort all layers an groups and add them to map
       const layerGroups = {}
-      layers.forEach((layer, idx) => {
-        if (layer) {
-          if (layer.get('timeline')) {
-            layer.setVisible(false) //Timelines is always invisable
-            var g = "timeline"
+      layers.forEach((layer) => {
+        const idx = workinglayers.indexOf(layer);
+        if (layer.get('timeline')) {
+          layer.setVisible(false) //Timelines is always invisable
+          var g = "timeline"
+          layerGroups[g] = layerGroups[g] ? [...layerGroups[g], layer] : [layer]
+          //Remove the layer from working layers
+          if (layerGroups[g].length == 1) {
+            workinglayers[idx] = g
+          } else {
+            workinglayers.splice(idx, 1);
+          }
+        } else if (layer.get('groups')) {
+          const groups = layer.get('groups')
+          const gr = Array.isArray(groups) ? groups : [groups]
+          gr.forEach((g) => {
             layerGroups[g] = layerGroups[g] ? [...layerGroups[g], layer] : [layer]
             //Remove the layer from working layers
-            const index = workinglayers.indexOf(layer);
-            if (index >= 0) workinglayers.splice(index, 1);
-          } else if (layer.get('groups')) {
-            const groups = layer.get('groups')
-            const gr = Array.isArray(groups) ? groups : [groups]
-            gr.forEach((g) => {
-              layerGroups[g] = layerGroups[g] ? [...layerGroups[g], layer] : [layer]
-              //Remove the layer from working layers
-              const index = workinglayers.indexOf(layer);
-              if (index >= 0) workinglayers.splice(index, 1);
-            })
-          }
+            if (layerGroups[g].length == 1) {
+              workinglayers[idx] = g
+            } else {
+              workinglayers.splice(idx, 1);
+            }
+          })
         }
       });
-      //Convert layerGroups into LayerGroups
+      //Convert layerGroups into LayerGroups by adding them on the key position
       for (const [key, value] of Object.entries(layerGroups)) {
-        workinglayers.push(new LayerGroupUndo({
+        workinglayers[workinglayers.indexOf[key]] = new LayerGroupUndo({
           name: key,
           title: key.charAt(0).toUpperCase() + key.slice(1),
           layers: value,
-          order: Math.min(...value.map(item => { return item.get('order') || 999999 })),
           displayInLayerSwitcher: key !== "timeline"
-        }))
+        })
       }
-      //Sort the working layer
-      workinglayers.sort(sortFn);
-      workinglayers.forEach(layer => {
-        map.addLayer(layer)
-      })
+      //Add the in reverse order to the map
+      for (let i = workinglayers.length - 1; i >= 0; i--) {
+        map.addLayer(workinglayers[i])
+      }
 
       //TrackerVector
       if (featureEnabled('tracker')) {

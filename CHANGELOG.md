@@ -31,7 +31,6 @@
 * Add control over the default behaviors
 * Make timeline example with https://service.pdok.nl/hwh/luchtfotocir/wms/v1_0?request=GetCapabilities&service=wms
 * implement cluster: https://openlayers.org/en/latest/examples/clusters-dynamic.html
-* make the order of the UI reflect also reflect on the layer order
 
 
 ### Bugs

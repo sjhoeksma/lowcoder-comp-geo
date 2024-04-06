@@ -181,7 +181,6 @@ var LayerObjectOption = new MultiCompBuilder(
         visible: withDefault(BoolPureControl, true),
         selectable: withDefault(BoolPureControl, true),
         userVisible: withDefault(BoolPureControl, true),
-        order: NumberControl,
         minZoom: withDefault(NumberControl, 0),
         maxZoom: withDefault(NumberControl, 30),
         opacity: withDefault(NumberControl, 1),

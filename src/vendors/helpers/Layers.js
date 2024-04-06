@@ -52,7 +52,6 @@ export function createLayer(layerConfig, map) {
           selectable: layerConfig.selectable,
           groups: layerConfig.groups,
           extra: layerConfig.extra,
-          order: layerConfig.order,
           splitscreen: layerConfig.splitscreen,
           displayInLayerSwitcher: layerConfig.userVisible,
           source: new VectorTileSource({
@@ -72,7 +71,6 @@ export function createLayer(layerConfig, map) {
           selectable: layerConfig.selectable,
           groups: layerConfig.groups,
           extra: layerConfig.extra,
-          order: layerConfig.order,
           splitscreen: layerConfig.splitscreen,
           displayInLayerSwitcher: layerConfig.userVisible,
           source: new TileWMS({
@@ -93,7 +91,6 @@ export function createLayer(layerConfig, map) {
           selectable: layerConfig.selectable,
           groups: layerConfig.groups,
           extra: layerConfig.extra,
-          order: layerConfig.order,
           splitscreen: layerConfig.splitscreen,
           displayInLayerSwitcher: layerConfig.userVisible,
           source: new VectorSource({
@@ -112,7 +109,6 @@ export function createLayer(layerConfig, map) {
           selectable: layerConfig.selectable,
           groups: layerConfig.groups,
           extra: layerConfig.extra,
-          order: layerConfig.order,
           splitscreen: layerConfig.splitscreen,
           displayInLayerSwitcher: layerConfig.userVisible,
           source: new XYZ({
@@ -130,7 +126,6 @@ export function createLayer(layerConfig, map) {
           selectable: layerConfig.selectable,
           groups: layerConfig.groups,
           extra: layerConfig.extra,
-          order: layerConfig.order,
           splitscreen: layerConfig.splitscreen,
           displayInLayerSwitcher: layerConfig.userVisible,
           source: new VectorSource({
@@ -161,7 +156,6 @@ export function createLayer(layerConfig, map) {
           selectable: layerConfig.selectable,
           groups: layerConfig.groups,
           extra: layerConfig.extra,
-          order: layerConfig.order,
           splitscreen: layerConfig.splitscreen,
           displayInLayerSwitcher: layerConfig.userVisible,
           source: new GeoTIFF({
@@ -193,7 +187,6 @@ export function createLayer(layerConfig, map) {
           selectable: layerConfig.selectable,
           groups: layerConfig.groups,
           extra: layerConfig.extra,
-          order: layerConfig.order,
           splitscreen: layerConfig.splitscreen,
           displayInLayerSwitcher: layerConfig.userVisible,
           source: new VectorTileSource({
@@ -217,7 +210,6 @@ export function createLayer(layerConfig, map) {
             selectable: layerConfig.selectable,
             groups: layerConfig.groups,
             extra: layerConfig.extra,
-            order: layerConfig.order,
             splitscreen: layerConfig.splitscreen,
             displayInLayerSwitcher: layerConfig.userVisible,
             source: new TileArcGISRest({
@@ -238,7 +230,6 @@ export function createLayer(layerConfig, map) {
             selectable: layerConfig.selectable,
             groups: layerConfig.groups,
             extra: layerConfig.extra,
-            order: layerConfig.order,
             splitscreen: layerConfig.splitscreen,
             displayInLayerSwitcher: layerConfig.userVisible,
             source: new ImageArcGISRest({
@@ -261,7 +252,6 @@ export function createLayer(layerConfig, map) {
             selectable: layerConfig.selectable,
             groups: layerConfig.groups,
             extra: layerConfig.extra,
-            order: layerConfig.order,
             splitscreen: layerConfig.splitscreen,
             displayInLayerSwitcher: layerConfig.userVisible,
             source: new PMTilesRasterSource({
@@ -282,7 +272,6 @@ export function createLayer(layerConfig, map) {
             selectable: layerConfig.selectable,
             groups: layerConfig.groups,
             extra: layerConfig.extra,
-            order: layerConfig.order,
             splitscreen: layerConfig.splitscreen,
             displayInLayerSwitcher: layerConfig.userVisible,
             source: new PMTilesVectorSource({
@@ -301,7 +290,6 @@ export function createLayer(layerConfig, map) {
           selectable: layerConfig.selectable,
           groups: layerConfig.groups,
           extra: layerConfig.extra,
-          order: layerConfig.order,
           splitscreen: layerConfig.splitscreen,
           displayInLayerSwitcher: layerConfig.userVisible,
           source: new VectorSource({
@@ -345,7 +333,6 @@ export function createLayer(layerConfig, map) {
           selectable: layerConfig.selectable,
           groups: layerConfig.groups,
           extra: layerConfig.extra,
-          order: layerConfig.order,
           splitscreen: layerConfig.splitscreen,
           displayInLayerSwitcher: layerConfig.userVisible,
           source: new VectorSource({
