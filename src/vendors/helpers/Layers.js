@@ -189,10 +189,14 @@ export function arcgisLoader(map, layerConfig, dataType) {
             }
           } else if (json.extent.spatialReference.wkid) {
             epsg = 'EPSG:' + json.extent.spatialReference.wkid
-          } else {
-            console.warn("Unknown spatial reference ", json.extent.spatialReference)
           }
-          _extent = transformExtent(_extent, epsg, map.getView().getProjection())
+          //Check if we can do the transformation, otherwise we keep the original extent
+          try {
+            proj4(epsg)
+            _extent = transformExtent(_extent, epsg, map.getView().getProjection())
+          } catch (ex) {
+            console.warn("Unknown transformation ", epsg)
+          }
         }
       }).finally(() => { isLoading = false })
   }
