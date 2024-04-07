@@ -23,7 +23,7 @@ export const enObj: I18nObjects = {
       "visible": true,
       "selectable": true,
       "source": {
-        "url": "https://rijnland.enl-mcs.nl/arcgis/rest/services/Polder/MapServer/0/",
+        "url": "https://rijnland.enl-mcs.nl/arcgis/rest/services/Polder/MapServer/0",
         "projection": "EPSG:28992",
       }
     },

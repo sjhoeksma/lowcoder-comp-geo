@@ -21,11 +21,16 @@ import UndoRedo from 'ol-ext/interaction/UndoRedo'
 import EsriPBF from "./EsriPBF.js";
 import EsriJSON from 'ol/format/EsriJSON.js';
 import { createStyleFunctionFromUrl } from 'ol-esri-styles';
-import { tile as tileStrategy } from 'ol/loadingstrategy.js';
-import { createXYZ } from 'ol/tilegrid.js';
 import { transformExtent } from 'ol/proj';
-import { getIntersection } from 'ol/extent';
+import { getIntersection, intersects } from 'ol/extent';
+import proj4 from 'proj4'
+import { register } from 'ol/proj/proj4'
+import { bbox } from 'ol/loadingstrategy';
 
+
+//Create projection transformations 
+proj4.defs("EPSG:28992", "+proj=sterea +lat_0=52.15616055555555 +lon_0=5.38763888888889 +k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel +units=m +no_defs");
+register(proj4)
 
 /**
  * Finds a layer in the given map by name.
@@ -159,79 +164,96 @@ export const parseFilter = function (data, defFilter = ['layers']) {
   return filter
 }
 
-const _invalidExtent = [-Number.MAX_VALUE, -Number.MAX_VALUE, -Number.MAX_VALUE, -Number.MAX_VALUE];
+const _maxExtent = [-Number.MAX_VALUE, -Number.MAX_VALUE, Number.MAX_VALUE, Number.MAX_VALUE];
 
-export function geoPbfLoader(map, layerConfig) {
-  const _extent = layerConfig.bbox ?
+export function arcgisLoader(map, layerConfig, dataType) {
+  var _extent = layerConfig.bbox ?
     transformExtent(layerConfig.bbox, 'EPSG:4326', map.getView().getProjection()) :
-    [-Number.MAX_VALUE, -Number.MAX_VALUE, Number.MAX_VALUE, Number.MAX_VALUE]
+    _maxExtent
+  var isLoading = false
+
+  if (!layerConfig.bbox && layerConfig.source?.url) {
+    isLoading = true
+    fetch(layerConfig.source.url + '?f=pjson')
+      .then(response => response.json())
+      .then((json) => {
+        if (json.extent) {
+          isLoading
+          _extent = [json.extent.xmin, json.extent.ymin, json.extent.xmax, json.extent.ymax]
+          _extent = transformExtent(_extent, 'EPSG:' + json.extent.spatialReference.wkid, map.getView().getProjection() || 'EPSG:3857')
+        }
+      }).finally(() => { isLoading = false })
+  }
+
+
   return (
     function (extent, resolution, projection) {
-      const layer = findLayer(map, layerConfig?.label)
-      if (layer && (layer.isVisible() ||
-        map.getView().getZoomForResolution(resolution) >= layer.getMinZoom())) {
+      if (!isLoading && intersects(_extent, extent)) {
         const curExtent = getIntersection(_extent, extent)
-        // console.log("Loader Cur", curExtent, "Ext", extent)
-        const url = layerConfig.source.url +
-          '/query/?f=pbf&' +
-          'returnGeometry=true&spatialRel=esriSpatialRelIntersects&geometry={' +
-          encodeURIComponent(
-            '"xmin":' +
-            curExtent[0] +
-            ',"ymin":' +
-            curExtent[1] +
-            ',"xmax":' +
-            curExtent[2] +
-            ',"ymax":' +
-            curExtent[3]
-          ) +
-          '}&geometryType=esriGeometryEnvelope&inSR=3857&outFields=*&resultType=tile' +
-          '&outSR=3857'
-        fetch(url)
-          .then(response => response.arrayBuffer())
-          .then((response) => {
-            layer.getSource().addFeatures(new EsriPBF().readFeatures(response))
-            // console.log("Reading features", url, new EsriPBF().readFeatures(response).length)
-          })
+        switch (dataType) {
+          case 'pbf': {
+            const url = layerConfig.source.url +
+              '/query/?f=pbf&' +
+              'returnGeometry=true&spatialRel=esriSpatialRelIntersects&geometry={' +
+              encodeURIComponent(
+                '"xmin":' +
+                curExtent[0] +
+                ',"ymin":' +
+                curExtent[1] +
+                ',"xmax":' +
+                curExtent[2] +
+                ',"ymax":' +
+                curExtent[3]
+              ) +
+              '}&geometryType=esriGeometryEnvelope&inSR=3857&outFields=*&resultType=tile' +
+              '&outSR=3857'
+            fetch(url)
+              .then(response => response.arrayBuffer())
+              .then((response) => {
+                layer.getSource().addFeatures(new EsriPBF().readFeatures(response))
+              })
+          } break;
+          default: {
+            // ArcGIS Server only wants the numeric portion of the projection ID.
+            const srid = projection
+              .getCode()
+              .split(/:(?=\d+$)/)
+              .pop();
+
+            const url =
+              layerConfig.source.url +
+              '/query/?f=json&' +
+              'returnGeometry=true&spatialRel=esriSpatialRelIntersects&geometry=' +
+              encodeURIComponent(
+                '{"xmin":' +
+                curExtent[0] +
+                ',"ymin":' +
+                curExtent[1] +
+                ',"xmax":' +
+                curExtent[2] +
+                ',"ymax":' +
+                curExtent[3] +
+                ',"spatialReference":{"wkid":' +
+                srid +
+                '}}',
+              ) +
+              '&geometryType=esriGeometryEnvelope&inSR=' +
+              srid +
+              '&outFields=*' +
+              '&outSR=' +
+              srid;
+            fetch(url)
+              .then(response => response.json())
+              .then((response) => {
+                layer.getSource().addFeatures(new EsriJSON().readFeatures(response))
+              })
+          }
+        }
       }
     }
   )
 }
 
-/**
- * Generates a loading strategy function for a map layer based on the layer's configuration.
- *
- * The returned function takes the current extent and resolution as arguments and returns an array of extents to load tiles for. The strategy is based on the layer's bounding box, and will only return a valid extent if the layer is visible and the current zoom level is within the layer's min/max zoom range.
- *
- * @param {ol.Map} map - The OpenLayers map instance.
- * @param {Object} layerConfig - The configuration object for the layer.
- * @param {Array<number>} layerConfig.bbox - The bounding box of the layer in EPSG:4326 coordinates.
- * @param {string} layerConfig.name - The name of the layer.
- * @returns {function(ol.Extent, number): ol.Extent[]} - A function that implements the loading strategy for the layer.
- */
-export function geoStrategy(map, layerConfig) {
-  const _extent = layerConfig.bbox ?
-    transformExtent(layerConfig.bbox, 'EPSG:4326', map.getView().getProjection()) :
-    [-Number.MAX_VALUE, -Number.MAX_VALUE, Number.MAX_VALUE, Number.MAX_VALUE]
-  return (
-    /** 
-     * The geoStrategy is based on the bbox, 
-     * Will only return a valid bbox if visible and on the correct zoom level
-     * and will return an visible interaction
-    */
-    function (extent, resolution) {
-      const layer = findLayer(map, layerConfig?.label)
-      if (layer && (layer.isVisible() ||
-        map.getView().getZoomForResolution(resolution) >= layer.getMinZoom())) {
-        const curExtent = getIntersection(_extent, extent)
-        //console.log("Strategy Cur", curExtent, "Ext", extent)
-        return [curExtent]
-      }
-      return [_invalidExtent]
-
-    }
-  );
-}
 
 /**
  * Creates and returns an OpenLayers layer instance for the given layer configuration object.
@@ -503,32 +525,8 @@ export function createLayer(layerConfig, map) {
           displayInLayerSwitcher: layerConfig.userVisible,
           source: new VectorSource({
             format: new EsriPBF({ dataProjection: layerConfig.source.projection || 'EPSG:3857' }),
-            /*
-            url:
-              layerConfig.source.url +
-              '/query/?f=pbf&' +
-              'returnGeometry=true&spatialRel=esriSpatialRelIntersects&geometry=' +
-              encodeURIComponent(
-                '{"xmin":' +
-                -20037508.342789244 +
-                ',"ymin":' +
-                -20037508.342789244 +
-                ',"xmax":' +
-                20037508.342789244 +
-                ',"ymax":' +
-                20037508.342789244 +
-                '}'
-              ) +
-              '&geometryType=esriGeometryEnvelope&inSR=3857&outFields=*&resultType=tile' +
-              '&outSR=3857',
-            strategy: tileStrategy(
-              createXYZ({
-                tileSize: [512, 512],
-              }),
-            ),*/
-
-            strategy: geoStrategy(map, layerConfig),
-            loader: geoPbfLoader(map, layerConfig)
+            strategy: bbox,
+            loader: arcgisLoader(map, layerConfig, 'pbf')
           }),
         })
         createStyleFunctionFromUrl(layerConfig.source.url, map.getView().getProjection() || 'EPSG:3857').then(styleFunction => {
@@ -550,43 +548,8 @@ export function createLayer(layerConfig, map) {
           displayInLayerSwitcher: layerConfig.userVisible,
           source: new VectorSource({
             format: new EsriJSON(),
-            url: function (extent, resolution, projection) {
-              // ArcGIS Server only wants the numeric portion of the projection ID.
-              const srid = projection
-                .getCode()
-                .split(/:(?=\d+$)/)
-                .pop();
-
-              const url =
-                layerConfig.source.url +
-                '/query/?f=json&' +
-                'returnGeometry=true&spatialRel=esriSpatialRelIntersects&geometry=' +
-                encodeURIComponent(
-                  '{"xmin":' +
-                  extent[0] +
-                  ',"ymin":' +
-                  extent[1] +
-                  ',"xmax":' +
-                  extent[2] +
-                  ',"ymax":' +
-                  extent[3] +
-                  ',"spatialReference":{"wkid":' +
-                  srid +
-                  '}}',
-                ) +
-                '&geometryType=esriGeometryEnvelope&inSR=' +
-                srid +
-                '&outFields=*' +
-                '&outSR=' +
-                srid;
-
-              return url;
-            },
-            strategy: tileStrategy(
-              createXYZ({
-                tileSize: [512, 512],
-              }),
-            ),
+            strategy: bbox,
+            loader: arcgisLoader(map, layerConfig, 'json')
           })
         });
         createStyleFunctionFromUrl(layerConfig.source.url, map.getView().getProjection() || 'EPSG:3857').then(styleFunction => {

@@ -31,6 +31,7 @@
 * Add control over the default behaviors
 * Make timeline example with https://service.pdok.nl/hwh/luchtfotocir/wms/v1_0?request=GetCapabilities&service=wms
 * implement cluster: https://openlayers.org/en/latest/examples/clusters-dynamic.html
+* add the custom projections to the ui as property editor
 
 
 ### Bugs

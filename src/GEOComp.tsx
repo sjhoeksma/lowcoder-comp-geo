@@ -161,7 +161,7 @@ var GEOComp = (function () {
         splitscreen: false,
         tracker: false,
         timeline: false,
-        gpsCentered: true,
+        gpsCentered: false,
         north: false,
         scale: true,
         largeButtons: true,
