@@ -161,7 +161,7 @@ var GEOComp = (function () {
         splitscreen: false,
         tracker: false,
         timeline: false,
-        gpsCentered: false,
+        gpsCentered: true,
         north: false,
         scale: true,
         largeButtons: true,
@@ -180,6 +180,7 @@ var GEOComp = (function () {
         "splitscreen:vertical": false,
         debug: geoContext.previewMode,
       }),
+    external: jsonObjectExposingStateControl("external"),
   };
 
 
@@ -207,6 +208,7 @@ var GEOComp = (function () {
     startDate: string;
     endDate: string;
     extent: any;
+    external: any
 
     test: any
   }) => {
@@ -332,6 +334,7 @@ var GEOComp = (function () {
             startDate={props.startDate}
             endDate={props.endDate}
             extent={props.extent}
+            external={props.external.value}
           />
         </div>
       </div>
@@ -651,4 +654,5 @@ export default withExposingConfigs(GEOComp, [
   new NameConfig("event", trans("component.event")),
   new NameConfig("bbox", trans("component.bbox")),
   new NameConfig("feature", trans("component.feature")),
+  new NameConfig("external", trans("component.external")),
 ]);

@@ -88,6 +88,17 @@ function Geo(props) {
     }
   }
 
+  //Return an external value object
+  const externalValue = function (name, obj) {
+    if (!obj) obj = props.external || {}
+    const names = name.split('.', 2)
+    if (names.length > 1) {
+      if (obj[names[0]]) return externalValue(names[1], obj[names[0]])
+      return null //not found
+    }
+    return obj[names[0]]
+  }
+
   //Fetch the geolocation based on browser or ip when center is not set
   const elementRef = useCallback(ref => {
     setGeoRef(ref);
@@ -444,9 +455,14 @@ function Geo(props) {
       // Add a simple push button to save features
       // Add control inside the map
       var layerCtrl = new LayerSwitcher({
+        target: externalValue('layerswitcher.target')
         // collapsed: false,
         // mouseover: true
       });
+      //Connect external drawer if needed
+      if (externalValue('layerswitcher.draw')) {
+        layerCtrl.on('drawlist', externalValue('layerswitcher.draw'))
+      }
       if (featureEnabled('layers')) map.addControl(layerCtrl);
 
       // Swipe control bar 
@@ -710,7 +726,7 @@ function Geo(props) {
       //Add map init event
       fireEvent('map:init', map)
     }
-  }, [props.features, props.extent, props.projection, props.startDate, props.endDate, geoRef]);
+  }, [props.features, props.extent, props.projection, props.startDate, props.endDate, props.external, geoRef]);
 
 
   useEffect(() => {
@@ -821,6 +837,7 @@ Geo.propTypes = {
   startDate: PropTypes.string,
   endDate: PropTypes.string,
   extent: PropTypes.array,
+  external: PropTypes.object,
 }
 
 export default Geo;

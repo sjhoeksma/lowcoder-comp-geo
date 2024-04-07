@@ -32,6 +32,9 @@
 * Make timeline example with https://service.pdok.nl/hwh/luchtfotocir/wms/v1_0?request=GetCapabilities&service=wms
 * implement cluster: https://openlayers.org/en/latest/examples/clusters-dynamic.html
 * add the custom projections to the ui as property editor
+* add option to control elements without the use of buttons
+* add bookmark options https://viglino.github.io/ol-ext/examples/control/map.control.geobookmark.html
+* add legend https://viglino.github.io/ol-ext/examples/legend/map.control.legends.html
 
 
 ### Bugs
