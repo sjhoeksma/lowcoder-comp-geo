@@ -164,6 +164,16 @@ export const parseFilter = function (data, defFilter = ['layers']) {
   return filter
 }
 
+function generateHash(input) {
+  let hash = 0, i, chr;
+  for (i = 0; i < input.length; i++) {
+    chr = input.charCodeAt(i);
+    hash = ((hash << 5) - hash) + chr;
+    hash |= 0; // Convert to 32bit integer
+  }
+  return "CUSTOM_EPSG_" + hash.toString();
+}
+
 const _maxExtent = [-Number.MAX_VALUE, -Number.MAX_VALUE, Number.MAX_VALUE, Number.MAX_VALUE];
 
 export function arcgisLoader(map, layerConfig, dataType) {
@@ -173,39 +183,44 @@ export function arcgisLoader(map, layerConfig, dataType) {
   var isLoading = false
 
   if (!layerConfig.bbox && layerConfig.source?.url) {
-    isLoading = true
+    isLoading = true;
     fetch(layerConfig.source.url + '/?f=pjson')
       .then(response => response.json())
       .then((json) => {
-        if (json.extent) {
-          _extent = [json.extent.xmin, json.extent.ymin, json.extent.xmax, json.extent.ymax]
-          var epsg = layerConfig.source?.projection || 'EPSG:4326'
-          if (json.extent.spatialReference.wkt) {
-            //ToDo: Check if there is an autohrity within wkt. if so use it as Epsg
-            try {
-              proj4(epsg)
-            } catch (ex) { //Not found define it
-              proj4.defs(espg, json.extent.spatialReference.wkt)
+        let extent = json.extent || json.initialExtent || json.fullExtent;
+        if (extent) {
+          _extent = [extent.xmin, extent.ymin, extent.xmax, extent.ymax];
+          let epsg = layerConfig.source?.projection || 'EPSG:4326';
+          if (extent.spatialReference && extent.spatialReference.wkt) {
+            const wkt = extent.spatialReference.wkt;
+            const customEpsgName = "CUSTOM_" + generateHash(wkt);
+            if (!proj4.defs(customEpsgName)) {
+              proj4.defs(customEpsgName, wkt);
+              register(proj4);
             }
-          } else if (json.extent.spatialReference.wkid) {
-            epsg = 'EPSG:' + json.extent.spatialReference.wkid
+            epsg = customEpsgName;
+          } else if (extent.spatialReference && extent.spatialReference.wkid) {
+            epsg = 'EPSG:' + extent.spatialReference.wkid;
           }
-          //Check if we can do the transformation, otherwise we keep the original extent
           try {
-            proj4(epsg)
-            _extent = transformExtent(_extent, epsg, map.getView().getProjection())
+            _extent = transformExtent(_extent, epsg, map.getView().getProjection());
           } catch (ex) {
-            console.warn("Unknown transformation ", epsg)
+            console.warn("Unable to transform extent using projection ", epsg, ex);
           }
+        } else {
+          console.warn("No extent information found in the ArcGIS server response.");
         }
-      }).finally(() => { isLoading = false })
+      }).finally(() => { isLoading = false });
   }
+
 
   return (
     function (extent, resolution, projection) {
       if (!isLoading && intersects(_extent, extent)) {
-        const curExtent = getIntersection(_extent, extent)
+        const curExtent = getIntersection(_extent, extent);
         const layer = findLayer(map, layerConfig.label)
+        // ArcGIS Server only wants the numeric portion of the projection ID.
+        const srid = projection.getCode().split(/:(?=\d+$)/).pop();
         switch (dataType) {
           case 'pbf': {
             const url = layerConfig.source.url +
@@ -221,8 +236,11 @@ export function arcgisLoader(map, layerConfig, dataType) {
                 ',"ymax":' +
                 curExtent[3]
               ) +
-              '}&geometryType=esriGeometryEnvelope&inSR=3857&outFields=*&resultType=tile' +
-              '&outSR=3857'
+              '}&geometryType=esriGeometryEnvelope&inSR=' +
+              srid +
+              '&outFields=*&resultType=tile' +
+              '&outSR=' +
+              srid
             fetch(url)
               .then(response => response.arrayBuffer())
               .then((response) => {
@@ -230,12 +248,6 @@ export function arcgisLoader(map, layerConfig, dataType) {
               })
           } break;
           default: {
-            // ArcGIS Server only wants the numeric portion of the projection ID.
-            const srid = projection
-              .getCode()
-              .split(/:(?=\d+$)/)
-              .pop();
-
             const url =
               layerConfig.source.url +
               '/query/?f=json&' +
