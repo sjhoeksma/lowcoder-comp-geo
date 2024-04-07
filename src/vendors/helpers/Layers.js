@@ -181,9 +181,12 @@ export function arcgisLoader(map, layerConfig, dataType) {
           _extent = [json.extent.xmin, json.extent.ymin, json.extent.xmax, json.extent.ymax]
           var epsg = layerConfig.source?.projection || 'EPSG:4326'
           if (json.extent.spatialReference.wkt) {
-            //PROJCS["OSGB_1936_British_National_Grid",GEOGCS["GCS_OSGB 1936",DATUM["D_OSGB_1936",SPHEROID["Airy_1830",6377563.396,299.3249646]],PRIMEM["Greenwich",0.0],UNIT["Degree",0.0174532925199433]],PROJECTION["Transverse_Mercator"],PARAMETER["false_easting",400000.0],PARAMETER["false_northing",-100000.0],PARAMETER["central_meridian",-2.0],PARAMETER["scale_factor",0.9996012717],PARAMETER["latitude_of_origin",49.0],UNIT["Meter",1.0]]
-            // proj4.defs("EPSG:28353",json.extent.spatialReference.wkt)
-            console.log("EPSG ", json)
+            //ToDo: Check if there is an autohrity within wkt. if so use it as Epsg
+            try {
+              proj4(epsg)
+            } catch (ex) { //Not found define it
+              proj4.defs(espg, json.extent.spatialReference.wkt)
+            }
           } else if (json.extent.spatialReference.wkid) {
             epsg = 'EPSG:' + json.extent.spatialReference.wkid
           } else {
