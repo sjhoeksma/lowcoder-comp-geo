@@ -174,22 +174,31 @@ export function arcgisLoader(map, layerConfig, dataType) {
 
   if (!layerConfig.bbox && layerConfig.source?.url) {
     isLoading = true
-    fetch(layerConfig.source.url + '?f=pjson')
+    fetch(layerConfig.source.url + '/?f=pjson')
       .then(response => response.json())
       .then((json) => {
         if (json.extent) {
-          isLoading
           _extent = [json.extent.xmin, json.extent.ymin, json.extent.xmax, json.extent.ymax]
-          _extent = transformExtent(_extent, 'EPSG:' + json.extent.spatialReference.wkid, map.getView().getProjection() || 'EPSG:3857')
+          var epsg = 'EPSG:4326'
+          if (json.extent.spatialReference.wkt) {
+            //PROJCS["OSGB_1936_British_National_Grid",GEOGCS["GCS_OSGB 1936",DATUM["D_OSGB_1936",SPHEROID["Airy_1830",6377563.396,299.3249646]],PRIMEM["Greenwich",0.0],UNIT["Degree",0.0174532925199433]],PROJECTION["Transverse_Mercator"],PARAMETER["false_easting",400000.0],PARAMETER["false_northing",-100000.0],PARAMETER["central_meridian",-2.0],PARAMETER["scale_factor",0.9996012717],PARAMETER["latitude_of_origin",49.0],UNIT["Meter",1.0]]
+            // proj4.defs("EPSG:28353",json.extent.spatialReference.wkt)
+            console.log("EPSG ", json)
+          } else if (json.extent.spatialReference.wkid) {
+            epsg = 'EPSG:' + json.extent.spatialReference.wkid
+          } else {
+            console.warn("Unknown spatial reference ", json.extent.spatialReference)
+          }
+          _extent = transformExtent(_extent, epsg, map.getView().getProjection())
         }
       }).finally(() => { isLoading = false })
   }
-
 
   return (
     function (extent, resolution, projection) {
       if (!isLoading && intersects(_extent, extent)) {
         const curExtent = getIntersection(_extent, extent)
+        const layer = findLayer(map, layerConfig.label)
         switch (dataType) {
           case 'pbf': {
             const url = layerConfig.source.url +
