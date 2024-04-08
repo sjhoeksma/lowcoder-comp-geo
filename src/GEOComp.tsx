@@ -27,6 +27,7 @@ import { geoContext } from './GEOContext';
 import { layersControl } from './LayersControl';
 // @ts-ignore
 import Notification from 'ol-ext/control/Notification'
+import { object } from 'prop-types';
 
 /**
  * Array of style configuration objects for styling the component.
@@ -568,6 +569,10 @@ GEOComp = withMethodExposing(GEOComp, [
           name: "filter",
           type: "JSONValue",
         },
+        {
+          name: "merge",
+          type: "boolean",
+        },
       ]
     },
     execute: async (comp: any, params: any) => {
@@ -590,7 +595,11 @@ GEOComp = withMethodExposing(GEOComp, [
         }
         //Load the new values by dispatching them, 
         //First merging the current values with the new values
-        comp.dispatch(changeValueAction(deepMerge(comp.toJsonValue(), data), true))
+        if (params[2] == true) {
+          comp.dispatch(changeValueAction(deepMerge(comp.toJsonValue(), data), true))
+        } else {
+          comp.dispatch(changeValueAction(Object.assign({}, (comp.toJsonValue(), data), true)))
+        }
         return true
       } catch (e) {
         console.error("Failed to parse config data", e)
