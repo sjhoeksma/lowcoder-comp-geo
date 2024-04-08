@@ -1,3 +1,30 @@
+# [1.5.0](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.4.0...v1.5.0) (2024-04-08)
+
+
+### Bug Fixes
+
+* added auto creation ([7468c75](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/7468c755b494d6e51dfe2c83dd88acdf30c76ae7))
+* added default projection of layer ([0cf0822](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/0cf0822aa45c97736e5829a513b89edc61ad772e))
+* added external draw support for layerswitcher ([90d6bd8](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/90d6bd821d7837e0228e9ec2b9cf04e338a55e26))
+* ArcGIS extent transformation and projection handling ([1fc38d9](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/1fc38d970d00db4ae31e6886c6b12297e30ab96f))
+* arcgisLoader ([fa5adeb](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/fa5adebccbe42c09c130558798e1e3d66f5ecdb3))
+* check transformation ([63dcc66](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/63dcc66f18600034e97f172041a1fdd59f7cef36))
+* default epsg conversion ([36c4ef8](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/36c4ef80f6fc151a8733e08ef518c934c0cbb1e2))
+* loader strategy ([392f08b](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/392f08bcb8dc7a1bc31d8a1c04641bae65feb4b5))
+* object assignement ([65b1b9d](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/65b1b9d46f038db99b53d6b1df8a643fed9c981f))
+* package version dev ([5ae2e9e](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/5ae2e9ec537645f453514e37f52d54b5b2133de0))
+* remove unused workflows ([9f188c9](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/9f188c9e12e310973165ffb2b13864e9e3011762))
+* setConfig ([a587642](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/a587642735f0f70660d639c6c199bbb385eaf88a))
+* small build fix ([9bc54ae](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/9bc54ae82e8668fc67136156a39f9de08a6ea5e6))
+* Sort order is now by UI ([4236586](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/42365863dc4f9b1758ff5ac1e946268f3715118a))
+* URL path in geoPbfLoader function ([cee142b](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/cee142be1306056ef34c3079143617f216525e55))
+
+
+### Features
+
+* added extent support on map ([f73fd97](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/f73fd9752510a470545d8167cfecf2a67e38f06c))
+* method getLayer ([b230423](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/b2304233bd80f74bf2641538a44c52da3a0ef699))
+
 # [1.4.0-dev.1](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0...v1.4.0-dev.1) (2024-04-08)
 
 ### Bug Fixes
