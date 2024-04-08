@@ -1,6 +1,6 @@
 {
-  "name": "lowcoder-comp-geo",
-  "version": "1.4.1-dev.0",
+  "name": "lowcoder-comp-geo-dev",
+  "version": "1.4.0-dev.1",
   "type": "module",
   "homepage": "https://sjhoeksma.github.io/lowcoder-comp-geo/",
   "repository": {
