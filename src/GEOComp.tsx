@@ -598,7 +598,7 @@ GEOComp = withMethodExposing(GEOComp, [
         if (params[2] == true) {
           comp.dispatch(changeValueAction(deepMerge(comp.toJsonValue(), data), true))
         } else {
-          comp.dispatch(changeValueAction(Object.assign({}, (comp.toJsonValue(), data), true)))
+          comp.dispatch(changeValueAction(Object.assign({}, comp.toJsonValue(), data), true))
         }
         return true
       } catch (e) {
