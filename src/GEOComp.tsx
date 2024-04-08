@@ -27,7 +27,7 @@ import { geoContext } from './GEOContext';
 import { layersControl } from './LayersControl';
 // @ts-ignore
 import Notification from 'ol-ext/control/Notification'
-import { object } from 'prop-types';
+import { findLayer } from './vendors/helpers';
 
 /**
  * Array of style configuration objects for styling the component.
@@ -653,7 +653,24 @@ GEOComp = withMethodExposing(GEOComp, [
       if (map) return map.getView().getZoom()
       return 0
     }
-  }
+  },
+  {
+    method: {
+      name: "getLayer",
+      description: "Get a layer by name",
+      params: [
+        {
+          name: "name",
+          type: "string",
+        },
+
+      ]
+    },
+    execute: async (comp: any, params: any) => {
+      var map = comp.exposingValues.events['map:init']
+      return findLayer(map, params[0])
+    }
+  },
 ]);
 
 
