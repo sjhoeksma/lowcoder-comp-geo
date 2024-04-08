@@ -39,7 +39,8 @@ export const en = {
     "designer": "Designer mode",
     "buttons": "Buttons",
     "showLogo": "Show logo",
-    "feature": "feature"
+    "feature": "feature",
+    "external": "External control"
   },
   "methods": {
     "xml": "Get XML",

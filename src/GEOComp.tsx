@@ -27,6 +27,7 @@ import { geoContext } from './GEOContext';
 import { layersControl } from './LayersControl';
 // @ts-ignore
 import Notification from 'ol-ext/control/Notification'
+import { findLayer } from './vendors/helpers';
 
 /**
  * Array of style configuration objects for styling the component.
@@ -148,6 +149,7 @@ var GEOComp = (function () {
     onEvent: eventHandlerControl(eventDefinitions),
     startDate: stringSimpleControl(), //TODO replace with date picker
     endDate: stringSimpleControl(),
+    extent: ArrayControl,
     features:
       featureControl({
         menu: false,
@@ -155,9 +157,9 @@ var GEOComp = (function () {
         fullscreen: true,
         layers: true,
         center: true,
-        modify: true,
+        modify: false,
         save: false,
-        splitscreen: true,
+        splitscreen: false,
         tracker: false,
         timeline: false,
         gpsCentered: true,
@@ -175,10 +177,11 @@ var GEOComp = (function () {
         "modify:undo": true,
         "modify:clear": true,
         "modify:snap": true,
-        "splitscreen:horizontal": false,
+        "splitscreen:horizontal": true,
         "splitscreen:vertical": false,
         debug: geoContext.previewMode,
       }),
+    external: jsonObjectExposingStateControl("external"),
   };
 
 
@@ -205,6 +208,8 @@ var GEOComp = (function () {
     projection: string;
     startDate: string;
     endDate: string;
+    extent: any;
+    external: any
 
     test: any
   }) => {
@@ -329,6 +334,8 @@ var GEOComp = (function () {
             projection={props.projection}
             startDate={props.startDate}
             endDate={props.endDate}
+            extent={props.extent}
+            external={props.external.value}
           />
         </div>
       </div>
@@ -345,6 +352,7 @@ var GEOComp = (function () {
             {children.maxZoom.propertyView({ label: "maxZoom" })}
             {children.rotation.propertyView({ label: "rotation" })}
             {children.projection.propertyView({ label: "projection" })}
+            {children.extent.propertyView({ label: "extent" })}
           </Section>
           <Section name="Interaction">
             {children.onEvent.propertyView()}
@@ -561,6 +569,10 @@ GEOComp = withMethodExposing(GEOComp, [
           name: "filter",
           type: "JSONValue",
         },
+        {
+          name: "merge",
+          type: "boolean",
+        },
       ]
     },
     execute: async (comp: any, params: any) => {
@@ -583,7 +595,11 @@ GEOComp = withMethodExposing(GEOComp, [
         }
         //Load the new values by dispatching them, 
         //First merging the current values with the new values
-        comp.dispatch(changeValueAction(deepMerge(comp.toJsonValue(), data), true))
+        if (params[2] == true) {
+          comp.dispatch(changeValueAction(deepMerge(comp.toJsonValue(), data), true))
+        } else {
+          comp.dispatch(changeValueAction(Object.assign({}, comp.toJsonValue(), data), true))
+        }
         return true
       } catch (e) {
         console.error("Failed to parse config data", e)
@@ -637,7 +653,24 @@ GEOComp = withMethodExposing(GEOComp, [
       if (map) return map.getView().getZoom()
       return 0
     }
-  }
+  },
+  {
+    method: {
+      name: "getLayer",
+      description: "Get a layer by name",
+      params: [
+        {
+          name: "name",
+          type: "string",
+        },
+
+      ]
+    },
+    execute: async (comp: any, params: any) => {
+      var map = comp.exposingValues.events['map:init']
+      return findLayer(map, params[0])
+    }
+  },
 ]);
 
 
@@ -647,4 +680,5 @@ export default withExposingConfigs(GEOComp, [
   new NameConfig("event", trans("component.event")),
   new NameConfig("bbox", trans("component.bbox")),
   new NameConfig("feature", trans("component.feature")),
+  new NameConfig("external", trans("component.external")),
 ]);

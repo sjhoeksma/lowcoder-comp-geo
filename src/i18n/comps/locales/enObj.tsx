@@ -6,8 +6,7 @@ export const enObj: I18nObjects = {
       "label": "ArcGIS Feature Servies",
       "title": "ArcGIS Feature Servies",
       "type": "arcgis-feature-service",
-      "order": 11,
-      "minZoom": 0,
+      "minZoom": 8,
       "maxZoom": 22,
       "visible": true,
       "selectable": true,
@@ -19,13 +18,12 @@ export const enObj: I18nObjects = {
       "label": "ArcGIS - Vector Tile PBF",
       "title": "ArcGIS - Vector Tile PBF",
       "type": "arcgis-vector-tiles",
-      "order": 10,
-      "minZoom": 0,
+      "minZoom": 8,
       "maxZoom": 22,
       "visible": true,
       "selectable": true,
       "source": {
-        "url": "https://rijnland.enl-mcs.nl/arcgis/rest/services/Polder/MapServer/0/",
+        "url": "https://rijnland.enl-mcs.nl/arcgis/rest/services/Polder/MapServer/0",
         "projection": "EPSG:28992",
       }
     },
@@ -33,7 +31,6 @@ export const enObj: I18nObjects = {
       "label": "PMTiles - Raster",
       "title": "PMTiles - Raster",
       "type": "pmtiles",
-      "order": 9,
       "minZoom": 0,
       "maxZoom": 30,
       "visible": false,
@@ -48,7 +45,6 @@ export const enObj: I18nObjects = {
       "label": "PMTiles - Vector",
       "title": "PMTiles - Vector",
       "type": "pmtiles",
-      "order": 8,
       "minZoom": 0,
       "maxZoom": 30,
       "visible": false,
@@ -62,7 +58,6 @@ export const enObj: I18nObjects = {
       "label": "GeoJson",
       "title": "GeoJson with Style and Image src",
       "type": "geojson",
-      "order": 7,
       "minZoom": 0,
       "maxZoom": 22,
       "visible": true,
@@ -285,7 +280,6 @@ export const enObj: I18nObjects = {
     {
       "label": "Contours - WFS",
       "type": "wfs",
-      "order": 5,
       "minZoom": 0,
       "maxZoom": 22,
       "visible": true,
@@ -302,7 +296,6 @@ export const enObj: I18nObjects = {
     {
       "label": "World Basemap - MVT/pbf",
       "type": "mvt",
-      "order": 4,
       "minZoom": 0,
       "maxZoom": 22,
       "splitscreen": "left",
@@ -317,7 +310,6 @@ export const enObj: I18nObjects = {
     {
       "label": "USA MapServer ImageLayer - ArcGIS MapServer",
       "type": "arcgis-mapserver",
-      "order": 3,
       "minZoom": 0,
       "maxZoom": 22,
       "visible": false,
@@ -331,7 +323,6 @@ export const enObj: I18nObjects = {
     {
       "label": "USA MapServer TileLayer - ArcGIS MapServer",
       "type": "arcgis-mapserver",
-      "order": 2,
       "minZoom": 0,
       "maxZoom": 22,
       "visible": false,
@@ -344,7 +335,6 @@ export const enObj: I18nObjects = {
     {
       "label": "NASA | BlueMarble NextGeneration - WMS",
       "type": "wms",
-      "order": 1,
       "minZoom": 0,
       "maxZoom": 8,
       "visible": true,
@@ -363,7 +353,6 @@ export const enObj: I18nObjects = {
     {
       "label": "Mapbox Style GL - JSON",
       "type": "stylegl",
-      "order": 0,
       "minZoom": 0,
       "maxZoom": 22,
       "visible": false,
@@ -378,7 +367,6 @@ export const enObj: I18nObjects = {
     {
       "label": "Open Street Map - XYZ",
       "type": "xyz",
-      "order": -1,
       "minZoom": 0,
       "maxZoom": 19,
       "visible": true,

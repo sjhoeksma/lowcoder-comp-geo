@@ -1,4 +1,4 @@
-name: Release new version
+name: Release new version - dev only
 
 on:
   workflow_dispatch:
@@ -31,9 +31,10 @@ jobs:
       - name: Install dependencies
         run: yarn
 
-      - name: Remove -dev from package name
+      - name: Modify package.json
         run: |
-          jq '.name = (.name | gsub("-dev"; ""))' package.json > temp.json && mv temp.json package.json
+          BRANCH_NAME=$(echo ${GITHUB_REF#refs/heads/} | sed 's/[^a-zA-Z0-9]/-/g')
+          jq '.name = (.name + "-'"$BRANCH_NAME"'")' package.json > temp.json && mv temp.json package.json
         shell: bash
 
       - name: Release
