@@ -1,6 +1,9 @@
-name: Release new version
+name: Release new version - dev only
 
 on:
+  push:
+    branches:
+      - dev
   workflow_dispatch:
     inputs:
       branchName:
