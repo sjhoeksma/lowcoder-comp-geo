@@ -1,15 +1,7 @@
 name: Release new version - dev only
 
 on:
-  push:
-    branches:
-      - dev
   workflow_dispatch:
-    inputs:
-      branchName:
-        description: "Branch Name"
-        required: true
-        default: "dev"
 
 jobs:
   release:

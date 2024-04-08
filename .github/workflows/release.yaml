@@ -1,6 +1,7 @@
 name: Release new version
+
 on:
-    workflow_dispatch:
+  workflow_dispatch:
 
 jobs:
   release:
@@ -26,15 +27,21 @@ jobs:
 
       - name: Install Yarn
         run: npm install -g yarn
-        
+
       - name: Install dependencies
         run: yarn
+
+      - name: Remove -dev from package name
+        run: |
+          jq '.name = (.name | gsub("-dev"; ""))' package.json > temp.json && mv temp.json package.json
+        shell: bash
 
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: npx semantic-release
+
       - name: Publish to npmjs.com
         run: yarn build_publish
         env:
