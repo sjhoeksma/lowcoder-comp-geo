@@ -19,8 +19,8 @@
     "lowcoder-sdk": "^2.3.4",
     "ol": "^9.1.0",
     "ol-esri-styles": "^0.0.1",
-    "ol-ext": "^4.0.15",
-    "ol-mapbox-style": "^12.3.0",
+    "ol-ext": "^4.0.18",
+    "ol-mapbox-style": "^12.3.1",
     "ol-pmtiles": "^0.4.0",
     "proj4": "^2.11.0",
     "prop-types": "^15.8.1",
@@ -28,8 +28,8 @@
     "react-dom": "18",
     "react-resize-detector": "^10.0.1",
     "react-spinners": "^0.13.8",
-    "typescript": "^5.3.3",
-    "vite": "^5.1.4"
+    "typescript": "^5.4.5",
+    "vite": "^5.2.9"
   },
   "lowcoder": {
     "description": "A Geo Lowcoder Component Plugin",

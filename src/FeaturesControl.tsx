@@ -1,7 +1,7 @@
 import { ReactNode } from 'react'
 import {
     MultiCompBuilder,
-    BoolPureControl,
+    BoolControl,
     withDefault,
 } from 'lowcoder-sdk'
 import { trans } from "./i18n/comps";
@@ -19,7 +19,7 @@ export function featureControl(config?: any) {
     const childrenMap: any = new Object();
     const initConfig = Object.assign({}, config)
     Object.keys(initConfig).forEach((k: string, index: any) => {
-        childrenMap[k] = withDefault(BoolPureControl, initConfig[k])
+        childrenMap[k] = withDefault(BoolControl, initConfig[k])
     })
     //Class is rebuild not retuning same class 
     class FeatureControlTemp extends new MultiCompBuilder(childrenMap, (props: any) => props)

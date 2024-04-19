@@ -100,195 +100,42 @@
 
 
     <section>
-        <article><h1>GEOComp Component</h1>
-<p>The <code>src</code> directory contains the source code for the GEOComp react component creating the Lowcoder plugin. GEOComp providers configuration features for the GEO react component which renders an interactive geographic map using the OpenLayers library.</p>
-<h2>Overview</h2>
-<p>GEOComp is a reusable map component that can be configured and integrated into other applications. It allows displaying geographic data layers, interactivity through popups and drawing, and exposes events for integrating custom functionality.</p>
-<p>Some key capabilities provided by GEOComp:</p>
+        <article><h1>Using the Lowcoder GEO plugin</h1>
+<p>This plugin enables the usage of <a href="https://openlayers.org/">Openlayers</a> within lowcoder. To use this plugin.</p>
+<ol>
+<li>Open your lowcoder environment &gt;&gt; go to the app &gt;&gt; Select insert tab click on extentions.</li>
+</ol>
+<p><img src="docs/images/steps/1.png" alt="insert"></p>
+<ol start="2">
+<li>write the name of the npm package, for the our extentions will be : <code>lowcoder-comp-geo</code> or the full url of the package <code>https://www.npmjs.com/package/lowcoder-comp-geo</code></li>
+</ol>
+<p><img src="docs/images/steps/2.png" alt="insert"></p>
+<ol start="3">
+<li>Drag and drop the <code>geo</code> component, Start using the plugin adding different type of layers like :
 <ul>
-<li>Configurable base map layers</li>
-<li>Overlay vector data layers from files or API sources</li>
-<li>Interaction through popups, selection, and drawing tools</li>
-<li>Expose map events and selected features</li>
-<li>Timeline animation of temporal data</li>
-<li>Customizable styling</li>
-</ul>
-<h2>Key Files</h2>
-<p>Within the main directory you will find the following files creating the lowcoder plugin</p>
-<ul>
-<li><code>GEOComp.tsx</code> - Main component definition and configuration</li>
-<li><code>LayersControl.tsx</code> - Builds layer configuration UI</li>
-<li><code>FeaturesControl.tsx</code> - Feature flags configuration</li>
-<li><code>vendors/Geo.jsx</code> - The implementation of the GEO react component</li>
-<li><code>styles.module.css</code> - Component styling</li>
-</ul>
-<h2>Component Configuration</h2>
-<p>GEOComp is configured through React props that control the map options and layers. Some key configuration props:</p>
-<p>Map</p>
-<ul>
-<li><code>layers</code> - Array of layer configuration objects
-<ul>
-<li><code>label</code> - Display label for layer</li>
-<li><code>title</code> - Layer menu text</li>
-<li><code>type</code> - Layer type dropdown (mvt, wms, etc)</li>
-<li><code>source</code> - Layer source settings
-<ul>
-<li><code>url</code>: The URL of the tile or image service</li>
-<li><code>attributions</code>: Attribution text for the layer</li>
-<li><code>params</code>: Additional parameters for the service request</li>
-<li><code>serverType</code>: The type of WMS server (geoserver, mapserver, etc)</li>
-<li><code>crossOrigin</code>: Whether to request cross-origin access when fetching the layer</li>
-<li><code>data</code>: The GeoJSON data object for a vector layer</li>
-<li><code>projection</code>: The projection of the vector data</li>
-<li><code>tileSize</code>: Tile size for COG layers</li>
-<li><code>nodata</code>: Nodata value to use for COG layers</li>
-<li><code>ratio</code>: Scaling ratio for ArcGIS MapServer images</li>
+<li>GeoJSON</li>
+<li>Cloud Optimized GeoTIFF (COG)</li>
+<li>PMTiles (Raster and Vector)</li>
+<li>XYZ</li>
+<li>WMS</li>
+<li>WFS</li>
+<li>Mapbox Vector Tiles ({z}/{x}/{y}.pbf)</li>
+<li>Mapbox Style GL Json</li>
+<li>ArcGIS FeatureServer (with Esri Style)</li>
+<li>ArcGIS MapServer</li>
+<li>ArcGIS ImageServer</li>
+<li>ArcGIS TileServer</li>
+<li>ArcGIS VectorTileServer (with Esri Style)</li>
 </ul>
 </li>
-<li><code>visible</code> - Is layer visible initially</li>
-<li><code>selectable</code> - Can layer be toggled on/off</li>
-<li><code>userVisible</code> - Is layer visible to user</li>
-<li><code>order</code> - Display order in layers list</li>
-<li><code>minZoom</code> - Minimum zoom level to show layer</li>
-<li><code>maxZoom</code> - Maximum zoom level to show layer</li>
-<li><code>opacity</code> - Layer opacity</li>
-<li><code>groups</code> - Layer groups</li>
-<li><code>splitscreen</code> - Split screen position (no, left, right)</li>
-<li><code>timeline</code> - Timeline year/date of layer</li>
-</ul>
-</li>
-<li><code>center</code> - Initial center point [lon, lat]</li>
-<li><code>zoom</code> - Initial zoom level</li>
-<li><code>maxZoom</code> - Initial maximum zoom level</li>
-<li><code>minZoom</code> - Initial minimum zoom level</li>
-</ul>
-<p>Interaction</p>
-<ul>
-<li><code>events</code> - Object mapping event names to handlers</li>
-</ul>
-<p>Menu</p>
-<ul>
-<li><code>title</code> - Title used within menu</li>
-<li><code>content</code> - Content of the menu used</li>
-<li><code>feature</code> - Selected/edited feature state</li>
-</ul>
-<p>Timeline</p>
-<ul>
-<li><code>Start Date</code> - Start Year/Date of the timeline</li>
-<li><code>End Date</code> - End Year/Date of the timeline</li>
-</ul>
-<p>Style</p>
-<ul>
-<li>Padding</li>
-<li>Text sizing</li>
-<li>Background color</li>
-<li>Borders</li>
-<li>Border radius</li>
-</ul>
-<p>Behavior</p>
-<ul>
-<li><code>menu</code> - Whether to show the menu icon.</li>
-<li><code>zoom</code> - Show zoom buttons.</li>
-<li><code>fullscreen</code> - Show fullscreen toggle.</li>
-<li><code>layers</code> - Show layer visibility toggles.</li>
-<li><code>center</code> - Show map center button.</li>
-<li><code>modify</code> - Allow geometry editing.</li>
-<li><code>save</code> - Show save button.</li>
-<li><code>splitscreen</code> - Allow split screen.</li>
-<li><code>tracker</code> - Show tracker options.</li>
-<li><code>timeline</code> - Show timeline slider.</li>
-<li><code>gpsCentered</code> - Center map on user's location.</li>
-<li><code>north</code> - Show north button to reset bearing.</li>
-<li><code>scale</code> - Show map scale display.</li>
-<li><code>largeButtons</code> - Use large toolbar icons.</li>
-<li><code>scaleToBottom</code> - Put scale on bottom of toolbar.</li>
-<li><code>&quot;modify:move&quot;</code> - Allow moving geometries.</li>
-<li><code>&quot;modify:point&quot;</code> - Allow editing points.</li>
-<li><code>&quot;modify:line&quot;</code> - Allow editing lines.</li>
-<li><code>&quot;modify:oval&quot;</code> - Allow editing ovals.</li>
-<li><code>&quot;modify:polygon&quot;</code> - Allow editing polygons.</li>
-<li><code>&quot;modify:delete&quot;</code> - Show delete geometry button.</li>
-<li><code>&quot;modify:redo&quot;</code> - Show redo button.</li>
-<li><code>&quot;modify:undo&quot;</code> - Show undo button.</li>
-<li><code>&quot;splitscreen:horizontal&quot;</code> - Allow horizontal split screen.</li>
-<li><code>&quot;splitscreen:vertical&quot;</code> - Allow vertical split screen.</li>
-<li><code>debug</code> - Enable debug messages.</li>
-</ul>
-<h2>Events and Interactivity</h2>
-<p>GEOComp exposes events that can be handled in the parent component:</p>
-<ul>
-<li><code>onInit</code> - Map initialized</li>
-<li><code>onLoad</code> - Layers loaded</li>
-<li><code>onModify</code> - User modifies feature on map</li>
-<li><code>onTimeline</code> - User interacts with timeline</li>
-<li><code>onClick</code> - Map clicked</li>
-<li><code>onSelect</code> - Feature clicked</li>
-<li><code>onBbox</code> - The bbox of the map changed</li>
-<li><code>onZoom</code> - Fires when the zoom has changed</li>
-<li><code>onEvent</code> - Eventhandler for all other events</li>
-</ul>
-<p>This allows integrating custom popup content, selection logic, etc.</p>
-<h2>Exposed Methods</h2>
-<h3>animate</h3>
-<p>Perform animation</p>
-<p><strong>Parameters:</strong></p>
-<ul>
-<li><code>coords</code> (JSONValue): Coordinates for animation</li>
-<li><code>duration</code> (number): Duration of animation</li>
-<li><code>properties</code> (JSON): Properties for feature</li>
-<li><code>animation</code> (string): Type of animation (toLocation,toExtent,pulse,home)</li>
-</ul>
-<h3>map</h3>
-<p>Return the last map object</p>
-<p><strong>Parameters:</strong></p>
-<p>None</p>
-<h3>notify</h3>
-<p>Notify message</p>
-<p><strong>Parameters:</strong></p>
-<ul>
-<li><code>message</code> (string): Notification message</li>
-<li><code>duration</code> (number): Display duration</li>
-</ul>
-<h3>showPopup</h3>
-<p>Displays a popup at the specified coordinates with a given message</p>
-<p><strong>Parameters:</strong></p>
-<ul>
-<li><code>coordinates</code> (JSONValue): Coordinates where the popup should appear</li>
-<li><code>message</code> (string): Message to display in the popup</li>
-</ul>
-<h3>setFeatures</h3>
-<p>Add feature to layer</p>
-<p><strong>Parameters:</strong></p>
-<ul>
-<li><code>data</code> (JSONValue): GeoJSON feature(s) to add</li>
-<li><code>layer</code> (string): Layer name</li>
-<li><code>clear</code> (boolean, optional): Clear layer first if true</li>
-</ul>
-<h3>getFeatures</h3>
-<p>Get features from layer</p>
-<p><strong>Parameters:</strong></p>
-<ul>
-<li><code>layer</code> (string): Layer name</li>
-</ul>
-<h3>clearFeatures</h3>
-<p>Clear features from layer</p>
-<p><strong>Parameters:</strong></p>
-<ul>
-<li><code>layer</code> (string): Layer name</li>
-</ul>
-<h3>setConfig</h3>
-<p>Set configuration the plugin by json</p>
-<p><strong>Parameters:</strong></p>
-<ul>
-<li><code>json</code> (JSONValue): Config object</li>
-<li><code>filter</code> (JSONValue): Layer Filter to apply</li>
-</ul>
-<h3>getConfig</h3>
-<p>Get configuration the plugin by json</p>
-<p><strong>Parameters:</strong></p>
-<ul>
-<li><code>filter</code> (JSONValue): Layer Filter to apply</li>
-</ul></article>
+</ol>
+<p><img src="docs/images/steps/3.gif" alt="insert"></p>
+<h1>Documentation</h1>
+<p>The ui of the plugin should be more or less self explaining. If you want a basic explanation of all switches and settings look at the <a href="https://sjhoeksma.github.io/lowcoder-comp-geo/#/tutorial">tutorial</a></p>
+<h1>Example</h1>
+<p>To help you with understanding how you can use this plugin we have added an <a href='https://sjhoeksma.github.io/lowcoder-comp-geo/lowcoder-example/lowcoder-comp-geo.json' download="lowcoder-comp-geo.json">example application</a>. Just download the json application file and import it within lowcoder or follow the instructions step by step in our <a href="">tutorial</a></p>
+<h4>Viewer</h4>
+<p><img src="https://github.com/sjhoeksma/lowcoder-comp-geo/blob/dev/docs/images/baseconfig.png?raw=true" alt="viewer"></p></article>
     </section>
 
 

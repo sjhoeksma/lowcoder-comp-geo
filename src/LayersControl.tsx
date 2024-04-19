@@ -1,7 +1,7 @@
 import { ReactNode } from 'react'
 import {
     MultiCompBuilder,
-    BoolPureControl,
+    BoolControl,
     StringControl,
     stringSimpleControl,
     NumberControl,
@@ -178,9 +178,9 @@ var LayerObjectOption = new MultiCompBuilder(
             { label: "PMTiles", value: "pmtiles" },
         ]),
         source: SourceControl(),
-        visible: withDefault(BoolPureControl, true),
-        selectable: withDefault(BoolPureControl, true),
-        userVisible: withDefault(BoolPureControl, true),
+        visible: withDefault(BoolControl, true),
+        selectable: withDefault(BoolControl, true),
+        userVisible: withDefault(BoolControl, true),
         minZoom: withDefault(NumberControl, 0),
         maxZoom: withDefault(NumberControl, 30),
         opacity: withDefault(NumberControl, 1),
