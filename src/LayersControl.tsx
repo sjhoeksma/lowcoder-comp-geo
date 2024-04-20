@@ -1,4 +1,5 @@
-import { ReactNode } from 'react'
+import { ReactNode, useState } from 'react';
+import { ColorPicker } from "antd";
 import {
     MultiCompBuilder,
     BoolControl,
@@ -10,10 +11,9 @@ import {
     StringOrJSONObjectControl,
     manualOptionsControl,
     ArrayControl,
-} from 'lowcoder-sdk'
+} from 'lowcoder-sdk';
 import { trans } from "./i18n/comps";
-import { Divider } from "antd"
-
+import { Divider } from "antd";
 
 /**
  * Creates a SourceControl component that allows configuring the source 
@@ -23,10 +23,10 @@ import { Divider } from "antd"
  * source parameters.
  */
 export function SourceControl() {
+
     const childrenMap: any = {
         url: stringSimpleControl(),
         attributions: withDefault(StringControl, ''),
-
         params: StringOrJSONObjectControl,
         serverType: withDefault(dropdownControl([
             { label: "Geoserver", value: "geoserver" },
@@ -35,16 +35,12 @@ export function SourceControl() {
             { label: "QGIS Server", value: "qgis" },
         ]), 'geoserver'),
         crossOrigin: stringSimpleControl(),
-
-        data: StringOrJSONObjectControl, // This could be a URL or a GeoJSON object ?
-        projection: stringSimpleControl(),
-
+        data: StringOrJSONObjectControl,
+        projection: withDefault(stringSimpleControl(), `EPSG:3857`),
         tileSize: withDefault(ArrayControl, [256, 256]),
         nodata: withDefault(NumberControl, 0),
-
         ratio: withDefault(NumberControl, 1),
-        style: StringOrJSONObjectControl,
-
+        style: withDefault(ArrayControl, `[{'fill-color': 'red',}]`),
         pmtilesType: withDefault(dropdownControl([
             { label: "Raster", value: "raster" },
             { label: "Vector", value: "vector" },
@@ -55,8 +51,6 @@ export function SourceControl() {
         ]), 'tile'),
     };
 
-
-    //Class is rebuild not retuning same class 
     class SourceTemp extends new MultiCompBuilder(childrenMap, (props: any) => props)
         .setPropertyViewFn((children: any) => (<></>))
         .build() {
@@ -66,77 +60,32 @@ export function SourceControl() {
             type: any
         }): ReactNode {
             function layerSourceChildren(layerType: string) {
-                switch (layerType) {
-                    case 'mvt':
-                        return [
-                            'url',
-                            'attributions'
-                        ]
-                    case 'wms':
-                        return [
-                            'url',
-                            'params',
-                            'serverType',
-                            'crossOrigin',
-                        ]
-                    case 'wfs':
-                        return [
-                            'url',
-                        ]
-                    case 'xyz':
-                        return [
-                            'url'
-                        ]
-                    case 'geojson':
-                        return [
-                            'data', // This could be a URL or a GeoJSON object ?
-                            'projection',
-                        ]
-                    case 'cog':
-                        return [
-                            'url',
-                            'tileSize',
-                            'nodata',
-                            'projection',
-                        ]
-                    case 'stylegl':
-                        return [
-                            'url', // Style JSON URL
-                            'projection',
-                            'style',
-                        ]
-                    case 'arcgis-mapserver':
-                        return [
-                            'mapServerType',
-                            'url',
-                            'params', // Optional: parameters for the ArcGIS service
-                            'ratio',
-                            'crossOrigin',
-                        ]
-                    case 'pmtiles':
-                        return [
-                            'pmtilesType',
-                            'url',
-                            'tileSize',
-                        ]
-                    case 'arcgis-vector-tiles':
-                        return [
-                            'url',
-                            'projection',
-                        ];
-                    case 'arcgis-feature-service':
-                        return [
-                            'url',
-                            'projection',
-                        ];
-                    default:
-                        return [] // Empty configuration for unsupported types
-                }
+                const baseChildren = {
+                    'mvt': ['url', 'attributions'],
+                    'wms': ['url', 'params', 'serverType', 'crossOrigin'],
+                    'wfs': ['url'],
+                    'xyz': ['url'],
+                    'geojson': ['data', 'projection'],
+                    'cog': ['url', 'tileSize', 'nodata', 'projection'],
+                    'stylegl': ['url', 'projection'],
+                    'arcgis-mapserver': ['mapServerType', 'url', 'params', 'ratio', 'crossOrigin'],
+                    'pmtiles': ['pmtilesType', 'url', 'tileSize', 'style'],
+                    'arcgis-vector-tiles': ['url', 'projection'],
+                    'arcgis-feature-service': ['url', 'projection'],
+                }[layerType] || []; // Default to empty configuration
+
+                return baseChildren;
             }
-            var list: any = []
+
+            var list = [];
             layerSourceChildren(params.type).forEach(k => {
-                list.push(this.children[k].propertyView({ label: trans(`layer.${k}`) }))
-            })
+                list.push(this.children[k].propertyView({ label: trans(`layer.${k}`) }));
+            });
+
+            // Include ColorPicker for PMTiles Vector Type
+            if (params.type === 'pmtiles' && this.children.pmtilesType.value === 'vector') {
+                list.push(<ColorPicker key="color-picker" />);
+            }
 
             return (
                 <>
@@ -184,14 +133,12 @@ var LayerObjectOption = new MultiCompBuilder(
         minZoom: withDefault(NumberControl, 0),
         maxZoom: withDefault(NumberControl, 30),
         opacity: withDefault(NumberControl, 1),
-
         groups: StringControl,
         splitscreen: dropdownControl([
             { label: "No", value: "" },
             { label: "Left", value: "left" },
             { label: "Right", value: "right" }]),
         timeline: StringControl,
-        //  style: JSONObjectControl,
     },
     (props: any) => props)
     .setPropertyViewFn((children: any) => (<></>))
@@ -207,29 +154,30 @@ LayerObjectOption = class extends LayerObjectOption {
     constructor(obj: any) {
         if (obj.value) {
             if (obj.value.style && typeof obj.value.style != "string") {
-                obj.value.style = JSON.stringify(obj.value.style, null)
+                obj.value.style = JSON.stringify(obj.value.style, null, 2)
             }
             if (obj.value.source && obj.value.source.data && typeof obj.value.source.data != "string") {
-                obj.value.source.data = JSON.stringify(obj.value.source.data, null)
+                obj.value.source.data = JSON.stringify(obj.value.source.data, null, 2)
             }
             if (obj.value.source && obj.value.source.params && typeof obj.value.source.params != "string") {
-                obj.value.source.params = JSON.stringify(obj.value.source.params, null)
+                obj.value.source.params = JSON.stringify(obj.value.source.params, null, 2)
             }
             if (obj.value.source && obj.value.source.tileSize && typeof obj.value.source.tileSize != "string") {
-                obj.value.source.tileSize = JSON.stringify(obj.value.source.tileSize, null);
+                obj.value.source.tileSize = JSON.stringify(obj.value.source.tileSize, null, 2);
             }
         }
-        super(obj)
+        super(obj);
     }
+
     propertyView(param: { autoMap?: boolean }) {
-        var list: any = []
+        var list: any = [];
         Object.keys(this.children).forEach((k, index) => {
             if (k == "source") {
-                list.push(this.children[k].propertyView({ label: trans(`layer.${k}`), type: this.children['type'].value }))
+                list.push(this.children[k].propertyView({ label: trans(`layer.${k}`), type: this.children['type'].value }));
             } else {
-                list.push(this.children[k].propertyView({ label: trans(`layer.${k}`) }))
+                list.push(this.children[k].propertyView({ label: trans(`layer.${k}`) }));
             }
-        })
+        });
         return (
             <>
                 <Divider orientation="left" dashed orientationMargin="0px" style={{ margin: "0px" }} key="div-layer-map">
@@ -249,7 +197,7 @@ LayerObjectOption = class extends LayerObjectOption {
 export function layersControl(config?: any) {
     const manualOptions = config ? config : [
         { label: "Layer1", title: "Layer" }
-    ]
+    ];
     const childrenMap: any = {
         data: manualOptionsControl(LayerObjectOption, {
             initOptions: manualOptions,
@@ -257,14 +205,14 @@ export function layersControl(config?: any) {
         })
     };
 
-    //Class is rebuiled not retuning same class 
     class LayersControlTemp extends new MultiCompBuilder(childrenMap, (props: any) => props)
         .setPropertyViewFn((children: any) => (<></>))
         .build() {
 
         constructor(obj: any) {
-            super(obj)
+            super(obj);
         }
+
         propertyView(params: {
             title: string
         }): ReactNode {
@@ -274,15 +222,16 @@ export function layersControl(config?: any) {
                 </>
             );
         }
-        orgView: any
+
+        orgView: any;
         getView(): any {
-            const p = super.getView()
-            var changed = JSON.stringify(p, null) != JSON.stringify(this.orgView, null)
+            const p = super.getView();
+            var changed = JSON.stringify(p, null, 2) != JSON.stringify(this.orgView, null, 2);
             if (changed) {
-                this.orgView = p
-                return p
+                this.orgView = p;
+                return p;
             }
-            return this.orgView
+            return this.orgView;
         }
     }
     return LayersControlTemp;

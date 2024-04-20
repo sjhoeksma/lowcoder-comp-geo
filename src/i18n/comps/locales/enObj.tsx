@@ -47,12 +47,15 @@ export const enObj: I18nObjects = {
       "type": "pmtiles",
       "minZoom": 0,
       "maxZoom": 30,
-      "visible": false,
+      "visible": true,
       "selectable": false,
       "source": {
         "pmtilesType": "vector",
-        "url": "https://link.storjshare.io/raw/jxqj5ixgrdniigc7f23mogdzeirq/truemaps-public%2Fpublic-datasets%2Foverturemaps%2F2024-01-17-alpha.0%2Ftheme%3Dbuildings%2Fegypt_buildings_vt.pmtiles",
-      }
+        "url": "https://data.source.coop/cholmes/overture/overture-buildings.pmtiles",
+      },
+      "style": [{
+        'fill-color': 'red',
+      }]
     },
     {
       "label": "GeoJson",
