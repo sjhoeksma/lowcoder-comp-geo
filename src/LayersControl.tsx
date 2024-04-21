@@ -9,6 +9,7 @@ import {
     withDefault,
     dropdownControl,
     StringOrJSONObjectControl,
+    ArrayOrJSONObjectControl,
     manualOptionsControl,
     ArrayControl,
 } from 'lowcoder-sdk';
@@ -40,7 +41,7 @@ export function SourceControl() {
         tileSize: withDefault(ArrayControl, [256, 256]),
         nodata: withDefault(NumberControl, 0),
         ratio: withDefault(NumberControl, 1),
-        style: withDefault(ArrayControl, `[{'fill-color': 'red',}]`),
+        style: withDefault(ArrayOrJSONObjectControl),
         pmtilesType: withDefault(dropdownControl([
             { label: "Raster", value: "raster" },
             { label: "Vector", value: "vector" },
@@ -126,6 +127,7 @@ var LayerObjectOption = new MultiCompBuilder(
             { label: "ArcGIS Vector Tiles", value: "arcgis-vector-tiles" },
             { label: "PMTiles", value: "pmtiles" },
         ]),
+        style: withDefault(ArrayOrJSONObjectControl),
         source: SourceControl(),
         visible: withDefault(BoolControl, true),
         selectable: withDefault(BoolControl, true),
