@@ -41,7 +41,6 @@ export function SourceControl() {
         tileSize: withDefault(ArrayControl, [256, 256]),
         nodata: withDefault(NumberControl, 0),
         ratio: withDefault(NumberControl, 1),
-        style: withDefault(ArrayOrJSONObjectControl),
         pmtilesType: withDefault(dropdownControl([
             { label: "Raster", value: "raster" },
             { label: "Vector", value: "vector" },
@@ -70,7 +69,7 @@ export function SourceControl() {
                     'cog': ['url', 'tileSize', 'nodata', 'projection'],
                     'stylegl': ['url', 'projection'],
                     'arcgis-mapserver': ['mapServerType', 'url', 'params', 'ratio', 'crossOrigin'],
-                    'pmtiles': ['pmtilesType', 'url', 'tileSize', 'style'],
+                    'pmtiles': ['pmtilesType', 'url', 'tileSize'],
                     'arcgis-vector-tiles': ['url', 'projection'],
                     'arcgis-feature-service': ['url', 'projection'],
                 }[layerType] || []; // Default to empty configuration
