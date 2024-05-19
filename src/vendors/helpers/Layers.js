@@ -27,7 +27,6 @@ import proj4 from 'proj4'
 import { register } from 'ol/proj/proj4'
 import { bbox } from 'ol/loadingstrategy';
 
-
 //Create projection transformations 
 proj4.defs("EPSG:28992", "+proj=sterea +lat_0=52.15616055555555 +lon_0=5.38763888888889 +k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel +units=m +no_defs");
 register(proj4)
@@ -520,6 +519,7 @@ export function createLayer(layerConfig, map) {
           });
         }
         else if (layerConfig.source.pmtilesType === 'vector') {
+          console.log("the PMTILES Style", layerConfig.style); // issue here
           return new VectorTileLayer({
             declutter: true,
             name: layerConfig.label,
@@ -535,7 +535,8 @@ export function createLayer(layerConfig, map) {
             displayInLayerSwitcher: layerConfig.userVisible,
             source: new PMTilesVectorSource({
               url: layerConfig.source?.url,
-            })
+            }),
+            style: layerConfig.style, // issue here
           });
         }
       case 'arcgis-vector-tiles':
