@@ -26,7 +26,7 @@ import { Divider } from "antd";
 export function SourceControl() {
 
     const childrenMap: any = {
-        url: stringSimpleControl(),
+        url: StringControl,
         attributions: withDefault(StringControl, ''),
         params: StringOrJSONObjectControl,
         serverType: withDefault(dropdownControl([
@@ -35,9 +35,9 @@ export function SourceControl() {
             { label: "Carmentaserver", value: "carmentaserver" },
             { label: "QGIS Server", value: "qgis" },
         ]), 'geoserver'),
-        crossOrigin: stringSimpleControl(),
+        crossOrigin: StringControl,
         data: StringOrJSONObjectControl,
-        projection: withDefault(stringSimpleControl(), `EPSG:3857`),
+        projection: withDefault(StringControl, `EPSG:3857`),
         tileSize: withDefault(ArrayControl, [256, 256]),
         nodata: withDefault(NumberControl, 0),
         ratio: withDefault(NumberControl, 1),

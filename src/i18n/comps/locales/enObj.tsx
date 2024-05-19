@@ -53,9 +53,20 @@ export const enObj: I18nObjects = {
         "pmtilesType": "vector",
         "url": "https://data.source.coop/cholmes/overture/overture-buildings.pmtiles",
       },
-      "style": [{
-        'fill-color': 'red',
-      }]
+      "style": [
+        {
+          filter: ['==', ['get', 'country_iso'], 'EG'],
+          style: {
+            'fill-color': 'red',
+          },
+        },
+        {
+          else: true,
+          style: {
+            'fill-color': 'blue',
+          },
+        },
+      ]
     },
     {
       "label": "GeoJson",

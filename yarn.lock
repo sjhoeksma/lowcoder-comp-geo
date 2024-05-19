@@ -4309,10 +4309,10 @@ lowcoder-cli@^0.0.30:
     vite-plugin-css-injected-by-js "^2.1.1"
     vite-plugin-svgr "^2.2.2"
 
-lowcoder-sdk@^2.3.4:
-  version "2.3.4"
-  resolved "https://registry.npmjs.org/lowcoder-sdk/-/lowcoder-sdk-2.3.4.tgz#3ca59afa92b100c1a35f2f51b1d3734696d286ca"
-  integrity sha512-05MJRdZEjksWzW/cp9TkR7Q6eW0lsnG3NQKPGGjkLfo2auxxfGyO5zPM7hpsC2LlTSfTzkZq3ouqmBIPa7vmVg==
+lowcoder-sdk@^2.4.3:
+  version "2.4.3"
+  resolved "https://registry.npmjs.org/lowcoder-sdk/-/lowcoder-sdk-2.4.3.tgz#ab94287df0600b3779461662e2ab33c19561e28d"
+  integrity sha512-HVZTzyfTHQ6zpG6epv2AvZMI6yNisHyFnhC8KaMExJ36Voqjn8k5G7voskfxMK9a9cuC/n45mXzQcu+bbtUn8A==
   dependencies:
     prettier "^3.1.1"
 
@@ -4940,10 +4940,10 @@ ol-ext@^4.0.18:
   resolved "https://registry.npmjs.org/ol-ext/-/ol-ext-4.0.18.tgz#87e68566bae1a7821e3a1af8b7019409ce922324"
   integrity sha512-zzeTAoCg9IocaM7LlXiLNnVCgVmfxxLzlDTWvYn3Y2gFxtICHSfRrIQl/8vumgBjftBksVl1Fds8P5uFReTmew==
 
-ol-mapbox-style@^12.3.1:
-  version "12.3.1"
-  resolved "https://registry.npmjs.org/ol-mapbox-style/-/ol-mapbox-style-12.3.1.tgz#155e93fc148e2a6bee80de5c2e26ba51069dcb34"
-  integrity sha512-pKBpKBns4YUgeFCp+aeuJtM+D2BKLc1HJmk5tFL0Nv7u7nelZnInUs/+XnSlHOa1hPBSrOyL+7CvKtegEyuYlg==
+ol-mapbox-style@^12.3.2:
+  version "12.3.2"
+  resolved "https://registry.npmjs.org/ol-mapbox-style/-/ol-mapbox-style-12.3.2.tgz#1cad02b1fca019fce4a2e8814049b5706588c1fb"
+  integrity sha512-Qw9I6+WHz9zBsLNm8zWWb707Y/hXrQP1fcwK86pxcX/FklwyDxAhfJAdTkINHncZ331CBEWcqvi2tzoN23dgwg==
   dependencies:
     "@mapbox/mapbox-gl-style-spec" "^13.23.1"
     mapbox-to-css-font "^2.4.1"
@@ -4959,6 +4959,18 @@ ol@^9.1.0:
   version "9.1.0"
   resolved "https://registry.npmjs.org/ol/-/ol-9.1.0.tgz#738e9f17093f65dafe114b8a78c69f110f5d0220"
   integrity sha512-nDrkJ2tzZNpo/wzN/PpHV5zdxbnXZaFktoMaD2cFLEc6gCwlgLY21Yd8wnt/4FjaVYwLBnbN9USXSwIBGcyksQ==
+  dependencies:
+    color-rgba "^3.0.0"
+    color-space "^2.0.1"
+    earcut "^2.2.3"
+    geotiff "^2.0.7"
+    pbf "3.2.1"
+    rbush "^3.0.1"
+
+ol@^9.2.2:
+  version "9.2.2"
+  resolved "https://registry.npmjs.org/ol/-/ol-9.2.2.tgz#e00822a6c2bb11543af743b89a354c67651206ca"
+  integrity sha512-YkuZW5MQTiKrr/0al1xuKarctNRvVj/anHZuq8rYMMq5BECG5E8rEOENOVFxhrbMX6T+un48D1Q0GtqBmU8Qdg==
   dependencies:
     color-rgba "^3.0.0"
     color-space "^2.0.1"
