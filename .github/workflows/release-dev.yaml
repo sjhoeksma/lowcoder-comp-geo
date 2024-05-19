@@ -34,7 +34,10 @@ jobs:
       - name: Modify package.json
         run: |
           BRANCH_NAME=$(echo ${GITHUB_REF#refs/heads/} | sed 's/[^a-zA-Z0-9]/-/g')
-          jq '.name = (.name + "-'"$BRANCH_NAME"'")' package.json > temp.json && mv temp.json package.json
+          PACKAGE_NAME=$(jq -r '.name' package.json)
+          if [[ "$PACKAGE_NAME" != *"$BRANCH_NAME" ]]; then
+            jq '.name = (.name + "-'"$BRANCH_NAME"'")' package.json > temp.json && mv temp.json package.json
+          fi
         shell: bash
 
       - name: Release
