@@ -1,3 +1,19 @@
+# [1.4.0-dev.2](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.4.0-dev.1...v1.4.0-dev.2) (2024-05-19)
+
+
+### Bug Fixes
+
+* remove style from source ([b0037c5](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/b0037c5cbca5b2cd74e5933e0bde1681650be551))
+* remove unused workflows ([9f188c9](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/9f188c9e12e310973165ffb2b13864e9e3011762))
+* style on base level layer ([49e4630](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/49e4630c9accca2b22c56830c30fb40ac21e61a6))
+
+
+### Features
+
+* add color picker and start styling pmtiles-vector ([31c5712](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/31c5712a30711255be743d7806884cfc19afaca5))
+* bump, replace BoolPureControl with BoolControl to enable js button in UI ([2b51d22](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/2b51d22c9a7f46ba2d70fc9073214cdb837d840e))
+* Update lowcoder-sdk to version 2.4.3 and ol to version 9.2.2 ([bae250a](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/bae250ac7617efb5e511d465821c4a4915e4873e))
+
 # [1.4.0-dev.1](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.3.0...v1.4.0-dev.1) (2024-04-08)
 
 
