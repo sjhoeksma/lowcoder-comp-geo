@@ -144,6 +144,7 @@ var GEOComp = (function () {
     menuTitle: stringSimpleControl(),
     menuContent: stringSimpleControl(),
     events: jsonObjectExposingStateControl("events"),
+    eventName: stringSimpleControl(),
     event: jsonObjectExposingStateControl("event"),
     feature: jsonObjectExposingStateControl("feature"),
     onEvent: eventHandlerControl(eventDefinitions),
@@ -204,6 +205,7 @@ var GEOComp = (function () {
     menuContent: string;
     autoHeight: boolean;
     events: any;
+    eventName: string;
     event: any;
     projection: string;
     startDate: string;
@@ -260,6 +262,7 @@ var GEOComp = (function () {
         var n = name.split(":")[0]
         var eventName = "event"
         eventDefinitions.forEach((k) => { if (k.value == n || k.value == name) { eventName = k.value } })
+        props.eventName = name
         //Double switch will allow fine grained event catching
         switch (name) { //Catch first on name
           case 'map:rebuild':
@@ -678,6 +681,7 @@ GEOComp = withMethodExposing(GEOComp, [
 export default withExposingConfigs(GEOComp, [
   new NameConfig("events", trans("component.events")),
   new NameConfig("event", trans("component.event")),
+  new NameConfig("eventName", trans("component.eventName")),
   new NameConfig("bbox", trans("component.bbox")),
   new NameConfig("feature", trans("component.feature")),
   new NameConfig("external", trans("component.external")),
