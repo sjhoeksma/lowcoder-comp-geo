@@ -1,3 +1,11 @@
+# [1.4.0-dev.3](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.4.0-dev.2...v1.4.0-dev.3) (2024-07-19)
+
+
+### Bug Fixes
+
+* Issue with argis layers not always loaded ([eb354d4](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/eb354d4e2650b3ac127a2ad1901363b91614b503))
+* upgrade lowcoder version ([b4c504a](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/b4c504ab7ceab95aea502bd54989df4beb5673ec))
+
 # ToDo
 
 ### Features
