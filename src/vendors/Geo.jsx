@@ -207,9 +207,8 @@ function Geo(props) {
 
   useEffect(() => {
     if (geoRef) {
-      geoRef.innerHTML = "<div id='GEO_" + geoId + "' " + (featureEnabled('largeButtons') ? "class='ol-large'" : "") +
+      geoRef.innerHTML = "<div id='GEO_" + geoId + "' " + (featureEnabled('largeButtons') ? "class='geo ol-large'" : "geo") +
         "  style='height:100%;width:100%'></div>"
-
       //The real map object
       var map = new Map({
         controls: [],

@@ -217,7 +217,6 @@ var GEOComp = (function () {
     extent: any;
     resizeOffset: number;
     external: any;
-    test: any
   }) => {
     //Default size of component
     const [dimensions, setDimensions] = useState({ width: 650, height: 460 });
@@ -310,7 +309,7 @@ var GEOComp = (function () {
 
     //Create the container for the component
     return (
-      <div ref={conRef} className="geowrapper"
+      <div ref={conRef} className={styles.geowrapper}
         style={{
           backgroundColor: `${props.styles.backgroundColor}`,
           borderColor: `${props.styles.border}`,
