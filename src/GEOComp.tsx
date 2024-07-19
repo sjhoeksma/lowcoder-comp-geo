@@ -284,7 +284,7 @@ var GEOComp = (function () {
               //TODO: Take care of margin and padding, but also that of parents
               var newHeight = dimensions.height + (eventObj.windowSize.height - eventObj.bounds.bottom - (offset + (props.resizeOffset || 0)))
               if (newHeight != dimensions.height) {
-                eventObj.element.style.height = `${newHeight}px`
+                eventObj.element.style.height = `${newHeight + offset}px`
                 setDimensions({ width: dimensions.width, height: newHeight })
                 if (featureEnabled("debug"))
                   console.debug("Resized done", newHeight)
