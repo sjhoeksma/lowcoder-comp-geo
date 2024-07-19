@@ -1,3 +1,10 @@
+# [1.4.0-dev.7](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.4.0-dev.6...v1.4.0-dev.7) (2024-07-19)
+
+
+### Bug Fixes
+
+* added geo class ([49d2dc2](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/49d2dc2971d5871b00193471e0f4b8f8648caa2d))
+
 # [1.4.0-dev.6](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.4.0-dev.5...v1.4.0-dev.6) (2024-07-19)
 
 
