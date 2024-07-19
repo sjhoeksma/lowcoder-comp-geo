@@ -1,3 +1,10 @@
+# [1.4.0-dev.4](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.4.0-dev.3...v1.4.0-dev.4) (2024-07-19)
+
+
+### Features
+
+* Dynamic loading of layers ([67cf44d](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/67cf44d989acfe13d217ea8d927eec041c10a44e))
+
 # [1.4.0-dev.3](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.4.0-dev.2...v1.4.0-dev.3) (2024-07-19)
 
 
