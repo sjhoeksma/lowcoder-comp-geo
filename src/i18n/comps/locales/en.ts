@@ -75,7 +75,8 @@ export const en = {
     "modify:snap": "Enable snapping to draw features",
     "splitscreen:horizontal": "Horizontal (Splitscreen)",
     "splitscreen:vertical": "Vertical (Splitscreen)",
-    debug: "Log debug to console"
+    debug: "Log debug to console",
+    resizeOffset: "Resize Offset"
   },
   layer: {
     type: "Type",
@@ -85,6 +86,7 @@ export const en = {
     minZoom: "Min Zoom",
     maxZoom: "Max Zoom",
     visible: "Visible",
+    loadSource: "Load Always",
     opacity: "Opacity",
     selectable: "Selectable",
     groups: "Group(s)",

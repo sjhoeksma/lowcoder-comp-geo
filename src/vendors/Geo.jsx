@@ -831,7 +831,6 @@ Geo.propTypes = {
   maxZoom: PropTypes.number,
   rotation: PropTypes.number,
   onEvent: PropTypes.func,
-  skipRemodify: PropTypes.func,
   menuTitle: PropTypes.string,
   menuContent: PropTypes.string,
   layers: PropTypes.array,

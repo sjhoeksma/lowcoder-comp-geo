@@ -129,6 +129,7 @@ var LayerObjectOption = new MultiCompBuilder(
         style: withDefault(ArrayOrJSONObjectControl),
         source: SourceControl(),
         visible: withDefault(BoolControl, true),
+        loadSource: withDefault(BoolControl, false),
         selectable: withDefault(BoolControl, true),
         userVisible: withDefault(BoolControl, true),
         minZoom: withDefault(NumberControl, 0),

@@ -186,6 +186,7 @@ var GEOComp = (function () {
         "splitscreen:vertical": false,
         debug: geoContext.previewMode,
       }),
+    resizeOffset: withDefault(NumberControl, 4),
     external: jsonObjectExposingStateControl("external"),
   };
 
@@ -214,8 +215,8 @@ var GEOComp = (function () {
     startDate: string;
     endDate: string;
     extent: any;
-    external: any
-
+    resizeOffset: number;
+    external: any;
     test: any
   }) => {
     //Default size of component
@@ -281,13 +282,14 @@ var GEOComp = (function () {
               const pads = props.styles.padding.split(' ');
               const marg = props.styles.margin.split(' ');
               const offset = (parseFloat(pads[pads.length == 4 ? 3 : 0].replace("px", "")) * 2) + (parseFloat(marg[marg.length == 4 ? 3 : 0].replace("px", "")) * 2)
-              const parentOffset = 0
               //TODO: Take care of margin and padding, but also that of parents
-              var newHeight = dimensions.height + (eventObj.windowSize.height - eventObj.bounds.bottom - (offset + parentOffset))
-              eventObj.element.style.height = `${newHeight}px`
-              setDimensions({ width: dimensions.width, height: newHeight })
-              if (featureEnabled("debug"))
-                console.debug("Resized done", newHeight)
+              var newHeight = dimensions.height + (eventObj.windowSize.height - eventObj.bounds.bottom - (offset + (props.resizeOffset || 0)))
+              if (newHeight != dimensions.height) {
+                eventObj.element.style.height = `${newHeight}px`
+                setDimensions({ width: dimensions.width, height: newHeight })
+                if (featureEnabled("debug"))
+                  console.debug("Resized done", newHeight)
+              }
             }
             break
           default:
@@ -369,6 +371,7 @@ var GEOComp = (function () {
           </Section>
           <Section name="Styles">
             {children.autoHeight.getPropertyView()}
+            {children.resizeOffset.propertyView({ label: "Resize Offset" })}
             {children.styles.getPropertyView()}
           </Section>
           <Section name="Behavior" open="false">
