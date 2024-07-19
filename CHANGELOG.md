@@ -1,3 +1,10 @@
+# [1.4.0-dev.5](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.4.0-dev.4...v1.4.0-dev.5) (2024-07-19)
+
+
+### Features
+
+* Added resize offset ([7f4dd82](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/7f4dd82faf287c4d975ee5b2d1051c93bf0dd3db))
+
 # [1.4.0-dev.4](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.4.0-dev.3...v1.4.0-dev.4) (2024-07-19)
 
 
