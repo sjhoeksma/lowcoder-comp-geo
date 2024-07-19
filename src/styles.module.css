@@ -1,5 +1,6 @@
-.wrapper {
-  padding: 5px;
+.geowrapper {
+  padding: 3px;
+  margin: 0px;
   display: flex;
   justify-content: center;
   align-items: center;

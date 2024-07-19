@@ -310,7 +310,7 @@ var GEOComp = (function () {
 
     //Create the container for the component
     return (
-      <div ref={conRef} className={styles.wrapper}
+      <div ref={conRef} className="geowrapper"
         style={{
           backgroundColor: `${props.styles.backgroundColor}`,
           borderColor: `${props.styles.border}`,
