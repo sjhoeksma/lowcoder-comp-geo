@@ -180,6 +180,70 @@ export function arcgisLoader(map, layerConfig, dataType) {
     transformExtent(layerConfig.bbox, 'EPSG:4326', map.getView().getProjection()) :
     _maxExtent
   var isLoading = false
+  var lastprojection
+
+  const _featureLoad = function (extent, projection) {
+    const curExtent = getIntersection(_extent, extent);
+    const layer = findLayer(map, layerConfig.label)
+    // ArcGIS Server only wants the numeric portion of the projection ID.
+    const srid = projection.getCode().split(/:(?=\d+$)/).pop();
+    switch (dataType) {
+      case 'pbf': {
+        const url = layerConfig.source.url +
+          '/query/?f=pbf&' +
+          'returnGeometry=true&spatialRel=esriSpatialRelIntersects&geometry={' +
+          encodeURIComponent(
+            '"xmin":' +
+            curExtent[0] +
+            ',"ymin":' +
+            curExtent[1] +
+            ',"xmax":' +
+            curExtent[2] +
+            ',"ymax":' +
+            curExtent[3]
+          ) +
+          '}&geometryType=esriGeometryEnvelope&inSR=' +
+          srid +
+          '&outFields=*&resultType=tile' +
+          '&outSR=' +
+          srid
+        fetch(url)
+          .then(response => response.arrayBuffer())
+          .then((response) => {
+            layer.getSource().addFeatures(new EsriPBF().readFeatures(response))
+          })
+      } break;
+      default: {
+        const url =
+          layerConfig.source.url +
+          '/query/?f=json&' +
+          'returnGeometry=true&spatialRel=esriSpatialRelIntersects&geometry=' +
+          encodeURIComponent(
+            '{"xmin":' +
+            curExtent[0] +
+            ',"ymin":' +
+            curExtent[1] +
+            ',"xmax":' +
+            curExtent[2] +
+            ',"ymax":' +
+            curExtent[3] +
+            ',"spatialReference":{"wkid":' +
+            srid +
+            '}}',
+          ) +
+          '&geometryType=esriGeometryEnvelope&inSR=' +
+          srid +
+          '&outFields=*' +
+          '&outSR=' +
+          srid;
+        fetch(url)
+          .then(response => response.json())
+          .then((response) => {
+            layer.getSource().addFeatures(new EsriJSON().readFeatures(response))
+          })
+      }
+    }
+  }
 
   if (!layerConfig.bbox && layerConfig.source?.url) {
     isLoading = true;
@@ -206,6 +270,7 @@ export function arcgisLoader(map, layerConfig, dataType) {
           } catch (ex) {
             console.warn("Unable to transform extent using projection ", epsg, ex);
           }
+          _featureLoad(map.getView().calculateExtent(), lastprojection)
         } else {
           console.warn("No extent information found in the ArcGIS server response.");
         }
@@ -213,69 +278,12 @@ export function arcgisLoader(map, layerConfig, dataType) {
   }
 
 
+
   return (
     function (extent, resolution, projection) {
+      lastprojection = projection
       if (!isLoading && intersects(_extent, extent)) {
-        const curExtent = getIntersection(_extent, extent);
-        const layer = findLayer(map, layerConfig.label)
-        // ArcGIS Server only wants the numeric portion of the projection ID.
-        const srid = projection.getCode().split(/:(?=\d+$)/).pop();
-        switch (dataType) {
-          case 'pbf': {
-            const url = layerConfig.source.url +
-              '/query/?f=pbf&' +
-              'returnGeometry=true&spatialRel=esriSpatialRelIntersects&geometry={' +
-              encodeURIComponent(
-                '"xmin":' +
-                curExtent[0] +
-                ',"ymin":' +
-                curExtent[1] +
-                ',"xmax":' +
-                curExtent[2] +
-                ',"ymax":' +
-                curExtent[3]
-              ) +
-              '}&geometryType=esriGeometryEnvelope&inSR=' +
-              srid +
-              '&outFields=*&resultType=tile' +
-              '&outSR=' +
-              srid
-            fetch(url)
-              .then(response => response.arrayBuffer())
-              .then((response) => {
-                layer.getSource().addFeatures(new EsriPBF().readFeatures(response))
-              })
-          } break;
-          default: {
-            const url =
-              layerConfig.source.url +
-              '/query/?f=json&' +
-              'returnGeometry=true&spatialRel=esriSpatialRelIntersects&geometry=' +
-              encodeURIComponent(
-                '{"xmin":' +
-                curExtent[0] +
-                ',"ymin":' +
-                curExtent[1] +
-                ',"xmax":' +
-                curExtent[2] +
-                ',"ymax":' +
-                curExtent[3] +
-                ',"spatialReference":{"wkid":' +
-                srid +
-                '}}',
-              ) +
-              '&geometryType=esriGeometryEnvelope&inSR=' +
-              srid +
-              '&outFields=*' +
-              '&outSR=' +
-              srid;
-            fetch(url)
-              .then(response => response.json())
-              .then((response) => {
-                layer.getSource().addFeatures(new EsriJSON().readFeatures(response))
-              })
-          }
-        }
+        _featureLoad(extent, projection)
       }
     }
   )
@@ -297,96 +305,33 @@ export function createLayer(layerConfig, map) {
     return null;
   }
 
-  try {
-    switch (layerConfig.type) {
-      case 'mvt':
-        return new VectorTileLayer({
-          name: layerConfig.label,
-          title: layerConfig.title || layerConfig.name,
-          minZoom: layerConfig.minZoom,
-          maxZoom: layerConfig.maxZoom,
-          visible: layerConfig.visible,
-          opacity: layerConfig.opacity,
-          selectable: layerConfig.selectable,
-          groups: layerConfig.groups,
-          extra: layerConfig.extra,
-          splitscreen: layerConfig.splitscreen,
-          displayInLayerSwitcher: layerConfig.userVisible,
-          source: new VectorTileSource({
+  const _createSource = function () {
+    try {
+      switch (layerConfig.type) {
+        case 'mvt':
+          new VectorTileSource({
             attributions: layerConfig.attributions,
             format: new MVT(),
             url: layerConfig.source.url,
-          }),
-        });
-      case 'wms':
-        return new TileLayer({
-          name: layerConfig.label,
-          title: layerConfig.title || layerConfig.name,
-          minZoom: layerConfig.minZoom,
-          maxZoom: layerConfig.maxZoom,
-          visible: layerConfig.visible,
-          opacity: layerConfig.opacity,
-          selectable: layerConfig.selectable,
-          groups: layerConfig.groups,
-          extra: layerConfig.extra,
-          splitscreen: layerConfig.splitscreen,
-          displayInLayerSwitcher: layerConfig.userVisible,
-          source: new TileWMS({
+          })
+        case 'wms':
+          return new TileWMS({
             url: layerConfig.source.url,
             params: layerConfig.source.params,
             serverType: layerConfig.source.serverType,
             crossOrigin: layerConfig.source.crossOrigin,
-          }),
-        });
-      case 'wfs':
-        return new VectorLayer({
-          name: layerConfig.label,
-          title: layerConfig.title || layerConfig.name,
-          minZoom: layerConfig.minZoom,
-          maxZoom: layerConfig.maxZoom,
-          visible: layerConfig.visible,
-          opacity: layerConfig.opacity,
-          selectable: layerConfig.selectable,
-          groups: layerConfig.groups,
-          extra: layerConfig.extra,
-          splitscreen: layerConfig.splitscreen,
-          displayInLayerSwitcher: layerConfig.userVisible,
-          source: new VectorSource({
+          })
+        case 'wfs':
+          return new VectorSource({
             format: new GeoJSON(),
             url: layerConfig.source.url,
-          }),
-        });
-      case 'xyz':
-        return new TileLayer({
-          name: layerConfig.label,
-          title: layerConfig.title || layerConfig.name,
-          minZoom: layerConfig.minZoom,
-          maxZoom: layerConfig.maxZoom,
-          visible: layerConfig.visible,
-          opacity: layerConfig.opacity,
-          selectable: layerConfig.selectable,
-          groups: layerConfig.groups,
-          extra: layerConfig.extra,
-          splitscreen: layerConfig.splitscreen,
-          displayInLayerSwitcher: layerConfig.userVisible,
-          source: new XYZ({
+          })
+        case 'xyz':
+          return new XYZ({
             url: layerConfig.source.url,
-          }),
-        });
-      case 'geojson':
-        return new VectorLayer({
-          name: layerConfig.label,
-          title: layerConfig.title || layerConfig.name,
-          minZoom: layerConfig.minZoom,
-          maxZoom: layerConfig.maxZoom,
-          visible: layerConfig.visible,
-          opacity: layerConfig.opacity,
-          selectable: layerConfig.selectable,
-          groups: layerConfig.groups,
-          extra: layerConfig.extra,
-          splitscreen: layerConfig.splitscreen,
-          displayInLayerSwitcher: layerConfig.userVisible,
-          source: new VectorSource({
+          })
+        case 'geojson':
+          return new VectorSource({
             features: new GeoJSON().readFeatures(
               (layerConfig.source.data && typeof layerConfig.source.data == "string") ?
                 layerConfig.source.data :
@@ -398,25 +343,9 @@ export function createLayer(layerConfig, map) {
               dataProjection: layerConfig.source.projection || 'EPSG:4326', // Assuming the GeoJSON is in WGS 84
               featureProjection: map.getView().getProjection() || 'EPSG:3857' // Assuming the map projection
             })
-          }),
-          // Add this line to apply a generic style to the layer
-          style: geoJsonStyleFunction
-        });
-
-      case 'cog':
-        return new TileLayer({
-          name: layerConfig.label,
-          title: layerConfig.title || layerConfig.name,
-          minZoom: layerConfig.minZoom,
-          maxZoom: layerConfig.maxZoom,
-          visible: layerConfig.visible,
-          opacity: layerConfig.opacity,
-          selectable: layerConfig.selectable,
-          groups: layerConfig.groups,
-          extra: layerConfig.extra,
-          splitscreen: layerConfig.splitscreen,
-          displayInLayerSwitcher: layerConfig.userVisible,
-          source: new GeoTIFF({
+          })
+        case 'cog':
+          return new GeoTIFF({
             sources: [
               {
                 url: layerConfig.source.url,
@@ -430,34 +359,91 @@ export function createLayer(layerConfig, map) {
             opaque: true,
             wrapX: false,
             projection: layerConfig.source.projection || 'EPSG:4326',
-          }),
-        });
+          })
 
-      case 'stylegl':
-        const layer = new VectorTileLayer({
-          declutter: true,
-          name: layerConfig.label,
-          title: layerConfig.title || layerConfig.name,
-          minZoom: layerConfig.minZoom,
-          maxZoom: layerConfig.maxZoom,
-          visible: layerConfig.visible,
-          opacity: layerConfig.opacity,
-          selectable: layerConfig.selectable,
-          groups: layerConfig.groups,
-          extra: layerConfig.extra,
-          splitscreen: layerConfig.splitscreen,
-          displayInLayerSwitcher: layerConfig.userVisible,
-          source: new VectorTileSource({
+        case 'stylegl':
+          return new VectorTileSource({
             projection: layerConfig.source?.projection || 'EPSG:3857',
-          }),
-          // style: layerConfig.source.style, //TODO: Fails
-        });
-        applyStyle(layer, layerConfig.source?.url, '');
-        applyBackground(layer, layerConfig.source?.url);
-        return layer;
+          })
 
-      case 'arcgis-mapserver':
-        if (layerConfig.source.mapServerType === 'tile') {
+        case 'arcgis-mapserver':
+          if (layerConfig.source.mapServerType === 'tile') {
+            return new TileArcGISRest({
+              url: layerConfig.source?.url,
+              params: layerConfig.source.params || {},
+              crossOrigin: layerConfig.source.crossOrigin,
+            })
+          }
+          else if (layerConfig.source.mapServerType === 'image') {
+            return new ImageArcGISRest({
+              url: layerConfig.source?.url,
+              ratio: layerConfig.source.ratio || 1,
+              params: layerConfig.source.params || {},
+              crossOrigin: layerConfig.source.crossOrigin,
+            })
+          }
+          console.log("Invalid mapServerType", layerConfig.source.mapServerType)
+          return null
+
+        case 'pmtiles':
+          if (layerConfig.source.pmtilesType === 'raster') {
+            return new PMTilesRasterSource({
+              url: layerConfig.source?.url,
+              tileSize: layerConfig.source?.tileSize,
+            })
+          }
+          else if (layerConfig.source.pmtilesType === 'vector') {
+            console.log("the PMTILES Style", layerConfig.style); // issue here
+            return new PMTilesVectorSource({
+              url: layerConfig.source?.url,
+            })
+          }
+          console.log("Invalid pmtilesType", layerConfig.source.pmtilesType)
+          return null
+
+        case 'arcgis-vector-tiles':
+          return new VectorSource({
+            format: new EsriPBF({ dataProjection: layerConfig.source.projection || 'EPSG:3857' }),
+            strategy: bbox,
+            loader: arcgisLoader(map, layerConfig, 'pbf')
+          })
+
+        case 'arcgis-feature-service':
+          return new VectorSource({
+            format: new EsriJSON(),
+            strategy: bbox,
+            loader: arcgisLoader(map, layerConfig, 'json')
+          })
+
+        default:
+          //Error will cause issue within lowcoder. So just use log
+          console.error(`Unsupported layer type: ${layerConfig.type}`);
+          return null
+      }
+    } catch (e) {
+      console.error("Failed to create source", e)
+      return null
+    }
+  }
+
+  const _createLayer = function () {
+    try {
+      switch (layerConfig.type) {
+        case 'mvt':
+          return new VectorTileLayer({
+            name: layerConfig.label,
+            title: layerConfig.title || layerConfig.name,
+            minZoom: layerConfig.minZoom,
+            maxZoom: layerConfig.maxZoom,
+            visible: layerConfig.visible,
+            opacity: layerConfig.opacity,
+            selectable: layerConfig.selectable,
+            groups: layerConfig.groups,
+            extra: layerConfig.extra,
+            splitscreen: layerConfig.splitscreen,
+            displayInLayerSwitcher: layerConfig.userVisible,
+          });
+        case 'wms':
           return new TileLayer({
             name: layerConfig.label,
             title: layerConfig.title || layerConfig.name,
@@ -470,15 +456,9 @@ export function createLayer(layerConfig, map) {
             extra: layerConfig.extra,
             splitscreen: layerConfig.splitscreen,
             displayInLayerSwitcher: layerConfig.userVisible,
-            source: new TileArcGISRest({
-              url: layerConfig.source?.url,
-              params: layerConfig.source.params || {},
-              crossOrigin: layerConfig.source.crossOrigin,
-            }),
           });
-        }
-        else if (layerConfig.source.mapServerType === 'image') {
-          return new ImageLayer({
+        case 'wfs':
+          return new VectorLayer({
             name: layerConfig.label,
             title: layerConfig.title || layerConfig.name,
             minZoom: layerConfig.minZoom,
@@ -490,17 +470,9 @@ export function createLayer(layerConfig, map) {
             extra: layerConfig.extra,
             splitscreen: layerConfig.splitscreen,
             displayInLayerSwitcher: layerConfig.userVisible,
-            source: new ImageArcGISRest({
-              url: layerConfig.source?.url,
-              ratio: layerConfig.source.ratio || 1,
-              params: layerConfig.source.params || {},
-              crossOrigin: layerConfig.source.crossOrigin,
-            }),
           });
-        }
-      case 'pmtiles':
-        if (layerConfig.source.pmtilesType === 'raster') {
-          return new WebGLTile({
+        case 'xyz':
+          return new TileLayer({
             name: layerConfig.label,
             title: layerConfig.title || layerConfig.name,
             minZoom: layerConfig.minZoom,
@@ -512,15 +484,41 @@ export function createLayer(layerConfig, map) {
             extra: layerConfig.extra,
             splitscreen: layerConfig.splitscreen,
             displayInLayerSwitcher: layerConfig.userVisible,
-            source: new PMTilesRasterSource({
-              url: layerConfig.source?.url,
-              tileSize: layerConfig.source?.tileSize,
-            })
           });
-        }
-        else if (layerConfig.source.pmtilesType === 'vector') {
-          console.log("the PMTILES Style", layerConfig.style); // issue here
-          return new VectorTileLayer({
+        case 'geojson':
+          return new VectorLayer({
+            name: layerConfig.label,
+            title: layerConfig.title || layerConfig.name,
+            minZoom: layerConfig.minZoom,
+            maxZoom: layerConfig.maxZoom,
+            visible: layerConfig.visible,
+            opacity: layerConfig.opacity,
+            selectable: layerConfig.selectable,
+            groups: layerConfig.groups,
+            extra: layerConfig.extra,
+            splitscreen: layerConfig.splitscreen,
+            displayInLayerSwitcher: layerConfig.userVisible,
+            // Add this line to apply a generic style to the layer
+            style: geoJsonStyleFunction
+          });
+
+        case 'cog':
+          return new TileLayer({
+            name: layerConfig.label,
+            title: layerConfig.title || layerConfig.name,
+            minZoom: layerConfig.minZoom,
+            maxZoom: layerConfig.maxZoom,
+            visible: layerConfig.visible,
+            opacity: layerConfig.opacity,
+            selectable: layerConfig.selectable,
+            groups: layerConfig.groups,
+            extra: layerConfig.extra,
+            splitscreen: layerConfig.splitscreen,
+            displayInLayerSwitcher: layerConfig.userVisible,
+          });
+
+        case 'stylegl':
+          const layer = new VectorTileLayer({
             declutter: true,
             name: layerConfig.label,
             title: layerConfig.title || layerConfig.name,
@@ -533,78 +531,138 @@ export function createLayer(layerConfig, map) {
             extra: layerConfig.extra,
             splitscreen: layerConfig.splitscreen,
             displayInLayerSwitcher: layerConfig.userVisible,
-            source: new PMTilesVectorSource({
-              url: layerConfig.source?.url,
-            }),
-            style: layerConfig.style, // issue here
+            // style: layerConfig.source.style, //TODO: Fails
           });
-        }
-      case 'arcgis-vector-tiles':
-        const esriVectorTiles = new VectorLayer({
-          name: layerConfig.label,
-          title: layerConfig.title || layerConfig.name,
-          minZoom: layerConfig.minZoom,
-          maxZoom: layerConfig.maxZoom,
-          visible: layerConfig.visible,
-          opacity: layerConfig.opacity,
-          selectable: layerConfig.selectable,
-          groups: layerConfig.groups,
-          extra: layerConfig.extra,
-          splitscreen: layerConfig.splitscreen,
-          displayInLayerSwitcher: layerConfig.userVisible,
-          source: new VectorSource({
-            format: new EsriPBF({ dataProjection: layerConfig.source.projection || 'EPSG:3857' }),
-            strategy: bbox,
-            loader: arcgisLoader(map, layerConfig, 'pbf')
-          }),
-        })
-        createStyleFunctionFromUrl(layerConfig.source.url, map.getView().getProjection() || 'EPSG:3857').then(styleFunction => {
-          esriVectorTiles.setStyle(styleFunction);
-        });
-        return esriVectorTiles;
-      case 'arcgis-feature-service':
-        const esriFeatureService = new VectorLayer({
-          name: layerConfig.label,
-          title: layerConfig.title || layerConfig.name,
-          minZoom: layerConfig.minZoom,
-          maxZoom: layerConfig.maxZoom,
-          visible: layerConfig.visible,
-          opacity: layerConfig.opacity,
-          selectable: layerConfig.selectable,
-          groups: layerConfig.groups,
-          extra: layerConfig.extra,
-          splitscreen: layerConfig.splitscreen,
-          displayInLayerSwitcher: layerConfig.userVisible,
-          source: new VectorSource({
-            format: new EsriJSON(),
-            strategy: bbox,
-            loader: arcgisLoader(map, layerConfig, 'json')
+          applyStyle(layer, layerConfig.source?.url, '');
+          applyBackground(layer, layerConfig.source?.url);
+          return layer;
+
+        case 'arcgis-mapserver':
+          if (layerConfig.source.mapServerType === 'tile') {
+            return new TileLayer({
+              name: layerConfig.label,
+              title: layerConfig.title || layerConfig.name,
+              minZoom: layerConfig.minZoom,
+              maxZoom: layerConfig.maxZoom,
+              visible: layerConfig.visible,
+              opacity: layerConfig.opacity,
+              selectable: layerConfig.selectable,
+              groups: layerConfig.groups,
+              extra: layerConfig.extra,
+              splitscreen: layerConfig.splitscreen,
+              displayInLayerSwitcher: layerConfig.userVisible,
+            });
+          }
+          else if (layerConfig.source.mapServerType === 'image') {
+            return new ImageLayer({
+              name: layerConfig.label,
+              title: layerConfig.title || layerConfig.name,
+              minZoom: layerConfig.minZoom,
+              maxZoom: layerConfig.maxZoom,
+              visible: layerConfig.visible,
+              opacity: layerConfig.opacity,
+              selectable: layerConfig.selectable,
+              groups: layerConfig.groups,
+              extra: layerConfig.extra,
+              splitscreen: layerConfig.splitscreen,
+              displayInLayerSwitcher: layerConfig.userVisible,
+            });
+          }
+        case 'pmtiles':
+          if (layerConfig.source.pmtilesType === 'raster') {
+            return new WebGLTile({
+              name: layerConfig.label,
+              title: layerConfig.title || layerConfig.name,
+              minZoom: layerConfig.minZoom,
+              maxZoom: layerConfig.maxZoom,
+              visible: layerConfig.visible,
+              opacity: layerConfig.opacity,
+              selectable: layerConfig.selectable,
+              groups: layerConfig.groups,
+              extra: layerConfig.extra,
+              splitscreen: layerConfig.splitscreen,
+              displayInLayerSwitcher: layerConfig.userVisible,
+            });
+          }
+          else if (layerConfig.source.pmtilesType === 'vector') {
+            console.log("the PMTILES Style", layerConfig.style); // issue here
+            return new VectorTileLayer({
+              declutter: true,
+              name: layerConfig.label,
+              title: layerConfig.title || layerConfig.name,
+              minZoom: layerConfig.minZoom,
+              maxZoom: layerConfig.maxZoom,
+              visible: layerConfig.visible,
+              opacity: layerConfig.opacity,
+              selectable: layerConfig.selectable,
+              groups: layerConfig.groups,
+              extra: layerConfig.extra,
+              splitscreen: layerConfig.splitscreen,
+              displayInLayerSwitcher: layerConfig.userVisible,
+              style: layerConfig.style, // issue here
+            });
+          }
+        case 'arcgis-vector-tiles':
+          const esriVectorTiles = new VectorLayer({
+            name: layerConfig.label,
+            title: layerConfig.title || layerConfig.name,
+            minZoom: layerConfig.minZoom,
+            maxZoom: layerConfig.maxZoom,
+            visible: layerConfig.visible,
+            opacity: layerConfig.opacity,
+            selectable: layerConfig.selectable,
+            groups: layerConfig.groups,
+            extra: layerConfig.extra,
+            splitscreen: layerConfig.splitscreen,
+            displayInLayerSwitcher: layerConfig.userVisible,
           })
-        });
-        createStyleFunctionFromUrl(layerConfig.source.url, map.getView().getProjection() || 'EPSG:3857').then(styleFunction => {
-          esriFeatureService.setStyle(styleFunction);
-        });
+          createStyleFunctionFromUrl(layerConfig.source.url, map.getView().getProjection() || 'EPSG:3857').then(styleFunction => {
+            esriVectorTiles.setStyle(styleFunction);
+          });
+          return esriVectorTiles;
+        case 'arcgis-feature-service':
+          const esriFeatureService = new VectorLayer({
+            name: layerConfig.label,
+            title: layerConfig.title || layerConfig.name,
+            minZoom: layerConfig.minZoom,
+            maxZoom: layerConfig.maxZoom,
+            visible: layerConfig.visible,
+            opacity: layerConfig.opacity,
+            selectable: layerConfig.selectable,
+            groups: layerConfig.groups,
+            extra: layerConfig.extra,
+            splitscreen: layerConfig.splitscreen,
+            displayInLayerSwitcher: layerConfig.userVisible,
+          });
+          createStyleFunctionFromUrl(layerConfig.source.url, map.getView().getProjection() || 'EPSG:3857').then(styleFunction => {
+            esriFeatureService.setStyle(styleFunction);
+          });
 
-        return esriFeatureService;
+          return esriFeatureService;
 
-
-      /* History ? 
-      new ol.layer.Geoportail({ 
-        name: '1970',
-        title: '1965-1980',
-        key: 'orthohisto',
-        layer: 'ORTHOIMAGERY.ORTHOPHOTOS.1965-1980' 
-      }),
-      */
-
-      default:
-        //Error will cause issue within lowcoder. So just use log
-        console.error(`Unsupported layer type: ${layerConfig.type}`);
-        return null
+        default:
+          //Error will cause issue within lowcoder. So just use log
+          console.error(`Unsupported layer type: ${layerConfig.type}`);
+          return null
+      }
+    } catch (e) {
+      console.error("Failed to create layer", e)
+      return null
     }
-  } catch (e) {
-    console.error("Failed to create layer", e)
-    return null
   }
+
+  //Dynamically load layer source
+  var layer = _createLayer()
+  if (layer != null) {
+    if (layerConfig.visible || layerConfig.loadSource) {
+      setTimeout(() => { layer.setSource(_createSource()) }, layerConfig.loadSource ? 100 : 0)
+    } else { //Load on demand
+      layer.once('change:visible', (event, b) => {
+        layer.setSource(_createSource())
+      })
+    }
+  }
+  return layer
+
 };
 

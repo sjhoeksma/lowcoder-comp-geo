@@ -40,6 +40,11 @@ export const CompStyles = [
     padding: "padding",
   },
   {
+    name: "margin",
+    label: trans("style.margin"),
+    padding: "margin",
+  },
+  {
     name: "textSize",
     label: trans("style.textSize"),
     textSize: "textSize",
@@ -144,7 +149,6 @@ var GEOComp = (function () {
     menuTitle: stringSimpleControl(),
     menuContent: stringSimpleControl(),
     events: jsonObjectExposingStateControl("events"),
-    eventName: stringSimpleControl(),
     event: jsonObjectExposingStateControl("event"),
     feature: jsonObjectExposingStateControl("feature"),
     onEvent: eventHandlerControl(eventDefinitions),
@@ -191,7 +195,7 @@ var GEOComp = (function () {
     onEvent: any;
     styles: {
       backgroundColor: any; border: any; radius: any; borderWidth: any;
-      padding: any; textSize: any;
+      margin: any; padding: any; textSize: any;
     };
     center: any;
     zoom: number;
@@ -205,7 +209,6 @@ var GEOComp = (function () {
     menuContent: string;
     autoHeight: boolean;
     events: any;
-    eventName: string;
     event: any;
     projection: string;
     startDate: string;
@@ -262,7 +265,6 @@ var GEOComp = (function () {
         var n = name.split(":")[0]
         var eventName = "event"
         eventDefinitions.forEach((k) => { if (k.value == n || k.value == name) { eventName = k.value } })
-        props.eventName = name
         //Double switch will allow fine grained event catching
         switch (name) { //Catch first on name
           case 'map:rebuild':
@@ -277,8 +279,11 @@ var GEOComp = (function () {
           case 'window:resize':
             if (featureEnabled('scaleToBottom') && props.autoHeight) {
               const pads = props.styles.padding.split(' ');
-              const bottom = (parseFloat(pads[pads.length == 4 ? 3 : 0].replace("px", "")) * 2) + 2
-              var newHeight = dimensions.height + (eventObj.windowSize.height - eventObj.bounds.bottom - bottom)
+              const marg = props.styles.margin.split(' ');
+              const offset = (parseFloat(pads[pads.length == 4 ? 3 : 0].replace("px", "")) * 2) + (parseFloat(marg[marg.length == 4 ? 3 : 0].replace("px", "")) * 2)
+              const parentOffset = 0
+              //TODO: Take care of margin and padding, but also that of parents
+              var newHeight = dimensions.height + (eventObj.windowSize.height - eventObj.bounds.bottom - (offset + parentOffset))
               eventObj.element.style.height = `${newHeight}px`
               setDimensions({ width: dimensions.width, height: newHeight })
               if (featureEnabled("debug"))
@@ -303,44 +308,38 @@ var GEOComp = (function () {
 
     //Create the container for the component
     return (
-      <div className={styles.wrapper}
+      <div ref={conRef} className={styles.wrapper}
         style={{
           backgroundColor: `${props.styles.backgroundColor}`,
           borderColor: `${props.styles.border}`,
           borderRadius: `${props.styles.radius}`,
           borderWidth: `${props.styles.borderWidth}`,
-          margin: 0,
+          margin: `${props.styles.margin}`,
           padding: `${props.styles.padding}`,
           fontSize: `${props.styles.textSize}`,
           height: '100%',
           width: '100%',
         }}
       >
-        <div ref={conRef}
-          style={{
-            height: '100%',
-            width: '100%',
-          }}
-        >
-          <Geo
-            height={dimensions.height}
-            width={dimensions.width}
-            center={props.center}
-            zoom={props.zoom}
-            maxZoom={props.maxZoom}
-            rotation={props.rotation}
-            menuContent={props.menuContent}
-            menuTitle={props.menuTitle}
-            layers={props.layers.data}
-            onEvent={handleEvent}
-            features={props.features}
-            projection={props.projection}
-            startDate={props.startDate}
-            endDate={props.endDate}
-            extent={props.extent}
-            external={props.external.value}
-          />
-        </div>
+
+        <Geo
+          height={dimensions.height}
+          width={dimensions.width}
+          center={props.center}
+          zoom={props.zoom}
+          maxZoom={props.maxZoom}
+          rotation={props.rotation}
+          menuContent={props.menuContent}
+          menuTitle={props.menuTitle}
+          layers={props.layers.data}
+          onEvent={handleEvent}
+          features={props.features}
+          projection={props.projection}
+          startDate={props.startDate}
+          endDate={props.endDate}
+          extent={props.extent}
+          external={props.external.value}
+        />
       </div>
     );
   })
@@ -681,7 +680,6 @@ GEOComp = withMethodExposing(GEOComp, [
 export default withExposingConfigs(GEOComp, [
   new NameConfig("events", trans("component.events")),
   new NameConfig("event", trans("component.event")),
-  new NameConfig("eventName", trans("component.eventName")),
   new NameConfig("bbox", trans("component.bbox")),
   new NameConfig("feature", trans("component.feature")),
   new NameConfig("external", trans("component.external")),

@@ -8,7 +8,7 @@ export const enObj: I18nObjects = {
       "type": "arcgis-feature-service",
       "minZoom": 8,
       "maxZoom": 22,
-      "visible": true,
+      "visible": false,
       "selectable": true,
       "source": {
         "url": "https://services-eu1.arcgis.com/NPIbx47lsIiu2pqz/ArcGIS/rest/services/Neptune_Coastline_Campaign_Open_Data_Land_Use_2014/FeatureServer/0",
@@ -20,7 +20,7 @@ export const enObj: I18nObjects = {
       "type": "arcgis-vector-tiles",
       "minZoom": 8,
       "maxZoom": 22,
-      "visible": true,
+      "visible": false,
       "selectable": true,
       "source": {
         "url": "https://rijnland.enl-mcs.nl/arcgis/rest/services/Polder/MapServer/0",
@@ -47,7 +47,7 @@ export const enObj: I18nObjects = {
       "type": "pmtiles",
       "minZoom": 0,
       "maxZoom": 30,
-      "visible": true,
+      "visible": false,
       "selectable": false,
       "source": {
         "pmtilesType": "vector",
@@ -74,7 +74,7 @@ export const enObj: I18nObjects = {
       "type": "geojson",
       "minZoom": 0,
       "maxZoom": 22,
-      "visible": true,
+      "visible": false,
       "selectable": true,
       "source": {
         "peojection": "EPSG:4326",
@@ -285,7 +285,7 @@ export const enObj: I18nObjects = {
       "order": 6,
       "minZoom": 0,
       "maxZoom": 22,
-      "visible": true,
+      "visible": false,
       "opacity": 0.3,
       "source": {
         "url": "https://link.storjshare.io/raw/juj37qat4melrpmooioq65fzgo7q/truemaps-public/aw3d30/output_cog.tif",
@@ -296,7 +296,7 @@ export const enObj: I18nObjects = {
       "type": "wfs",
       "minZoom": 0,
       "maxZoom": 22,
-      "visible": true,
+      "visible": false,
       "source": {
         "url": "https://services.seismofaults.eu/geoserver/EDSF/wfs?service=WFS&version=1.1.0&request=GetFeature&typeName=EDSF%3Asubduction_contours&outputFormat=JSON&srsName=urn%3Ax-ogc%3Adef%3Acrs%3AEPSG%3A4326&maxFeatures=1000",
         "format": "geojson",
@@ -351,7 +351,7 @@ export const enObj: I18nObjects = {
       "type": "wms",
       "minZoom": 0,
       "maxZoom": 8,
-      "visible": true,
+      "visible": false,
       "source": {
         "url": "https://ideas-digitaltwin.jpl.nasa.gov/wms/epsg4326/best/wms.cgi",
         "params": {

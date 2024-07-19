@@ -145,6 +145,11 @@ function Geo(props) {
         .map(layerConfig => createLayer(layerConfig, map))
         .filter(layer => layer !== null && layer !== undefined)
       var workinglayers = [...layers]
+
+      //Check if whe have enable lazy loading
+      //Add
+
+
       //Sort all layers an groups and add them to map
       const layerGroups = {}
       layers.forEach((layer) => {
