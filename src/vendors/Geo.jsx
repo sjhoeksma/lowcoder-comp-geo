@@ -807,7 +807,7 @@ function Geo(props) {
   useEffect(() => {
     var el = document.getElementById('GEO.' + geoId)
     if (el) {
-      fireEvent('window:resize', { element: el, windowSize: windowSize, bounds: el.getBoundingClientRect() })
+      fireEvent('window:resize', { element: el, windowSize: windowSize, bounds: el.getBoundingClientRect(), document })
     }
   }, [elementRef, windowSize])
 
