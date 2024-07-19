@@ -16,7 +16,7 @@
     "antd": "^5.15.4",
     "arcgis-pbf-parser": "^0.0.4",
     "lowcoder-cli": "^0.0.30",
-    "lowcoder-sdk": "^2.4.3",
+    "lowcoder-sdk": "^2.4.8",
     "ol": "^9.2.2",
     "ol-esri-styles": "^0.0.1",
     "ol-ext": "^4.0.18",
