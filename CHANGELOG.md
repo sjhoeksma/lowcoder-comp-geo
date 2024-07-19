@@ -1,3 +1,10 @@
+# [1.4.0-dev.9](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.4.0-dev.8...v1.4.0-dev.9) (2024-07-19)
+
+
+### Bug Fixes
+
+* testing margins ([4196f3f](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/4196f3f278b53f8b281c76bbac5c5e5dd234c46a))
+
 # [1.4.0-dev.8](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.4.0-dev.7...v1.4.0-dev.8) (2024-07-19)
 
 
