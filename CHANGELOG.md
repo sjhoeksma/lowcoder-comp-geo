@@ -1,3 +1,10 @@
+# [1.4.0-dev.6](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.4.0-dev.5...v1.4.0-dev.6) (2024-07-19)
+
+
+### Bug Fixes
+
+* style ([0935425](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/093542527b734a8b421d6f729d10329475ebe8f6))
+
 # [1.4.0-dev.5](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.4.0-dev.4...v1.4.0-dev.5) (2024-07-19)
 
 
