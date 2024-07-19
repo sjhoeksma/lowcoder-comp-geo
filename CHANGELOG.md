@@ -1,3 +1,10 @@
+# [1.4.0-dev.12](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.4.0-dev.11...v1.4.0-dev.12) (2024-07-19)
+
+
+### Bug Fixes
+
+* resize ([9f8a543](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/9f8a543788f990bc4e9087268b6ee8f801222757))
+
 # [1.4.0-dev.11](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.4.0-dev.10...v1.4.0-dev.11) (2024-07-19)
 
 
