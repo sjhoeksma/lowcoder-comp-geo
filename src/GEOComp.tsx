@@ -280,10 +280,10 @@ var GEOComp = (function () {
             if (featureEnabled('scaleToBottom') && props.autoHeight) {
               const pads = props.styles.padding.split(' ');
               const marg = props.styles.margin.split(' ');
-              const offset = 0
-              //const offset = (parseFloat(pads[pads.length == 4 ? 3 : 0].replace("px", "")) * 2) + (parseFloat(marg[marg.length == 4 ? 3 : 0].replace("px", "")) * 2)
+              //Remove the bottom of the wrapper
+              const offset = (parseFloat(pads[pads.length == 4 ? 3 : 0].replace("px", ""))) + (parseFloat(marg[marg.length == 4 ? 3 : 0].replace("px", "")))
               //TODO: Take care of margin and padding, but also that of parents
-              var newHeight = dimensions.height + (eventObj.windowSize.height - eventObj.bounds.bottom - (offset + (props.resizeOffset || 0)))
+              var newHeight = eventObj.windowSize.height - eventObj.bounds.top - offset - (props.resizeOffset || 0)
               if (newHeight != dimensions.height) {
                 eventObj.element.style.height = `${newHeight}px`
                 setDimensions({ width: dimensions.width, height: newHeight })
