@@ -393,7 +393,7 @@ export function createLayer(layerConfig, map) {
             })
           }
           else if (layerConfig.source.pmtilesType === 'vector') {
-            console.log("the PMTILES Style", layerConfig.style); // issue here
+            //console.log("the PMTILES Style", layerConfig.style); // issue here
             return new PMTilesVectorSource({
               url: layerConfig.source?.url,
             })
@@ -585,7 +585,7 @@ export function createLayer(layerConfig, map) {
             });
           }
           else if (layerConfig.source.pmtilesType === 'vector') {
-            console.log("the PMTILES Style", layerConfig.style); // issue here
+            //console.log("the PMTILES Style", layerConfig.style); // issue here
             return new VectorTileLayer({
               declutter: true,
               name: layerConfig.label,
