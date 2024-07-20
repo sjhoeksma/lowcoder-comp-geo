@@ -1,3 +1,10 @@
+# [1.4.0-dev.14](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.4.0-dev.13...v1.4.0-dev.14) (2024-07-20)
+
+
+### Bug Fixes
+
+* newHeight ([01a84d4](https://github.com/sjhoeksma/lowcoder-comp-geo/commit/01a84d487821fe23586914ae12195adaf6635fa4))
+
 # [1.4.0-dev.13](https://github.com/sjhoeksma/lowcoder-comp-geo/compare/v1.4.0-dev.12...v1.4.0-dev.13) (2024-07-19)
 
 
