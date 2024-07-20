@@ -284,13 +284,11 @@ var GEOComp = (function () {
               const offset = (parseFloat(pads[pads.length == 4 ? 3 : 0].replace("px", ""))) + (parseFloat(marg[marg.length == 4 ? 3 : 0].replace("px", "")))
               //TODO: Take care of margin and padding, but also that of parents
               var newHeight = eventObj.windowSize.height - eventObj.bounds.top - offset * 2 - (props.resizeOffset || 0)
-              if (newHeight != dimensions.height) {
-                eventObj.newHeight = newHeight
-                //eventObj.element.style.height = `${newHeight}px`
-                setDimensions({ width: dimensions.width, height: newHeight })
-                if (featureEnabled("debug"))
-                  console.debug("Resized done", newHeight)
-              }
+              eventObj.newHeight = newHeight
+              //eventObj.element.style.height = `${newHeight}px`
+              setDimensions({ width: dimensions.width, height: newHeight })
+              if (featureEnabled("debug"))
+                console.debug("Resized done", newHeight)
             }
             break
           default:
